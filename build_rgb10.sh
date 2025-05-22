@@ -34,6 +34,7 @@ source ./build_mednafen.sh
 source ./build_ecwolfsa.sh
 source ./build_ppssppsa.sh
 source ./build_scummvmsa.sh
+source ./build_xroar.sh
 source ./build_ogage.sh
 source ./build_351files.sh
 source ./build_filebrowser.sh
