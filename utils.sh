@@ -74,26 +74,26 @@ function setup_arkbuild32() {
 }
 
 function remove_arkbuild() {
-  for m in proc dev/pts dev sys Arkbuild
+  for m in proc dev/pts dev sys
   do
     if grep -qs "Arkbuild/${m} " /proc/mounts; then
       sudo umount Arkbuild/${m}
       verify_action
     fi
   done
-  [ -d "Arkbuild" ] && sudo rm -rf Arkbuild
+  [ -d "Arkbuild" ] && sudo umount Arkbuild
   return 0
 }
 
 function remove_arkbuild32() {
-  for m in proc dev/pts dev sys Arkbuild32
+  for m in proc dev/pts dev sys
   do
     if grep -qs "Arkbuild32/${m} " /proc/mounts; then
       sudo umount Arkbuild32/${m}
       verify_action
     fi
   done
-  [ -d "Arkbuild32" ] && sudo rm -rf Arkbuild32
+  [ -d "Arkbuild32" ] && sudo umount Arkbuild32
   return 0
 }
 
