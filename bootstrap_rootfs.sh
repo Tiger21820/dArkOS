@@ -3,7 +3,7 @@
 echo -e "Boostraping Debian....\n\n"
 # Ensure some build tools are installed and ready
 sudo apt -y update
-for NEEDED_TOOL in bc build-essential debootstrap eatmydata gcc lib32stdc++6 libc6-i386 libncurses5-dev lzop qemu-user-static zlib1g:i386
+for NEEDED_TOOL in bc build-essential ccache debootstrap eatmydata gcc lib32stdc++6 libc6-i386 libncurses5-dev lzop qemu-user-static zlib1g:i386
 do
   dpkg -s "$NEEDED_TOOL" &>/dev/null
   if [[ $? != "0" ]]; then
@@ -19,10 +19,17 @@ if [[ $? != "0" ]]; then
   sudo apt -y install debootstrap
 fi
 
+# Create ccache if it does not exist already
+if [ ! -d "Arkbuild_ccache" ]; then
+  mkdir Arkbuild_ccache
+fi
+export CCACHE_DIR=Arkbuild_ccache
+[ -z $(echo $PATH | grep Arkbuild_ccache) ] && export PATH=Arkbuild_ccache:$PATH
+
 # Bootstrap base system
 sudo eatmydata debootstrap --no-check-gpg --include=eatmydata --resolve-deps --arch=arm64 --foreign bookworm Arkbuild http://deb.debian.org/debian/
 sudo cp /usr/bin/qemu-aarch64-static Arkbuild/usr/bin/
-sudo chroot Arkbuild/ apt-get -y install eatmydata
+sudo chroot Arkbuild/ apt-get -y install ccache eatmydata
 sudo chroot Arkbuild/ eatmydata /debootstrap/debootstrap --second-stage
 
 # Bind essential host filesystems into chroot for networking

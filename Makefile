@@ -11,3 +11,7 @@ clean:
 	source utils.sh && remove_arkbuild && remove_arkbuild32
 	sudo rm -rf Arkbuild* mnt odroidgoA-4.4.y ArkOS_* wget-*
 	@echo "Done!"
+
+clean_complete: clean
+	sudo rm -rf Arkbuild_ccache
+	sudo rm -f build.log*

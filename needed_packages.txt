@@ -1,5 +1,6 @@
 alsa-utils
 brightnessctl
+ccache
 cmake
 console-setup
 dialog
