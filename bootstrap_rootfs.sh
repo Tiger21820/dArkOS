@@ -62,29 +62,6 @@ sudo chroot Arkbuild/ systemctl enable NetworkManager
 # Install libmali, DRM, and GBM libraries for rk3326
 sudo chroot Arkbuild/ eatmydata apt-get install -y libdrm-dev libgbm1
 
-# Place libmali manually (assumes you have libmali.so or mali drivers ready)
-for ARCHITECTURE in aarch64-linux-gnu arm-linux-gnueabihf
-do
-  if [ "$ARCHITECTURE" == "aarch64-linux-gnu" ]; then
-    FOLDER="aarch64"
-  else
-    FOLDER="armhf"
-  fi
-  sudo mkdir -p Arkbuild/usr/lib/${ARCHITECTURE}/
-  wget -t 3 -T 60 --no-check-certificate https://github.com/christianhaitian/rk3326_core_builds/raw/refs/heads/rk3326/mali/${FOLDER}/libmali-bifrost-g31-rxp0-gbm.so
-  sudo mv libmali-bifrost-g31-rxp0-gbm.so Arkbuild/usr/lib/${ARCHITECTURE}/.
-  whichmali="libmali-bifrost-g31-rxp0-gbm.so"
-  cd Arkbuild/usr/lib/${ARCHITECTURE}
-  sudo ln -sf ${whichmali} libMali.so
-  for LIB in libEGL.so libEGL.so.1 libGLES_CM.so libGLES_CM.so.1 libGLESv1_CM.so libGLESv1_CM.so.1 libGLESv1_CM.so.1.1.0 libGLESv2.so libGLESv2.so.2 libGLESv2.so.2.0.0 libGLESv2.so.2.1.0 libGLESv3.so libGLESv3.so.3 libgbm.so libgbm.so.1 libgbm.so.1.0.0 libmali.so libmali.so.1 libMaliOpenCL.so libOpenCL.so libwayland-egl.so libwayland-egl.so.1 libwayland-egl.so.1.0.0
-  do
-    sudo rm -fv ${LIB}
-    sudo ln -sfv libMali.so ${LIB}
-  done
-  cd ../../../../
-done
-sudo chroot Arkbuild/ ldconfig
-sleep 10
 setup_ark_user
 sleep 10
 echo -e "Generating /etc/fstab"
