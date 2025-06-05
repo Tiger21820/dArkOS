@@ -3,7 +3,7 @@
 echo -e "Boostraping Debian....\n\n"
 # Ensure some build tools are installed and ready
 sudo apt -y update
-for NEEDED_TOOL in bc build-essential ccache debootstrap eatmydata gcc lib32stdc++6 libc6-i386 libncurses5-dev lzop python-is-python3 qemu-user-static zlib1g:i386
+for NEEDED_TOOL in bc build-essential ccache debootstrap eatmydata gcc lib32stdc++6 libc6-i386 libncurses5-dev libssl-dev lzop python-is-python3 qemu-user-static zlib1g:i386
 do
   dpkg -s "$NEEDED_TOOL" &>/dev/null
   if [[ $? != "0" ]]; then
