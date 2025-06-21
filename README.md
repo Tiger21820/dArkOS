@@ -13,3 +13,4 @@ Debian based operating system for select RK3326 and RK3566 based portable gaming
       - Method 2: - Clone this git repo then run `./FreeSudo.sh`.  If there were no errors, it should've completed this change for you. \
                     You can verify this by checking if a `/etc/sudoers.d/$USER` file exists and contains `$USER ALL=(ALL) NOPASSWD: ALL` in it.
      
+Now you should be able to just run make <device> to build for a supported device.  Example: `make rg353m`

@@ -3,7 +3,7 @@
 # Build and install ogage (Global Hotkey Daemon)
 if [ "$CHIPSET" == "rk3326" ]; then
   branch="master"
-else
+elif [[ "$UNIT" == *"353"* ]]; then
   branch="rg353v"
 fi
 call_chroot "cd /home/ark &&

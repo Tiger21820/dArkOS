@@ -19,6 +19,8 @@ fi
 (
 # Set chipset in environment variable
 export CHIPSET=rk3566
+export UNIT=353m
+export UNIT_DTB=${CHIPSET}-${UNIT}
 # Load shared utilities (if any)
 source ./utils.sh
 

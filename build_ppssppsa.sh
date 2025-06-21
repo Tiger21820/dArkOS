@@ -1,12 +1,6 @@
 #!/bin/bash
 
 # Build and install PPSSPP standalone emulator
-if [ "$CHIPSET" == "rk3326" ]; then
-  DEVICE="rgb10"
-else
-  DEVICE="rg353m"
-fi
-
 call_chroot "cd /home/ark &&
   cd ${CHIPSET}_core_builds &&
   chmod 777 builds-alt.sh &&
@@ -14,15 +8,15 @@ call_chroot "cd /home/ark &&
   "
 sudo mkdir -p Arkbuild/opt/ppsspp
 sudo cp -Ra Arkbuild/home/ark/${CHIPSET}_core_builds/ppsspp/build/assets/ Arkbuild/opt/ppsspp/
-sudo cp ppsspp/gamecontrollerdb.txt.${DEVICE} Arkbuild/opt/ppsspp/assets/gamecontrollerdb.txt
+sudo cp ppsspp/gamecontrollerdb.txt.${UNIT} Arkbuild/opt/ppsspp/assets/gamecontrollerdb.txt
 sudo cp ppsspp/ppsspp.sh Arkbuild/usr/local/bin/
 sudo cp ppsspp/ppsspphotkey.service Arkbuild/etc/systemd/system/
-sudo cp ppsspp/ppssppkeydemon.py.${DEVICE} Arkbuild/usr/local/bin/ppssppkeydemon.py
+sudo cp ppsspp/ppssppkeydemon.py.${UNIT} Arkbuild/usr/local/bin/ppssppkeydemon.py
 sudo mkdir -p Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM
-sudo cp -R ppsspp/configs/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.go.${DEVICE} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.go
-sudo cp -R ppsspp/configs/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.sdl.${DEVICE} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.sdl
-sudo cp ppsspp/controls.ini.${DEVICE} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/controls.ini
-sudo cp ppsspp/ppsspp.ini.${DEVICE} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini
+sudo cp -R ppsspp/configs/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.go.${UNIT} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.go
+sudo cp -R ppsspp/configs/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.sdl.${UNIT} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini.sdl
+sudo cp ppsspp/controls.ini.${UNIT} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/controls.ini
+sudo cp ppsspp/ppsspp.ini.${UNIT} Arkbuild/opt/ppsspp/backupforromsfolder/ppsspp/PSP/SYSTEM/ppsspp.ini
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/ppsspp/LICENSE.TXT Arkbuild/opt/ppsspp/
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/ppsspp/build/PPSSPPSDL Arkbuild/opt/ppsspp/
 call_chroot "chown -R ark:ark /opt/"

@@ -29,7 +29,7 @@ sudo mount ${LOOP_DEV}p3 ${mountpoint}
 KERNEL_VERSION=$(basename $(ls Arkbuild/lib/modules))
 sudo cp $KERNEL_SRC/.config Arkbuild/boot/config-${KERNEL_VERSION}
 sudo cp $KERNEL_SRC/arch/arm64/boot/Image ${mountpoint}/
-sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/rk3566-353m.dtb ${mountpoint}/
+sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb ${mountpoint}/
 
 # Create uInitrd from generated initramfs
 sudo cp /usr/bin/qemu-aarch64-static Arkbuild/usr/bin/
@@ -57,22 +57,23 @@ find . | cpio -H newc -o | gzip -c > ../uInitrd
 sudo mv ../uInitrd ../${mountpoint}/uInitrd
 cd ..
 rm -rf initrd
-#sudo mkimage -A arm64 -O linux -T ramdisk -C none -n uInitrd -d ${mountpoint}/initrd.img ${mountpoint}/uInitrd
 sudo rm -f ${mountpoint}/initrd.img
 
 # Build uboot and resource and install it to the image
 cd $KERNEL_SRC
-make ARCH=arm64 rk3566.img
+cp arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+# Next line generates the resource.img file needed to flash to the image and to build the uboot
+scripts/mkimg --dtb ${UNIT_DTB}.dtb
 git clone --depth=1 https://github.com/christianhaitian/rk356x-uboot.git
 git clone https://github.com/christianhaitian/rkbin.git
 mkdir -p ./prebuilts/gcc/linux-x86/aarch64/
-wget https://releases.linaro.org/components/toolchain/binaries/6.3-2017.05/aarch64-linux-gnu/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz
-tar Jxvf gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz -C ./prebuilts/gcc/linux-x86/aarch64/
+ln -s /opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu ./prebuilts/gcc/linux-x86/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu
 cd rk356x-uboot
 cp ../resource.img rk3566_tool/Image/
 ./make.sh rk3566
 
 echo "Flashing uboot.img and resource.img..."
+cp uboot.img device/rk3566/uboot.img.jelos
 sudo dd if=uboot.img of=$LOOP_DEV bs=$SECTOR_SIZE seek=16384 conv=notrunc
 sudo dd if=rk3566_tool/Image/resource.img of=$LOOP_DEV bs=$SECTOR_SIZE seek=24576 conv=notrunc
 #sudo dd if=device/rk3566/uboot.img of=$LOOP_DEV bs=$SECTOR_SIZE seek=16384 conv=notrunc

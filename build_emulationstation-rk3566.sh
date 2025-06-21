@@ -8,7 +8,7 @@ fi
 echo "export devid=$(printenv DEV_ID)" | sudo tee Arkbuild/home/ark/ES_VARIABLES.txt
 echo  "export devpass=$(printenv DEV_PASS)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
 echo "export apikey=$(printenv TGDB_APIKEY)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
-echo "export softname=\"dArkOS-RG353M\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
+echo "export softname=\"dArkOS-${UNIT}\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
 
 call_chroot "apt-get -y update && eatmydata apt-get -y install libfreeimage3 fonts-droid-fallback libfreetype6 curl vlc-bin libsdl2-mixer-2.0-0"
 call_chroot "cd /home/ark &&
@@ -31,9 +31,9 @@ call_chroot "cd /home/ark &&
 sudo rm -rf Arkbuild/home/ark/EmulationStation-fcamod
 sudo mkdir -p Arkbuild/etc/emulationstation/themes
 sudo cp Emulationstation/es_systems.cfg.${CHIPSET} Arkbuild/etc/emulationstation/es_systems.cfg
-sudo cp Emulationstation/es_input.cfg.rg353m Arkbuild/etc/emulationstation/es_input.cfg
-sudo cp Emulationstation/es_settings.cfg.rg353m Arkbuild/home/ark/.emulationstation/es_settings.cfg
-sudo cp Emulationstation/emulationstation.sh.rg353m Arkbuild/usr/bin/emulationstation/emulationstation.sh
+sudo cp Emulationstation/es_input.cfg.${UNIT} Arkbuild/etc/emulationstation/es_input.cfg
+sudo cp Emulationstation/es_settings.cfg.${UNIT} Arkbuild/home/ark/.emulationstation/es_settings.cfg
+sudo cp Emulationstation/emulationstation.sh.${UNIT} Arkbuild/usr/bin/emulationstation/emulationstation.sh
 sudo cp Emulationstation/fonts/* Arkbuild/usr/bin/emulationstation/resources/
 call_chroot "chown -R ark:ark /etc/emulationstation/"
 call_chroot "chown -R ark:ark /home/ark/"

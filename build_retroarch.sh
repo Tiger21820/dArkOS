@@ -14,20 +14,18 @@ sudo mkdir -p Arkbuild/home/ark/.config/retroarch/autoconfig/udev
 sudo mkdir -p Arkbuild/opt/cmds
 if [ "$CHIPSET" == "rk3326" ]; then
   sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch.${CHIPSET}.rot Arkbuild/opt/retroarch/bin/retroarch
-  DEVICE="rgb10"
 else
   sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch Arkbuild/opt/retroarch/bin/retroarch
-  DEVICE="rg353m"
 fi
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filters/*.so Arkbuild/home/ark/.config/retroarch/filters/video/
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filters/*.filt Arkbuild/home/ark/.config/retroarch/filters/video/
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/libretro-common/audio/dsp_filters/*.so Arkbuild/home/ark/.config/retroarch/filters/audio/
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/libretro-common/audio/dsp_filters/*.dsp Arkbuild/home/ark/.config/retroarch/filters/audio/
 sudo rm -rf Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/
-sudo cp -a retroarch/configs/retroarch.cfg.${DEVICE} Arkbuild/home/ark/.config/retroarch/retroarch.cfg
-sudo cp -a retroarch/configs/retroarch.cfg.bak.${DEVICE} Arkbuild/home/ark/.config/retroarch/retroarch.cfg.bak
-sudo cp -a retroarch/configs/retroarch-core-options.cfg.${DEVICE} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg
-sudo cp -a retroarch/configs/retroarch-core-options.cfg.bak.${DEVICE} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg.bak
+sudo cp -a retroarch/configs/retroarch.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch.cfg
+sudo cp -a retroarch/configs/retroarch.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch.cfg.bak
+sudo cp -a retroarch/configs/retroarch-core-options.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg
+sudo cp -a retroarch/configs/retroarch-core-options.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg.bak
 sudo cp -a retroarch/configs/controller/retrogame_joypad.cfg Arkbuild/home/ark/.config/retroarch/autoconfig/udev/
 sudo cp retroarch/scripts/retroarch Arkbuild/usr/local/bin/
 sudo cp retroarch/scripts/retroarch.sh Arkbuild/opt/cmds
@@ -108,10 +106,10 @@ sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filter
 sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filters/*.filt Arkbuild/home/ark/.config/retroarch32/filters/video/
 sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/libretro-common/audio/dsp_filters/*.so Arkbuild/home/ark/.config/retroarch32/filters/audio/
 sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/libretro-common/audio/dsp_filters/*.dsp Arkbuild/home/ark/.config/retroarch32/filters/audio/
-sudo cp -a retroarch32/configs/retroarch.cfg.${DEVICE} Arkbuild/home/ark/.config/retroarch32/retroarch.cfg
-sudo cp -a retroarch32/configs/retroarch.cfg.bak.${DEVICE} Arkbuild/home/ark/.config/retroarch32/retroarch.cfg.bak
-sudo cp -a retroarch32/configs/retroarch-core-options.cfg.${DEVICE} Arkbuild/home/ark/.config/retroarch32/retroarch-core-options.cfg
-sudo cp -a retroarch32/configs/retroarch-core-options.cfg.bak.${DEVICE} Arkbuild/home/ark/.config/retroarch32/retroarch-core-options.cfg.bak
+sudo cp -a retroarch32/configs/retroarch.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch32/retroarch.cfg
+sudo cp -a retroarch32/configs/retroarch.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch32/retroarch.cfg.bak
+sudo cp -a retroarch32/configs/retroarch-core-options.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch32/retroarch-core-options.cfg
+sudo cp -a retroarch32/configs/retroarch-core-options.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch32/retroarch-core-options.cfg.bak
 sudo cp -a retroarch32/configs/controller/retrogame_joypad.cfg Arkbuild/home/ark/.config/retroarch32/autoconfig/udev/
 sudo cp retroarch32/scripts/retroarch32 Arkbuild/usr/local/bin/
 sudo cp retroarch32/scripts/retroarch32.sh Arkbuild/opt/cmds

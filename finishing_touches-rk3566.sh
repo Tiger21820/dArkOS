@@ -5,7 +5,7 @@ sudo mkdir -p ${mountpoint}/extlinux
 cat <<EOF | sudo tee ${mountpoint}/extlinux/extlinux.conf
 LABEL ArkOS
   LINUX /Image
-  FDT /rk3566-353m.dtb
+  FDT /${UNIT_DTB}.dtb
   APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash net.ifnames=0 console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=0 video=HDMI-A-1:1280x720@60
 EOF
 
@@ -20,8 +20,11 @@ echo "export PATH=\"\$PATH:/usr/sbin\"" | sudo tee -a Arkbuild/home/ark/.bashrc
 sudo chroot Arkbuild/ chown ark:ark /home/ark/.bashrc
 
 # Set the name in the hostname and add it to the hosts file
-echo "rg353m" | sudo tee Arkbuild/etc/hostname
-sudo sed -i '/localhost/s//localhost rg353m/' Arkbuild/etc/hosts
+if [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"503"* ]]; then
+  NAME="rg${UNIT}"
+fi
+echo "$NAME" | sudo tee Arkbuild/etc/hostname
+sudo sed -i '/localhost/s//localhost ${NAME}/' Arkbuild/etc/hosts
 
 # Copy the necessary .asoundrc file for proper audio in emulationstation and emulators
 sudo cp audio/.asoundrc.${CHIPSET} Arkbuild/home/ark/.asoundrc
@@ -132,8 +135,7 @@ sudo cp scripts/Switch* Arkbuild/usr/local/bin/
 sudo cp scripts/Fix* Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
 sudo cp device/rk3566/uboot.img.anbernic Arkbuild/usr/local/bin/
-sudo cp device/rk3566/uboot.img Arkbuild/usr/local/bin/uboot.img.jelos
-#sudo cp device/rgb10/* Arkbuild/usr/local/bin/
+sudo mv device/rk3566/uboot.img.jelos Arkbuild/usr/local/bin/uboot.img.jelos
 
 # Make all scripts in /usr/local/bin executable, world style
 sudo chmod 777 Arkbuild/usr/local/bin/*
@@ -152,33 +154,15 @@ sudo cp audio/asound.state.${CHIPSET} Arkbuild/var/local/asound.state
 # Set SDL Video Driver for bash
 echo "export SDL_VIDEO_EGL_DRIVER=libEGL.so" | sudo tee Arkbuild/etc/profile.d/SDL_VIDEO.sh
 
+# Set device name 
+echo "$NAME" | sudo tee Arkbuild/home/ark/.config/.DEVICE
+
 # Set the locale
 
 sudo umount ${mountpoint}
-#sudo losetup -d ${LOOP_BOOT}
 
-# Format rootfs partition in final image
-#ROOTFS_PART_OFFSET=$((237569 * 512))
-#LOOP_ROOTFS=$(sudo losetup --find --show --offset ${ROOTFS_PART_OFFSET} ${DISK})
-#sudo mkfs.ext4 -F -L ROOTFS ${LOOP_ROOTFS}
-#sudo losetup -d ${LOOP_ROOTFS}
-
-# Format ROMS partition in final image
-#ROM_PART_OFFSET=$((ROM_PART_START * 512))
-#ROM_PART_SIZE_BYTES=$(( (ROM_PART_END - ROM_PART_START + 1) * 512 ))
-#LOOP_ROM=$(sudo losetup --find --show --offset ${ROM_PART_OFFSET} --sizelimit ${ROM_PART_SIZE_BYTES} ${DISK})
-#if [ -z "$LOOP_ROM" ]; then
-  #echo "❌ Failed to create loop device for ROMS partition!"
-  #echo "ROM_PART_START: $ROM_PART_START"
-  #echo "ROM_PART_END: $ROM_PART_END"
-  #echo "ROM_PART_OFFSET: $ROM_PART_OFFSET"
-  #echo "ROM_PART_SIZE_BYTES: $ROM_PART_SIZE_BYTES"
-  #exit 1
-#fi
-#sudo mkfs.vfat -F 32 -n EASYROMS ${LOOP_ROM}
 fat32_mountpoint=mnt/roms
 mkdir -p ${fat32_mountpoint}
-#sudo mount ${LOOP_DEV}p5 ${fat32_mountpoint}
 sudo mkdir -p Arkbuild/roms
 while read GAME_SYSTEM; do
   if [[ ! "$GAME_SYSTEM" =~ ^# ]]; then
@@ -188,8 +172,8 @@ while read GAME_SYSTEM; do
 done <game_systems.txt
 
 # Copy default game launch images
-sudo cp launchimages/loading.ascii.rg353m ${fat32_mountpoint}/launchimages/loading.ascii
-sudo cp launchimages/loading.jpg.rg353m ${fat32_mountpoint}/launchimages/loading.jpg
+sudo cp launchimages/loading.ascii.${UNIT} ${fat32_mountpoint}/launchimages/loading.ascii
+sudo cp launchimages/loading.jpg.${UNIT} ${fat32_mountpoint}/launchimages/loading.jpg
 
 # Copy various tools to roms folders
 sudo cp -a ecwolf/Scan* ${fat32_mountpoint}/wolf/
@@ -206,6 +190,5 @@ sudo tar -C mnt/ -cvf Arkbuild/roms.tar roms
 # Remove and cleanup fat32 roms mountpoint
 sudo chmod -R 755 ${fat32_mountpoint}
 sync
-#sudo umount ${fat32_mountpoint}
-#sudo losetup -d ${LOOP_ROM}
+
 sudo rm -rf ${fat32_mountpoint}

@@ -142,6 +142,11 @@ sudo cp audio/asound.state.${CHIPSET} Arkbuild/var/local/asound.state
 # Set SDL Video Driver for bash
 echo "export SDL_VIDEO_EGL_DRIVER=libEGL.so" | sudo tee Arkbuild/etc/profile.d/SDL_VIDEO.sh
 
+# Set device name 
+if [ "$CHIPSET" == "rk3326" ]; then
+  echo "rgb10" | sudo tee Arkbuild/home/ark/.config/.DEVICE
+fi
+
 # Set the locale
 
 sudo umount ${mountpoint}

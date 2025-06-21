@@ -1,12 +1,6 @@
 #!/bin/bash
 
 # Build and install Mupen64Plus standalone emulator
-if [ "$CHIPSET" == "rk3326" ]; then
-  DEVICE="rgb10"
-else
-  DEVICE="rg353m"
-fi
-
 call_chroot "cd /home/ark &&
   cd ${CHIPSET}_core_builds &&
   chmod 777 builds-alt.sh &&
@@ -15,7 +9,7 @@ call_chroot "cd /home/ark &&
 sudo mkdir -p Arkbuild/opt/mupen64plus
 sudo mkdir -p Arkbuild/home/ark/.config/mupen64plus
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/mupen64plussa-64/* Arkbuild/opt/mupen64plus/
-sudo cp -a mupen64plus/configs/${DEVICE}/mupen64plus.cfg Arkbuild/home/ark/.config/mupen64plus/
+sudo cp -a mupen64plus/configs/${UNIT}/mupen64plus.cfg Arkbuild/home/ark/.config/mupen64plus/
 sudo rm -f Arkbuild/opt/mupen64plus/*.gz
 sudo cp -a mupen64plus/*.ini Arkbuild/opt/mupen64plus/
 sudo cp mupen64plus/scripts/n64.sh Arkbuild/usr/local/bin/

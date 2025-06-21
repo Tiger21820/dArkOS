@@ -1,12 +1,6 @@
 #!/bin/bash
 
 # Build and install SCUMMVM standalone emulator
-if [ "$CHIPSET" == "rk3326" ]; then
-  DEVICE="rgb10"
-else
-  DEVICE="rg353m"
-fi
-
 call_chroot "source /root/.bashrc && cd /home/ark &&
   cd ${CHIPSET}_core_builds &&
   chmod 777 builds-alt.sh &&
@@ -25,8 +19,8 @@ sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/scummvm/NEWS.md Arkbuild/opt
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/scummvm/README.md Arkbuild/opt/scummvm/
 call_chroot "chown -R ark:ark /opt/"
 sudo chmod 777 Arkbuild/opt/scummvm/scummvm
-sudo cp scummvm/scummvmkeydemon.py.${DEVICE} Arkbuild/usr/local/bin/scummvmkeydemon.py
-sudo cp scummvm/configs/scummvm.ini.${DEVICE} Arkbuild/home/ark/.config/scummvm/scummvm.ini
+sudo cp scummvm/scummvmkeydemon.py.${UNIT} Arkbuild/usr/local/bin/scummvmkeydemon.py
+sudo cp scummvm/configs/scummvm.ini.${UNIT} Arkbuild/home/ark/.config/scummvm/scummvm.ini
 call_chroot "chown -R ark:ark /home/ark/.config/"
 sudo cp scummvm/scummvm.sh Arkbuild/usr/local/bin/scummvm.sh
 sudo chmod 777 Arkbuild/usr/local/bin/scummvm.sh
