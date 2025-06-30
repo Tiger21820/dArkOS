@@ -36,14 +36,9 @@ else
 fi
 
 extension="3000.10"
-#sudo mv -f -v ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/sdl2-64/libSDL2-2.0.so.0.${extension}.rotated ${CHROOT_DIR}/usr/lib/${ARCH}/libSDL2-2.0.so.0.${extension}
-#sudo mv -f -v ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/sdl2-32/libSDL2-2.0.so.0.${extension}.rotated ${CHROOT_DIR}/usr/lib/${ARCH}/libSDL2-2.0.so.0.${extension}
-#sudo rm -rfv ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/sdl2-64
-#sudo rm -rfv ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/sdl2-32
 sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/lib/${ARCH}/libSDL2.so /usr/lib/${ARCH}/libSDL2-2.0.so.0"
 sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/lib/${ARCH}/libSDL2-2.0.so.0.${extension} /usr/lib/${ARCH}/libSDL2.so"
 sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/include/SDL2 /usr/local/include/"
-#sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/lib/${ARCH}/libSDL2.so /usr/lib/${ARCH}/libSDL2-2.0.so.0"
-#sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/lib/${ARCH}/libSDL2-2.0.so.0.${extension} /usr/lib/${ARCH}/libSDL2.so"
+sudo chroot ${CHROOT_DIR}/ bash -c "ln -sfv /usr/lib/aarch64-linux-gnu/bin/sdl2-config /usr/bin/sdl2-config"
 sudo cp -R ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/SDL/include/* ${CHROOT_DIR}/usr/include/${ARCH}/SDL2/
 sudo rm -rf ${CHROOT_DIR}/home/ark/${CHIPSET}_core_builds/SDL

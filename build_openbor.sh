@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build and install gzdoom standalone emulator
+# Build and install OpenBOR standalone emulator
 call_chroot "cd /home/ark &&
   cd ${CHIPSET}_core_builds &&
   chmod 777 builds-alt.sh &&
