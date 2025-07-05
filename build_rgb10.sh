@@ -50,6 +50,7 @@ source ./build_351files.sh
 source ./build_filebrowser.sh
 source ./build_wpasupplicant.sh
 source ./build_gptokeyb.sh
+source ./build_image-viewer.sh
 source ./build_emulationstation.sh
 source ./build_linapple.sh
 source ./finishing_touches.sh

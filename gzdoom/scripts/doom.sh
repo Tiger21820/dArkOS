@@ -1,8 +1,9 @@
 #!/bin/bash
 
 if [[ $1 == "standalone" ]]; then
-        directory=$(dirname "$2" | cut -d "/" -f2)
-	sudo /usr/local/bin/doomkeydemon.py &
+    directory=$(dirname "$2" | cut -d "/" -f2)
+    echo "VAR=lzdoom" > /home/ark/.config/KILLIT
+    sudo systemctl start killer_daemon.service
 	if [ ".$(echo "$2"| cut -d. -f2)" == ".sh" ] || [ ".$(echo "$2"| cut -d. -f2)" == ".SH" ]; then
 	dos2unix "${2}"
         "$2"
@@ -26,8 +27,8 @@ if [[ $1 == "standalone" ]]; then
 	else
 	/opt/lzdoom/lzdoom -iwad "$2"
 	fi
-	sudo killall python3
-        sudo systemctl restart oga_events &
+    sudo systemctl stop killer_daemon.service
+    sudo systemctl restart ogage &
 elif [[ $1 == "standalone-gzdoom" ]]; then
         directory=$(dirname "$2" | cut -d "/" -f2)
         echo "VAR=gzdoom" > /home/ark/.config/KILLIT
@@ -56,7 +57,7 @@ elif [[ $1 == "standalone-gzdoom" ]]; then
         /opt/gzdoom/gzdoom -iwad "$2" +gl_es 1 +vid_preferbackend 3 +cl_capfps 0
         fi
         sudo systemctl stop killer_daemon.service
-        sudo systemctl restart oga_events &
+        sudo systemctl restart ogage &
 else
   /usr/local/bin/"$1" -L /home/ark/.config/"$1"/cores/"$2"_libretro.so "$3"
 fi

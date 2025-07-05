@@ -6,7 +6,8 @@ call_chroot "cd /home/ark &&
   chmod 777 builds-alt.sh &&
   eatmydata ./builds-alt.sh linapplesa &&
   cd linapple/sdl12-compat/build &&
-  make install
+  make install &&
+  cp /usr/lib/aarch64-linux-gnu/libSDL_image-1.2.so.0* /usr/lib/.
   "
 sudo mkdir -p Arkbuild/opt/linapple
 sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/linapplesa-64/linapple Arkbuild/opt/linapple/

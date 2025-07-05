@@ -41,6 +41,7 @@ libudev1
 libvorbisidec1
 libvpx7
 libxkbcommon0
+libzip4
 mbrola
 mbrola-us1
 mbrola-us2
@@ -57,6 +58,7 @@ python3-urwid
 python3-wheel
 rfkill
 rustc
+samba
 systemd-timesyncd
 tar
 unzip

@@ -152,7 +152,7 @@ function install_package() {
        if [[ "$updateapt" == "N" ]]; then
          if test -z "$(cat ${CHROOT_DIR}/etc/apt/sources.list | grep contrib)"
          then
-           sudo sed -i '/main/s//main contrib non-free/' ${CHROOT_DIR}/etc/apt/sources.list
+           sudo sed -i '/main/s//main contrib non-free non-free-firmware/' ${CHROOT_DIR}/etc/apt/sources.list
 		 fi
          sudo chroot ${CHROOT_DIR}/ apt-get -y update
          updateapt="Y"

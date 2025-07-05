@@ -158,7 +158,43 @@ if [ "$CHIPSET" == "rk3326" ]; then
   echo "rgb10" | sudo tee Arkbuild/home/ark/.config/.DEVICE
 fi
 
-# Set the locale
+# Configure default samba share setup
+cat <<EOF | sudo tee -a sudo tee Arkbuild/etc/samba/smb.conf
+[roms]
+   comment = ROMS
+   path = /roms
+   browsable = yes
+   read only = no
+   map archive = no
+   map system = no
+   map hidden = no
+   guest ok = yes
+   read list = guest
+
+[opt]
+   comment = OPT
+   path = /opt
+   browsable = yes
+   read only = no
+   map archive = no
+   map system = no
+   map hidden = no
+   guest ok = yes
+   read list = guest
+
+[ark]
+   comment = ark
+   path = /home/ark
+   browsable = yes
+   read only = no
+   map archive = no
+   map system = no
+   map hidden = no
+   guest ok = yes
+   read list = guest
+EOF
+sudo chroot Arkbuild/ bash -c "systemctl disable smbd"
+sudo chroot Arkbuild/ bash -c "systemctl disable nmbd"
 
 # Clone some themes to the tempthemes folder
 sudo mkdir Arkbuild/tempthemes
@@ -210,8 +246,9 @@ sudo cp launchimages/loading.jpg.rgb10 ${fat32_mountpoint}/launchimages/loading.
 
 # Copy various tools to roms folders
 sudo cp -a ecwolf/Scan* ${fat32_mountpoint}/wolf/
-sudo cp -a scummvm/Scan* ${fat32_mountpoint}/scummvm/
-sudo cp -a scummvm/menu.scummvm ${fat32_mountpoint}/scummvm/
+sudo cp -a scummvm/scripts/Scan* ${fat32_mountpoint}/scummvm/
+sudo cp -a hypseus-singe/scripts/Scan* ${fat32_mountpoint}/scummvm/
+sudo cp -a scummvm/scripts/menu.scummvm ${fat32_mountpoint}/scummvm/
 
 # Clone some themes to the roms/themes folder
 sudo git clone https://github.com/Jetup13/es-theme-nes-box.git ${fat32_mountpoint}/themes/es-theme-nes-box

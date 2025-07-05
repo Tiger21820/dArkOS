@@ -313,41 +313,6 @@ NetworkInfo() {
   fi
 }
 
-Country() {
-
-  cur_country=`sudo iw reg get | grep country | cut -c 9-10`
-  if [[ "$cur_country" == "00" ]]; then
-    cur_country="WORLD"
-  fi
-
-  declare coptions=()
-  coptions=( "WORLD" . "US" . "DZ" . "AR" . "AU" . "AT" . "BH" . "BM" . "BO" . "BR" . "BG" . "CA" . "CL" . "CN" . "CO" . "CR" . "CY" . "CZ" . "DK" . "DO" . "EC" . "EG" . "SV" . "EE" . "FI" . "FR" . "DE" . "GR" . "GT" . "HN" . "HK" . "IS" . "IN" . "ID" . "IE" . "PK" . "IL" . "IT" . "JM" . "JP3" . "JO" . "KE" . "KW" . "KW" . "LB" . "LI" . "LI" . "LT" . "LT" . "LU" . "MU" . "MX" . "MX" . "MA" . "MA" . "NL" . "NZ" . "NZ" . "NO" . "OM" . "PA" . "PA" . "PE" . "PH" . "PL" . "PL" . "PT" . "PR" . "PR" . "QA" . "KR" . "RO" . "RU" . "RU" . "SA" . "CS" . "SG" . "SK" . "SK" . "SI" . "SI" . "ZA" . "ES" . "LK" . "CH" . "TW" . "TH" . "TH" . "TT" . "TN" . "TR" . "UA" . "AE" . "GB" . "UY" . "UY" . "VE" . "VN" . )
-
-  while true; do
-    cselection=(dialog \
-   	--backtitle "Country currently set to $cur_country" \
-   	--title "Which country would you like to set your wifi to?" \
-   	--no-collapse \
-   	--clear \
-	--cancel-label "Back" \
-    --menu "" $height $width 15)
-
-    cchoice=$("${cselection[@]}" "${coptions[@]}" 2>&1 > /dev/tty1) || MainMenu
-	if [[ $? != 0 ]]; then
-	  exit 1
-	fi
-
-    # There is only one choice possible
-    if [[ "$cchoice" == "WORLD" ]]; then
-      sudo iw reg set 00
-    else
-	  sudo iw reg set "$cchoice"
-    fi
-    Country
-  done  
-
-}
-
 MainMenu() {
 
   if [[ "$(tr -d '\0' < /proc/device-tree/compatible)" == *"rk3566"* ]]; then
@@ -364,9 +329,9 @@ MainMenu() {
 	  cur_ap="Wifi Disabled"
     fi
 
-    mainoptions=( 1 "Turn Wifi $Wifi_MStat (Currently: $Wifi_Stat)" 2 "Connect to new Wifi connection" 3 "Activate existing Wifi Connection" 4 "Delete exiting connections" 5 "Current Network Info" 6 "Change Country Code" 7 "Exit" )
+    mainoptions=( 1 "Turn Wifi $Wifi_MStat (Currently: $Wifi_Stat)" 2 "Connect to new Wifi connection" 3 "Activate existing Wifi Connection" 4 "Delete exiting connections" 5 "Current Network Info" 6 "Exit" )
   else
-    mainoptions=( 2 "Connect to new Wifi connection" 3 "Activate existing Wifi Connection" 4 "Delete exiting connections" 5 "Current Network Info" 6 "Change Country Code" 7 "Exit" )
+    mainoptions=( 2 "Connect to new Wifi connection" 3 "Activate existing Wifi Connection" 4 "Delete exiting connections" 5 "Current Network Info" 6 "Exit" )
     C_AP=`iw dev wlan0 info | grep ssid | cut -c 7-30`
     if [[ -z $C_AP ]]; then
       C_AP=`sudo nmcli -t -f name,device connection show --active | grep wlan0 | cut -d\: -f1`
@@ -395,8 +360,7 @@ MainMenu() {
 		3) Activate ;;
 		4) Delete ;;
 		5) NetworkInfo ;;
-		6) Country ;;
-		7) ExitMenu ;;
+		6) ExitMenu ;;
       esac
     done
   done

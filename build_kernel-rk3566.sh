@@ -32,12 +32,12 @@ sudo cp $KERNEL_SRC/arch/arm64/boot/Image ${mountpoint}/
 sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb ${mountpoint}/
 
 # Create uInitrd from generated initramfs
-sudo cp /usr/bin/qemu-aarch64-static Arkbuild/usr/bin/
+#sudo cp /usr/bin/qemu-aarch64-static Arkbuild/usr/bin/
 KERNEL_VERSION=$(basename $(find Arkbuild/lib/modules -maxdepth 1 -mindepth 1 -type d))
 # Create symlink so depmod/initramfs can find modules for uname -r (host kernel)
 sudo touch Arkbuild/lib/modules/${KERNEL_VERSION}/modules.builtin.modinfo
 call_chroot "uname() { echo ${KERNEL_VERSION}; }; export -f uname; depmod ${KERNEL_VERSION}; update-initramfs -c -k ${KERNEL_VERSION}"
-sudo rm Arkbuild/usr/bin/qemu-aarch64-static
+#sudo rm Arkbuild/usr/bin/qemu-aarch64-static
 sudo cp Arkbuild/boot/initrd.img-* ${mountpoint}/initrd.img
 if ! command -v mkimage &> /dev/null; then
   sudo apt -y update
@@ -48,11 +48,13 @@ mkdir initrd
 #Update uInitrd to force booting from mmcblk1p4
 sudo mv ${mountpoint}/initrd.img initrd/.
 cd initrd
-#sudo update-initramfs -c -k "4.19.172"
-#unlz4 -d initrd.img | cpio -id
 gunzip -c initrd.img | cpio -idmv
 rm -f initrd.img
 sed -i '/local dev_id\=/c\\tlocal dev_id\=\"/dev/mmcblk1p4\"' scripts/local
+#Add regulatory.db and regualtory.db.p7s
+mkdir -p usr/lib/firmware
+wget https://github.com/CaffeeLake/wireless-regdb/raw/refs/heads/master/regulatory.db -O lib/firmware/regulatory.db -O lib/firmware/regulatory.db
+#wget -t 5 -T 60 https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/plain/regulatory.db.p7s -O lib/firmware/regulatory.db.p7s
 find . | cpio -H newc -o | gzip -c > ../uInitrd
 sudo mv ../uInitrd ../${mountpoint}/uInitrd
 cd ..

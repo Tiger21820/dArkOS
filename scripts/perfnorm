@@ -16,7 +16,7 @@ if [ -e "/home/ark/.config/.GameLoadingIModeASCII" ] && [[ $(tty) != *"pts"* ]];
   fi
 elif [ -e "/home/ark/.config/.GameLoadingIModePIC" ] && [[ $(tty) != *"pts"* ]] && [ -z $1 ]; then
   if [ -f "/roms/launchimages/loading.jpg" ]; then
-    ffplay -x 1280 -y 720 /roms/launchimages/loading.jpg &
+    image-viewer /roms/launchimages/loading.jpg &
     PROC=$!
     (sleep 2s; kill -9 $PROC)
   else

@@ -20,8 +20,8 @@ sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/hypseus-singe/build/hypseus 
 sudo cp hypseus-singe/configs/hypinput_gamepad.ini.${UNIT} Arkbuild/opt/hypseus-singe/hypinput_gamepad.ini
 sudo cp hypseus-singe/configs/gamecontrollerdb.txt Arkbuild/opt/hypseus-singe/gamecontrollerdb.txt
 call_chroot "chown -R ark:ark /opt/"
-sudo cp hypseus-singe/singe.sh Arkbuild/usr/local/bin/singe.sh
-sudo cp hypseus-singe/daphne.sh Arkbuild/usr/local/bin/daphne.sh
+sudo cp hypseus-singe/scripts/singe.sh Arkbuild/usr/local/bin/singe.sh
+sudo cp hypseus-singe/scripts/daphne.sh Arkbuild/usr/local/bin/daphne.sh
 sudo chmod 777 Arkbuild/opt/hypseus-singe/hypseus-singe
 sudo chmod 777 Arkbuild/usr/local/bin/singe.sh
 sudo chmod 777 Arkbuild/usr/local/bin/daphne.sh
