@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ $(cat /sys/devices/platform/backlight/backlight/backlight/brightness) -lt 2 ]; then
+   echo 45 > /sys/devices/platform/backlight/backlight/backlight/brightness
+fi
+

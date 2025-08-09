@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # Create boot.ini
+if [ "$UNIT" == "rg351mp" ]; then
+  INITRD_LOADERADDRESS="0x01100000"
+else
+  INITRD_LOADERADDRESS="0x04000000"
+fi
 cat <<EOF | sudo tee ${mountpoint}/boot.ini
 odroidgoa-uboot-config
 
@@ -8,7 +13,7 @@ setenv bootargs "root=/dev/mmcblk0p2 rootwait rw fsck.repair=yes net.ifnames=0 f
 
 # Booting
 setenv loadaddr "0x02000000"
-setenv initrd_loadaddr "0x04000000"
+setenv initrd_loadaddr "${INITRD_LOADERADDRESS}"
 setenv dtb_loadaddr "0x01f00000"
 
 load mmc 1:1 \${loadaddr} Image
@@ -25,7 +30,11 @@ else
   sudo cp logos/unrotated/logo.bmp ${mountpoint}/
 fi
 
-sudo cp optional/* ${mountpoint}/
+if [ -d "optional" ]; then
+  if [ ! -z "$(find optional/ -mindepth 1 -maxdepth 1)" ]; then
+    sudo cp optional/* ${mountpoint}/
+  fi
+fi
 
 # Tell systemd to ignore PowerKey presses.  Let the Global Hotkey daemon handle that
 echo "HandlePowerKey=ignore" | sudo tee -a Arkbuild/etc/systemd/logind.conf
@@ -60,7 +69,7 @@ sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/loca
 sudo mkdir -p Arkbuild/usr/local/bin
 sudo cp scripts/spktoggle.sh Arkbuild/usr/local/bin/
 sudo chmod 777 Arkbuild/usr/local/bin/spktoggle.sh
-sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/spktoggle.sh &\") | crontab -"
+#sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/spktoggle.sh &\") | crontab -"
 #sudo cp scripts/audiopath.service Arkbuild/etc/systemd/system/audiopath.service
 sudo cp scripts/audiostate.service Arkbuild/etc/systemd/system/audiostate.service
 #sudo chroot Arkbuild/ bash -c "systemctl enable audiopath"
@@ -77,6 +86,7 @@ sudo chroot Arkbuild/ bash -c "systemctl enable firstboot"
 sudo cp hotkeydaemon/killer_daemon.service Arkbuild/etc/systemd/system/killer_daemon.service
 sudo cp hotkeydaemon/killer_daemon.py Arkbuild/usr/local/bin/killer_daemon.py
 sudo chmod 777 Arkbuild/usr/local/bin/killer_daemon.py
+sudo chroot Arkbuild/ bash -c "systemctl disable killer_daemon"
 
 # Add amiga script
 sudo cp amiga/amiga.sh Arkbuild/usr/local/bin/
@@ -148,6 +158,18 @@ sudo cp scripts/timezones Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
 if [[ "$UNIT" == "rgb10" ]]; then
   sudo cp device/rgb10/* Arkbuild/usr/local/bin/
+elif [[ "$UNIT" == "rg351mp" ]]; then
+  sudo cp device/rg351mp/*.sh Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/*.py Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/*.green Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/*.red Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/fix_power_led Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/checkbrightonboot Arkbuild/usr/local/bin/
+  sudo cp device/rg351mp/"Change LED to Red.sh" Arkbuild/opt/system/
+  sudo chroot Arkbuild/ bash -c "chown -R ark:ark /opt"
+  sudo chmod 777 Arkbuild/opt/system/"Change LED to Red.sh"
+  sudo cp device/rg351mp/*.service Arkbuild/etc/systemd/system/
+  sudo chroot Arkbuild/ bash -c "systemctl enable 351mp batt_led"
 fi
 
 # Make all scripts in /usr/local/bin executable, world style

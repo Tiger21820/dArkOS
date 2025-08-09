@@ -44,8 +44,8 @@ sudo cp $KERNEL_SRC/.config Arkbuild/boot/config-${KERNEL_VERSION}
 sudo cp $KERNEL_SRC/arch/arm64/boot/Image ${mountpoint}/
 sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${KERNEL_DTB} ${mountpoint}/
 if [ "$UNIT" == "rg351mp" ]; then
-  sudo cp /tmp/${UNIT}-kernel.dtb ${mountpoint}/.
-  sudo rm /tmp/${UNIT}-kernel.dtb
+  sudo cp /tmp/${UNIT}-uboot.dtb ${mountpoint}/.
+  sudo rm /tmp/${UNIT}-uboot.dtb
 fi
 
 # Create uInitrd from generated initramfs

@@ -10,7 +10,11 @@ LABEL ArkOS
 EOF
 
 #sudo cp logo.bmp ${mountpoint}/
-sudo cp optional/* ${mountpoint}/
+if [ -d "optional" ]; then
+  if [ ! -z "$(find optional/ -mindepth 1 -maxdepth 1)" ]; then
+    sudo cp optional/* ${mountpoint}/
+  fi
+fi
 
 # Tell systemd to ignore PowerKey presses.  Let the Global Hotkey daemon handle that
 echo "HandlePowerKey=ignore" | sudo tee -a Arkbuild/etc/systemd/logind.conf
@@ -74,6 +78,7 @@ sudo chroot Arkbuild/ bash -c "systemctl enable firstboot"
 sudo cp hotkeydaemon/killer_daemon.service Arkbuild/etc/systemd/system/killer_daemon.service
 sudo cp hotkeydaemon/killer_daemon.py Arkbuild/usr/local/bin/killer_daemon.py
 sudo chmod 777 Arkbuild/usr/local/bin/killer_daemon.py
+sudo chroot Arkbuild/ bash -c "systemctl disable killer_daemon"
 
 # Add amiga script
 sudo cp amiga/amiga.sh Arkbuild/usr/local/bin/

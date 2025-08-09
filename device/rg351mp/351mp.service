@@ -1,0 +1,13 @@
+[Unit]
+Description=351MP Fixes
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/fix_power_led
+ExecStart=/usr/local/bin/checkbrightonboot
+ExecStart=/usr/local/bin/fixvolume.sh
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
