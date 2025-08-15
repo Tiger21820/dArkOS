@@ -131,6 +131,12 @@ sudo chmod -R 777 Arkbuild/opt/system/
 # Copy performance scripts
 sudo cp scripts/perf* Arkbuild/usr/local/bin/
 
+# Add preservation of SDL_VIDEO_EGL_DRIVER to sudoers
+cat <<EOF | sudo tee Arkbuild/etc/sudoers.d/ark_preserve_sdl_video_egl_driver
+Defaults        env_keep += "SDL_VIDEO_EGL_DRIVER"
+EOF
+sudo chmod 0440 Arkbuild/etc/sudoers.d/ark_preserve_sdl_video_egl_driver
+
 # Disable power saving for 8821cs wifi chip
 cat <<EOF | sudo tee Arkbuild/etc/modprobe.d/8821cs.conf
 # Disable power saving

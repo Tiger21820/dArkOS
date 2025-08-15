@@ -142,6 +142,12 @@ sudo chmod -R 777 Arkbuild/opt/system/
 # Copy performance scripts
 sudo cp scripts/perf* Arkbuild/usr/local/bin/
 
+# Add preservation of SDL_VIDEO_EGL_DRIVER to sudoers
+cat <<EOF | sudo tee Arkbuild/etc/sudoers.d/ark_preserve_sdl_video_egl_driver
+Defaults        env_keep += "SDL_VIDEO_EGL_DRIVER"
+EOF
+sudo chmod 0440 Arkbuild/etc/sudoers.d/ark_preserve_sdl_video_egl_driver
+
 # Add USB DAC Support
 echo -e "Generating 20-usb-alsa.rules udev for usb dac support"
 echo -e "KERNEL==\"controlC[0-9]*\", DRIVERS==\"usb\", SYMLINK=\"snd/controlC7\"" | sudo tee Arkbuild/etc/udev/rules.d/20-usb-alsa.rules
@@ -193,9 +199,7 @@ sudo cp audio/asound.state.${CHIPSET} Arkbuild/var/local/asound.state
 echo "export SDL_VIDEO_EGL_DRIVER=libEGL.so" | sudo tee Arkbuild/etc/profile.d/SDL_VIDEO.sh
 
 # Set device name 
-if [ "$CHIPSET" == "rk3326" ]; then
-  echo "rgb10" | sudo tee Arkbuild/home/ark/.config/.DEVICE
-fi
+echo "$NAME" | sudo tee Arkbuild/home/ark/.config/.DEVICE
 
 # Configure default samba share setup
 cat <<EOF | sudo tee -a Arkbuild/etc/samba/smb.conf
