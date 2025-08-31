@@ -166,6 +166,20 @@ sudo cp scripts/spktoggle.sh Arkbuild/usr/local/bin/
 sudo cp scripts/volume.sh Arkbuild/usr/local/bin/
 sudo cp scripts/${CHIPSET}/* Arkbuild/usr/local/bin/
 sudo cp scripts/timezones Arkbuild/usr/local/bin/
+sudo cp scripts/BaRT_QuickMode.sh Arkbuild/usr/local/bin/
+sudo cp scripts/"Enable Quick Mode".sh Arkbuild/usr/local/bin/
+sudo cp scripts/arkos_ap_mode.sh Arkbuild/usr/local/bin/
+sudo cp scripts/auto_suspend* Arkbuild/usr/local/bin/
+sudo cp scripts/keystroke.py Arkbuild/usr/local/bin/
+sudo cp scripts/b2.sh Arkbuild/usr/local/bin/
+sudo cp scripts/freej2me.sh Arkbuild/usr/local/bin/
+sudo cp scripts/get_last_played.sh Arkbuild/usr/local/bin/
+sudo cp scripts/gx4000.sh Arkbuild/usr/local/bin/
+sudo cp scripts/isitpng.sh Arkbuild/usr/local/bin/
+sudo cp scripts/neogeocd.sh Arkbuild/usr/local/bin/
+sudo cp scripts/netplay.sh Arkbuild/usr/local/bin/
+sudo cp scripts/sleep_governors.sh Arkbuild/usr/local/bin/
+sudo cp scripts/wasitpng.sh Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
 sudo cp device/${CHIPSET}/uboot.img.anbernic Arkbuild/usr/local/bin/
 sudo cp scripts/Switch* Arkbuild/usr/local/bin/

@@ -1340,6 +1340,7 @@
 			<emulator name="retroarch">
 				<cores>
 					<core>genesis_plus_gx</core>
+					<core>genesis_plus_gx_EX</core>
 					<core>genesis_plus_gx_wide</core>
 					<core>picodrive</core>
 					<core>gearsystem</core>
@@ -1376,6 +1377,7 @@
 			<emulator name="retroarch">
 				<cores>
 					<core>genesis_plus_gx</core>
+					<core>genesis_plus_gx_EX</core>
 					<core>genesis_plus_gx_wide</core>
 					<core>picodrive</core>
 				</cores>
@@ -1423,6 +1425,7 @@
 			<emulator name="retroarch">
 				<cores>
 					<core>genesis_plus_gx</core>
+					<core>genesis_plus_gx_EX</core>
 					<core>genesis_plus_gx_wide</core>
 					<core>picodrive</core>
 				</cores>
@@ -1458,6 +1461,7 @@
 			<emulator name="retroarch">
 				<cores>
 					<core>genesis_plus_gx</core>
+					<core>genesis_plus_gx_EX</core>
 					<core>genesis_plus_gx_wide</core>
 					<core>picodrive</core>
 				</cores>
@@ -1602,6 +1606,7 @@
 			<emulator name="retroarch">
 				<cores>
 					<core>genesis_plus_gx</core>
+					<core>genesis_plus_gx_EX</core>
 					<core>gearsystem</core>
 					<core>smsplus</core>
 					<core>picodrive</core>

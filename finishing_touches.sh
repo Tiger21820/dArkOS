@@ -164,6 +164,20 @@ sudo cp scripts/pause.sh Arkbuild/usr/local/bin/
 sudo cp scripts/speak_bat_life.sh Arkbuild/usr/local/bin/
 sudo cp scripts/spktoggle.sh Arkbuild/usr/local/bin/
 sudo cp scripts/timezones Arkbuild/usr/local/bin/
+sudo cp scripts/BaRT_QuickMode.sh Arkbuild/usr/local/bin/
+sudo cp scripts/"Enable Quick Mode".sh Arkbuild/usr/local/bin/
+sudo cp scripts/arkos_ap_mode.sh Arkbuild/usr/local/bin/
+sudo cp scripts/auto_suspend* Arkbuild/usr/local/bin/
+sudo cp scripts/keystroke.py Arkbuild/usr/local/bin/
+sudo cp scripts/b2.sh Arkbuild/usr/local/bin/
+sudo cp scripts/freej2me.sh Arkbuild/usr/local/bin/
+sudo cp scripts/get_last_played.sh Arkbuild/usr/local/bin/
+sudo cp scripts/gx4000.sh Arkbuild/usr/local/bin/
+sudo cp scripts/isitpng.sh Arkbuild/usr/local/bin/
+sudo cp scripts/neogeocd.sh Arkbuild/usr/local/bin/
+sudo cp scripts/netplay.sh Arkbuild/usr/local/bin/
+sudo cp scripts/sleep_governors.sh Arkbuild/usr/local/bin/
+sudo cp scripts/wasitpng.sh Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
 # Disable winbin as connectivity to Active Directory is not needed
 sudo chroot Arkbuild/ bash -c "systemctl disable winbind"

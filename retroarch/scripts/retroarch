@@ -51,7 +51,7 @@ if [ "$?" -eq "10" ]; then
   fi
 fi
 
-if [ -f "/boot/rk3566.dtb" ] || [ -f "/boot/rk3566-OC.dtb" ]; then
+if compgen -G "/boot/rk3566*" > /dev/null; then
   /usr/local/bin/controller_setup.sh
 
   if [ "$(ls /dev/input/ | wc -l)" -gt "7" ]; then

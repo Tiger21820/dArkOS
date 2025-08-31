@@ -2,8 +2,6 @@
 if mountpoint -q /roms; then
   sudo umount /roms
 fi
-#sudo ln -s /dev/mmcblk0 /dev/hda
-#sudo ln -s /dev/mmcblk0p3 /dev/hda3
 sudo chmod 666 /dev/tty1
 export TERM=linux
 height="15"
@@ -15,88 +13,128 @@ if [ -f "/boot/rk3326-rg351v-linux.dtb" ] || [ -f "/boot/rk3326-rg351mp-linux.dt
 fi
 
 if [ ! -f /boot/doneit ]; then
-  sudo echo ", +" | sudo sfdisk -N 3 --force /dev/mmcblk0
+  sudo echo ", +" | sudo sfdisk -N 3 --force /dev/mmcblk0 &> /dev/null
   sudo touch "/boot/doneit"
   dialog --infobox "EASYROMS partition expansion and conversion to exfat in process.  The device will now reboot to continue the process..." $height $width 2>&1 > /dev/tty1
   sleep 5
   sudo reboot
 fi
+(
+	maxSize=$(lsblk -b --output SIZE -n -d /dev/mmcblk0)
 
-maxSize=$(lsblk -b --output SIZE -n -d /dev/mmcblk0)
+	newExtSizePct=$(printf %.2f "$((10**4 * 11000000000/$maxSize))e-4")
+	newExtSizePct=$(echo print 1-$newExtSizePct | perl)
+	ExfatPctToRemain=$(echo print 100*$newExtSizePct | perl)
 
-newExtSizePct=$(printf %.2f "$((10**4 * 11000000000/$maxSize))e-4")
-newExtSizePct=$(echo print 1-$newExtSizePct | perl)
-ExfatPctToRemain=$(echo print 100*$newExtSizePct | perl)
+	partition_type=$(df -T | grep mmcblk[0-1]p2 | cut -d ' ' -f 2)
+	if [ $ExfatPctToRemain -lt "100" ]; then
+	  printf "d\n3\nw\n" | sudo fdisk /dev/mmcblk0 &> /dev/null
+	  sudo growpart --free-percent=$ExfatPctToRemain -v /dev/mmcblk0 2 &> /dev/null
+	  if [[ "$partition_type" == *"ext"* ]]; then
+		sudo resize2fs /dev/mmcblk0p2 &> /dev/null
+	  elif [[ "$partition_type" == *"xfs"* ]]; then
+		sudo xfs_growfs /dev/mmcblk0p2 &> /dev/null
+	  elif [[ "$partition_type" == *"btrfs"* ]]; then
+		sudo btrfs filesystem resize max / &> /dev/null
+	  else
+		echo "Don't know how to grow a $partition_type file system."
+		echo ""
+	  fi
+	  ext4endSector=$(sudo sfdisk -l /dev/mmcblk0 | grep mmcblk0p2 | awk '{print $3}')
+	  exfatstartSector=$(echo print 1+$ext4endSector | perl)
+	  echo 30
+	  printf "n\np\n3\n$exfatstartSector\n\nt\n3\n11\nw\n" | sudo fdisk /dev/mmcblk0 &> /dev/null
+	  echo 45
+	fi
 
-#echo "$ExfatPctToRemain" > /home/ark/growpercentage.log
+	sudo mkfs.exfat -c 16K -L EASYROMS /dev/mmcblk0p3 &> /dev/null
+	sync
+	echo 50
+	sleep 2
+	sudo fsck.exfat -a /dev/mmcblk0p3 &> /dev/null
+	sync
+	echo 55
+	printf "t\n3\n7\nw\n" | sudo fdisk /dev/mmcblk0 &> /dev/null
+	echo 60
+	sudo mount -t exfat -w /dev/mmcblk0p3 /roms &> /dev/null
+	exitcode=$?
+	echo $exitcode > /tmp/code.txt
+	sleep 2
+	#sudo tar -xf /roms.tar -C / &> /dev/null
+	(pv -n /roms.tar | tar --no-same-permissions --no-same-owner -xf - -C /) &> /tmp/tar_stat.txt &
+	let COUNT=1
+	while true; do
+	  VAL=$(tail -n 1 /tmp/tar_stat.txt)
+	  if [[ "$VAL" == "100" ]]; then
+	   VAL_INT=$(awk "BEGIN {print ($VAL / 100) * 20 + 60}" 2> /dev/null | cut -d '.' -f1)
+	   echo $VAL_INT
+	   break
+	  elif [[ "$VAL" != "$SAMEVAL" ]]; then
+	   VAL_INT=$(awk "BEGIN {print ($VAL / 100) * 20 + 60}" 2> /dev/null | cut -d '.' -f1)
+	   echo $VAL_INT
+	   SAMEVAL="$VAL"
+	   continue
+	  elif [[ $COUNT -ge 15000 ]]; then
+	   echo "We're failing out for creating roms structure."
+	   break
+	  else
+	   let COUNT++
+	   continue
+	  fi
+	done
+	#echo 80
+	sync
+	sudo rm -rf /roms/themes/es-theme-nes-box/ &> /dev/null
+	cd /tempthemes
+	(tar --no-same-permissions --no-same-owner -cf - . | pv -n -s $(du -sb /tempthemes/ | awk '{print $1}') | tar --no-same-permissions --no-same-owner -xf - -C /roms/themes/) &> /tmp/tar_stat.txt &
+	let COUNT=1
+	while true; do
+	  VAL=$(tail -n 1 /tmp/tar_stat.txt)
+	  if [[ "$VAL" -ge "100" ]]; then
+	   VAL_INT_CP=$(awk "BEGIN {print ($VAL / 100) * 15 + 80}" 2> /dev/null | cut -d '.' -f1)
+	   echo $VAL_INT_CP
+	   break
+	  elif [[ "$VAL" != "$SAMEVAL" ]] && [[ ! -z "$VAL" ]]; then
+	   VAL_INT_CP=$(awk "BEGIN {print ($VAL / 100) * 15 + 80}" 2> /dev/null | cut -d '.' -f1)
+	   echo $VAL_INT_CP
+	   SAMEVAL="$VAL"
+	   continue
+	  elif [[ $COUNT -ge 15000 ]]; then
+	   echo "We're failing out for copying themes."
+	   break
+	  else
+	   let COUNT++
+	   continue
+	  fi
+	done
+	sync
+	#echo 95
+	sleep 1
+	cd ..
+	sudo rm -rf /tempthemes &> /dev/null
+	sleep 2
+	sudo cp -f /boot/fstab.exfat /etc/fstab &> /dev/null
+	sync
+	sudo rm -f /boot/doneit* &> /dev/null
+	if [ ! -f "/boot/rk3326-rg351v-linux.dtb" ] && [ ! -f "/boot/rk3326-rg351mp-linux.dtb" ]; then
+	  sudo rm -f /roms.tar &> /dev/null
+	fi
+	sudo rm -f /boot/fstab.exfat &> /dev/null
+	echo 100
+) | dialog --title "Firstboot setup of dArkOS" --gauge "Expanding rootfs and exfat partitions.  Please wait..." $height $width 0 2>&1 > /dev/tty1
 
-# Expand the rootfs partition if possible to make room for future update needs
-partition_type=$(df -T | grep mmcblk[0-1]p2 | cut -d ' ' -f 2)
-if [ $ExfatPctToRemain -lt "100" ]; then
-  printf "d\n3\nw\n" | sudo fdisk /dev/mmcblk0
-  sudo growpart --free-percent=$ExfatPctToRemain -v /dev/mmcblk0 2
-  if [[ "$partition_type" == *"ext"* ]]; then
-    sudo resize2fs /dev/mmcblk0p2
-  elif [[ "$partition_type" == *"xfs"* ]]; then
-    sudo xfs_growfs /dev/mmcblk0p2
-  elif [[ "$partition_type" == *"btrfs"* ]]; then
-    sudo btrfs filesystem resize max /
-  else
-    echo "Don't know how to grow a $partition_type file system."
-	echo ""
-  fi
-  ext4endSector=$(sudo sfdisk -l /dev/mmcblk0 | grep mmcblk0p2 | awk '{print $3}')
-  exfatstartSector=$(echo print 1+$ext4endSector | perl)
-  printf "n\np\n3\n$exfatstartSector\n\nt\n3\n11\nw\n" | sudo fdisk /dev/mmcblk0
-fi
-
-sudo mkfs.exfat -c 16K -L EASYROMS /dev/mmcblk0p3
-sync
-sleep 2
-sudo fsck.exfat -a /dev/mmcblk0p3
-sync
-printf "t\n3\n7\nw\n" | sudo fdisk /dev/mmcblk0
-
-sudo mount -t exfat -w /dev/mmcblk0p3 /roms
-exitcode=$?
-sleep 2
-sudo tar -xvf /roms.tar -C /
-#sudo tar -xvf /roms.tar --strip-components=1 -C /
-sync
-sudo rm -rf -v /roms/themes/es-theme-nes-box/
-# Setup swapfile
-#printf "\n\n\e[32mSetting up swapfile.  Please wait...\n"
-#printf "\033[0m"
-#sudo dd if=/dev/zero of=/swapfile bs=1024 count=262144
-#sudo mkswap /swapfile
-#sudo swapon /swapfile
-sudo mv -f -v /tempthemes/* /roms/themes
-sync
-sleep 1
-sudo rm -rf -v /tempthemes
-sleep 2
-#sudo umount /roms
-sudo cp /boot/fstab.exfat /etc/fstab
-sync
-sudo rm -f /boot/doneit*
-if [ ! -f "/boot/rk3326-rg351v-linux.dtb" ] && [ ! -f "/boot/rk3326-rg351mp-linux.dtb" ]; then
-  sudo rm -f /roms.tar
-fi
-sudo rm -f /boot/fstab.exfat
-# Disable and delete swapfile
-#sudo swapoff /swapfile
-#sudo rm -f -v /swapfile
-if [ $exitcode -eq 0 ]; then
-  dialog --infobox "Completed expansion of EASYROMS partition and conversion to exfat. The system will now reboot and load ArkOS." $height $width 2>&1 > /dev/tty1 | sleep 10
-  systemctl disable firstboot.service
-  sudo rm -v /boot/firstboot.sh
-  sudo rm -v -- "$0"
+exitcode=$(cat /tmp/code.txt)
+if [ "$exitcode" == "0" ]; then
+  dialog --infobox "Completed expansion of root filesystem and EASYROMS partition and conversion to exfat. The system will now reboot and load dArkOS." $height $width 2>&1 > /dev/tty1 | sleep 10
+  systemctl disable firstboot.service &> /dev/null
+  sudo rm /boot/firstboot.sh &> /dev/null
+  sudo rm -- "$0"
   reboot
 else
-  dialog --infobox "EASYROMS partition expansion and conversion to exfat failed for an unknown reason.  Please expand the partition using an alternative tool such as Minitool Partition Wizard.  System will reboot and load ArkOS now." $height $width 2>&1 > /dev/tty1 | sleep 10
-  systemctl disable firstboot.service
-  sudo rm -v /boot/firstboot.sh
-  sudo rm -v -- "$0"
+  dialog --infobox "EASYROMS partition expansion and conversion to exfat failed for an unknown reason.  Please expand the partition using an alternative tool such as Minitool Partition Wizard.  System will reboot and load dArkOS now." $height $width 2>&1 > /dev/tty1 | sleep 10
+  systemctl disable firstboot.service &> /dev/null
+  sudo rm /boot/firstboot.sh &> /dev/null
+  sudo rm -- "$0"
   reboot
 fi
 
