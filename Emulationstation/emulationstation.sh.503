@@ -93,6 +93,7 @@ if [ "$?" -eq "10" ]; then
                           "2)") if [ ! -z "$isitrgui" ]; then
                                   if [ ! -f "~/.config/.setxmb" ]; then
                                     sed -i '/menu_driver = \"rgui\"/s//menu_driver = \"xmb\"/g' /home/ark/.config/retroarch/retroarch.cfg
+                                    sed -i '/menu_scale_factor = /c\menu_scale_factor = \"1.50\"/g' /home/ark/.config/retroarch/retroarch.cfg
                                     sed -i '/xmb_menu_color_theme = \"4\"/s//xmb_menu_color_theme = \"8\"/g' /home/ark/.config/retroarch/retroarch.cfg
                                     touch ~/.config/.setxmb
                                   fi

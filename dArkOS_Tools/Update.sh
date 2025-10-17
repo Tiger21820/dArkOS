@@ -16,7 +16,7 @@ fi
 
 sudo timedatectl set-ntp 1
 
-LOCATION="https://raw.githubusercontent.com/christianhaitian/darkos/master"
+LOCATION="https://raw.githubusercontent.com/christianhaitian/darkos-updates/master"
 
 wget -t 3 -T 60 --no-check-certificate "$LOCATION"/LICENSE -O /dev/shm/LICENSE -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
@@ -25,7 +25,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-wget -t 3 -T 60 --no-check-certificate "$LOCATION"/updates/dArkOSUpdate.sh -O /home/ark/dArkOSUpdate.sh -a "$LOG_FILE" || sudo rm -f /home/ark/dArkOSUpdate.sh | tee -a "$LOG_FILE"
+wget -t 3 -T 60 --no-check-certificate "$LOCATION"/dArkOSUpdate.sh -O /home/ark/dArkOSUpdate.sh -a "$LOG_FILE" || sudo rm -f /home/ark/dArkOSUpdate.sh | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   sudo msgbox "Looks like OTA updating is currently down or your wifi or internet connection is not functioning correctly."
   printf "There was an error with attempting this update." | tee -a "$LOG_FILE"
