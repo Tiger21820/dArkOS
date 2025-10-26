@@ -24,7 +24,6 @@ else
 	sudo mkdir -p Arkbuild/home/ark/.config/retroarch/filters/video
 	sudo mkdir -p Arkbuild/home/ark/.config/retroarch/filters/audio
 	sudo mkdir -p Arkbuild/home/ark/.config/retroarch/autoconfig/udev
-	sudo mkdir -p Arkbuild/opt/cmds
 	if [ "$UNIT" == "rgb10" ] || [ "$UNIT" == "rk2020" ]; then
 	  sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch.${CHIPSET}.rot Arkbuild/opt/retroarch/bin/retroarch
 	elif [ "$CHIPSET" == "rk3566" ]; then
@@ -52,6 +51,7 @@ sudo cp retroarch/configs/retroarch-core-options.cfg.${UNIT} Arkbuild/home/ark/.
 sudo cp retroarch/configs/retroarch-core-options.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg.bak
 sudo cp retroarch/configs/controller/*.cfg Arkbuild/home/ark/.config/retroarch/autoconfig/udev/
 sudo cp retroarch/scripts/retroarch Arkbuild/usr/local/bin/
+sudo mkdir -p Arkbuild/opt/cmds
 sudo cp retroarch/scripts/retroarch.sh Arkbuild/opt/cmds
 #sudo cp retroarch/scripts/retroarch32.sh Arkbuild/opt/cmds
 call_chroot "chown -R ark:ark /opt/"
