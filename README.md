@@ -10,7 +10,7 @@ The overarching goals of dArkOS is as follows:
 1. Online Updates (Won't require SD card reflashing unless there are major structural changes like file system changes.)
 1. Enthusiats focused
 
-This is intended to continue to the work from [ArkOS]() but in a way that allows others to easily fork and modify the OS to their own taste.  If there's a feature not currently available that you want, you can fork this and add it yourself.
+This is intended to continue the work from [ArkOS](https://github.com/christianhaitian/arkos/wiki) but in a way that allows others to easily fork and modify the OS to their own taste.  If there's a feature not currently available that you want, you can fork this and add it yourself.
 Don't feel like building the OS from scratch or don't have the resources to do so?  Ok, just download one of the available prebuilt images and make changes right in the OS.  Since this OS is based on the latest stable version of Debian, you have
 access to over 64,000 packages you can install via the Debian Advanced Package Tool (APT).  Want to build the latest testing or bleeding edge release of Debian? See the notes below on how to accomplish this.
 
@@ -33,12 +33,12 @@ Now you should be able to just run make <device_name> to build for a supported d
  - To build without 32bit support, change the BUILD_ARMHF export in the Makefile to n or add BUILD_ARMHF=n as a variable to `make`.
 - For RK3566, you can add Kodi to your build.  Just change the BUILD_KODI export in the Makefile to y or add BUILD_KODI=y as a variavble to `make`.  Kodi is also available as a prepackaged build in the extra_packages/rk3566 subfolder.  Just copy it to your tools folder and launch from Options/Tools in the start menu.
  - Be aware that building Kodi will add a significant amount of time to your build.  Could be double or triple the build time.
-- Initial build time on an Intel I7-8700U unit with a 512GB NVME SSD and 32GB of DDR4 memory is a little over 19 hours.  Subsequent builds are about 8 hours thanks to ccache.
+- Initial build time on an Intel I7-8700U unit with a 512GB NVME SSD and 32GB of DDR4 memory is a little over 19 hours.  Subsequent builds are about 3 hours thanks to ccache.
 
 # Credits and Thanks
-ChatGPT for guidance on how to build a Debian image \
+[ChatGPT](https://chatgpt.com/) for guidance on how to build a Debian image \
 TheGreatCrippler for testing and feedback \
 kloptops for testing and feedback \
 Fraxinus88 for testing and feedback \
 ImCoKeMaN for testing and feedback \
-PortMaster team for support in figuring out PM interface issues
+[PortMaster](https://portmaster.games/) team for support in figuring out PM interface issues
