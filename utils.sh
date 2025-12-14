@@ -24,6 +24,11 @@ fi
 export ARCH=arm64
 export CROSS_COMPILE=aarch64-linux-gnu-
 export PATH=/opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/:$PATH
+if [ "$CHIPSET" == "rk3326" ]; then
+  export whichmali=libmali-bifrost-g31-rxp0-gbm.so
+else
+  export whichmali=libmali-bifrost-g52-g13p0-gbm.so
+fi
 
 function verify_action() {
   code=$?
@@ -102,11 +107,6 @@ function setup_arkbuild32() {
     sudo cp -a Arkbuild32/home/ark/libgo2/libgo2.so* Arkbuild/usr/lib/arm-linux-gnueabihf/
     # Place libmali manually (assumes you have libmali.so or mali drivers ready)
     sudo mkdir -p Arkbuild32/usr/lib/arm-linux-gnueabihf/
-    if [ "$CHIPSET" == "rk3326" ]; then
-      whichmali="libmali-bifrost-g31-rxp0-gbm.so"
-    else
-      whichmali="libmali-bifrost-g52-g2p0-gbm.so"
-    fi
     wget -t 3 -T 60 --no-check-certificate https://github.com/christianhaitian/${CHIPSET}_core_builds/raw/refs/heads/master/mali/armhf/${whichmali}
     sudo mv ${whichmali} Arkbuild32/usr/lib/arm-linux-gnueabihf/.
     cd Arkbuild32/usr/lib/arm-linux-gnueabihf

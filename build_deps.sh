@@ -62,11 +62,6 @@ do
     FOLDER="armhf"
   fi
   sudo mkdir -p Arkbuild/usr/lib/${ARCHITECTURE}/
-  if [ "$CHIPSET" == "rk3326" ]; then
-    whichmali="libmali-bifrost-g31-rxp0-gbm.so"
-  else
-    whichmali="libmali-bifrost-g52-g2p0-gbm.so"
-  fi
   wget -t 3 -T 60 --no-check-certificate https://github.com/christianhaitian/${CHIPSET}_core_builds/raw/refs/heads/master/mali/${FOLDER}/${whichmali}
   sudo mv ${whichmali} Arkbuild/usr/lib/${ARCHITECTURE}/.
   cd Arkbuild/usr/lib/${ARCHITECTURE}

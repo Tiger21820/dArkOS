@@ -4,10 +4,10 @@ export TERM=linux
 
 if [ ! -z "$(df | grep mmcblk0)" ]; then
   msgbox "The internal emmc storage seems to be \
-  mounted or you're running this tool from ArkOS \
+  mounted or you're running this tool from dArkOS \
   that is mounted on the internal emmc storage.  \
   Please make sure to run this tool from a sd card based \
-  boot of ArkOS and make sure the internal storage is not \
+  boot of dArkOS and make sure the internal storage is not \
   mounted prior to running this tool."
   exit
 fi
@@ -21,7 +21,7 @@ fi
 
 msgbox "ONCE YOU PROCEED WITH THIS process, DO NOT STOP THIS PROCESS UNTIL IT IS COMPLETED \
 OR YOUR INTERNAL EMMC MAY BE LEFT IN AN UNUSUABLE STATE.  This process will remove Android \
-from your device and replace it with ArkOS.  You've been warned!  Type OK in the next \
+from your device and replace it with dArkOS.  You've been warned!  Type OK in the next \
 screen to proceed."
 my_var=`osk "Enter OK here to proceed." | tail -n 1`
 
@@ -78,7 +78,7 @@ if [ -z "$image" ]; then
 fi
 
 dialog --clear
-(pv -n "$image" | sudo dd of=/dev/mmcblk0 bs=1M status=none) 2>&1 | dialog --gauge "Writing the ArkOS \
+(pv -n "$image" | sudo dd of=/dev/mmcblk0 bs=1M status=none) 2>&1 | dialog --gauge "Writing the dArkOS \
 image to emmc, please wait..." 10 50 0
 dialog --clear
 dialog --infobox "Updating some scripts and copying some settings to the linux partition of the internal \
@@ -123,7 +123,7 @@ sudo sed -i 's/mmcblk1/mmcblk0/' /mnt/usbdrive/fstab.exfat
 sudo sed -i "s/sudo rm -f \/boot\/fstab.exfat/sudo rm -f \/boot\/fstab.exfat\necho $(cat \/sys\/devices\/platform\/backlight\/backlight\/backlight\/brightness) \| sudo tee \/sys\/devices\/platform\/backlight\/backlight\/backlight\/brightness/" /mnt/usbdrive/expandtoexfat.sh
 sudo umount /mnt/usbdrive/
 dialog --clear
-msgbox "Done.  Please reboot without a SD card in slot 1 to boot into ArkOS from emmc.  If you'd like to \
+msgbox "Done.  Please reboot without a SD card in slot 1 to boot into dArkOS from emmc.  If you'd like to \
 load Android back onto the internal memory, check out GammaOS-RK3566 by TheGammaSqueeze.  If you'd like to \
 load the original stock Android OS, check out the GammaOS-RK3566 github page for information on how to \
 reinstall the stock Android OS."
