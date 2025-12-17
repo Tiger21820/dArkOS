@@ -97,6 +97,16 @@ clean:
 	while losetup -a | grep -m 1 ArkOS; do sudo losetup -d "$$(losetup -a | grep ArkOS | cut -d ':' -f 1)"; done
 	@echo "Done!"
 
+clean_devenv:
+	./clean_mounts_devenv.sh
+	sudo rm -rf Ark_devenv/
+	@echo "Done!"
+
+clean_devenv32:
+	./clean_mounts_devenv.sh 32
+	sudo rm -rf Ark_devenv32/
+	@echo "Done!"
+
 clean_complete: clean
 	[ -d "$${PWD}/Arkbuild_ccache" ] && sudo umount $${PWD}/Arkbuild_ccache || true
 	[ -d "$${PWD}/Arkbuild_ccache" ] && sudo rm -rf Arkbuild_ccache || true

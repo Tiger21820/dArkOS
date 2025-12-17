@@ -108,10 +108,10 @@ sudo chroot ${CHROOT_DIR}/ apt-get -y install ccache eatmydata
 sudo chroot ${CHROOT_DIR}/ eatmydata /debootstrap/debootstrap --second-stage
 
 # Bind essential host filesystems into chroot for networking
-#sudo mount --bind /dev ${CHROOT_DIR}/dev
-#sudo mount -t devpts none ${CHROOT_DIR}/dev/pts -o newinstance,ptmxmode=0666
-#sudo mount --bind /proc ${CHROOT_DIR}/proc
-#sudo mount --bind /sys ${CHROOT_DIR}/sys
+sudo mount --bind /dev ${CHROOT_DIR}/dev
+sudo mount -t devpts none ${CHROOT_DIR}/dev/pts -o newinstance,ptmxmode=0666
+sudo mount --bind /proc ${CHROOT_DIR}/proc
+sudo mount --bind /sys ${CHROOT_DIR}/sys
 echo -e "nameserver 8.8.8.8\nnameserver 1.1.1.1" | sudo tee ${CHROOT_DIR}/etc/resolv.conf > /dev/null
 
 #sudo chroot ${CHROOT_DIR}/ mount -t proc proc /proc
