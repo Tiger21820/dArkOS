@@ -29,7 +29,7 @@ while read NEEDED_DEV_PACKAGE; do
 done <needed_dev_packages.txt
 
 # Default gcc and g++ to version 12 if gcc is newer than 12
-GCC_VERSION=`sudo chroot ${CHROOT_DIR}/ echo $(gcc --version | head -n 1 | awk '{print $3}' | cut -d'.' -f1)`
+GCC_VERSION=`sudo chroot ${CHROOT_DIR}/ bash -c "gcc --version | head -n 1 | awk '{print $3}' | cut -d' ' -f3 | cut -d'.' -f1"`
 if (( GCC_VERSION > 12 )); then
   install_package $BIT gcc-12
   install_package $BIT g++-12
