@@ -80,7 +80,7 @@ function setup_ark_user() {
 function setup_arkbuild32() {
   if [ ! -d Arkbuild32 ]; then
     # Bootstrap base system
-    sudo debootstrap --variant=minbase --no-check-gpg --include=eatmydata --resolve-deps --arch=armhf --foreign ${DEBIAN_CODE_NAME} Arkbuild32 http://deb.debian.org/debian/
+    sudo debootstrap --no-check-gpg --include=eatmydata --resolve-deps --arch=armhf --foreign ${DEBIAN_CODE_NAME} Arkbuild32 http://deb.debian.org/debian/
     sudo cp /usr/bin/qemu-arm-static Arkbuild32/usr/bin/
     echo 'Acquire::http::proxy "http://127.0.0.1:3142";' | sudo tee Arkbuild32/etc/apt/apt.conf.d/99proxy
     sudo chroot Arkbuild32/ apt -y install eatmydata
@@ -97,7 +97,7 @@ function setup_arkbuild32() {
     sudo chroot Arkbuild32/ apt install -y libdrm-dev libgbm1
     setup_ark_user 32
     sudo mkdir -p Arkbuild32/home/ark
-    sudo chroot Arkbuild32/ umount /proc
+    #sudo chroot Arkbuild32/ umount /proc
     source build_deps.sh 32
     source build_sdl2.sh 32
     sudo cp -a Arkbuild32/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.${extension} Arkbuild/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.${extension}
