@@ -21,13 +21,20 @@ if [[ -d "/opt/drastic/backup" && ! -L "/opt/drastic/backup" ]]; then
   rm -rf /opt/drastic/backup/
 fi
 
-if [[ -d "/opt/drastic/savestates" && ! -L "/opt/drastic/backup" ]]; then
+if [[ -d "/opt/drastic/savestates" && ! -L "/opt/drastic/savestates" ]]; then
   cp -n /opt/drastic/savestates/* /${directory}/nds/savestates/
   rm -rf /opt/drastic/savestates/
 fi
 
-rm -rf /opt/drastic/cheats
-rm -rf /opt/drastic/slot2
+if [[ -d "/opt/drastic/cheats" && ! -L "/opt/drastic/cheats" ]]; then
+  cp -n /opt/drastic/cheats/* /${directory}/nds/cheats/
+  rm -rf /opt/drastic/cheats/
+fi
+
+if [[ -d "/opt/drastic/slot2" && ! -L "/opt/drastic/slot2" ]]; then
+  cp -n /opt/drastic/slot2/* /${directory}/nds/slot2/
+  rm -rf /opt/drastic/slot2/
+fi
 
 ln -sf /${directory}/nds/backup /opt/drastic/
 ln -sf /${directory}/nds/cheats /opt/drastic/
