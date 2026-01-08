@@ -53,7 +53,7 @@ sudo cp Emulationstation/es_settings.cfg.${UNIT} Arkbuild/home/ark/.emulationsta
 sudo cp Emulationstation/emulationstation.sh.${UNIT} Arkbuild/usr/bin/emulationstation/emulationstation.sh
 sudo cp Emulationstation/fonts/* Arkbuild/usr/bin/emulationstation/resources/
 sudo mkdir -p Arkbuild/usr/share/fonts/truetype/droid/
-sudo wget -t 5 -T 30 --no-check-certificate https://github.com/aosp-mirror/platform_frameworks_base/blob/main/data/fonts/DroidSansFallbackFull.ttf -O Arkbuild/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf
+sudo wget -t 5 -T 30 --no-check-certificate https://github.com/aosp-mirror/platform_frameworks_base/raw/refs/heads/main/data/fonts/DroidSansFallbackFull.ttf -O Arkbuild/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf
 sudo cp -R Emulationstation/scripts/ Arkbuild/home/ark/.emulationstation/
 sudo chmod -R 777 Arkbuild/home/ark/.emulationstation/scripts/*
 call_chroot "chown -R ark:ark /etc/emulationstation/"
