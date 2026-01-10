@@ -21,7 +21,7 @@ elif [ "$UNIT" == "rk2023" ] || [ "$UNIT" == "rgb30" ] || [ "$UNIT" == "rgb20pro
   branch="rk2023"
 fi
 
-if [ -f "Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.commit)" == "$(curl -s https:/api.github.com/repos/christianhaitian/ogage/commits/${branch} | jq -r '.sha')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/ogage/commits/${branch} | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.tar.gz
 else
 	call_chroot "cd /home/ark &&

@@ -21,7 +21,7 @@ fi
 NAME=`echo ${NAME} | tr '[:lower:]' '[:upper:]'`
 echo "export softname=\"dArkOS-${NAME}\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
 
-if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit)" == "$(curl -s https:/api.github.com/repos/christianhaitian/EmulationStation-fcamod/commits/${ES_BRANCH} | jq -r '.sha')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/EmulationStation-fcamod/commits/${ES_BRANCH} | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz
     sudo rm Arkbuild/home/ark/ES_VARIABLES.txt
 else

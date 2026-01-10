@@ -9,7 +9,7 @@ elif [ "$CHIPSET" == "rk3566" ]; then
   BUILD_UNIT="rg503"
 fi
 
-if [ -f "Arkbuild_package_cache/${CHIPSET}/ti99_${BUILD_UNIT}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/ti99_${BUILD_UNIT}.commit)" == "$(curl -s https:/api.github.com/repos/christianhaitian/ti99sim/commits/${BUILD_UNIT} | jq -r '.sha')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/ti99_${BUILD_UNIT}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/ti99_${BUILD_UNIT}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/ti99sim/commits/${BUILD_UNIT} | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/ti99_${BUILD_UNIT}.tar.gz
 else
 	call_chroot "cd /home/ark &&

@@ -142,7 +142,7 @@ else
 fi
 
 # Build freej2me-lr.jar and freej2me-plus-lr.jar
-if [ -f "Arkbuild_package_cache/${CHIPSET}/freej2me-plus.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit)" == "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit)" == "$(curl --silent https:/api.github.com/repos/TASEmulators/freej2me-plus/releases | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/freej2me-plus.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit)" == "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit)" == "$(curl --silent https://api.github.com/repos/TASEmulators/freej2me-plus/releases | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/freej2me-plus.tar.gz
 else
    call_chroot "cd /home/ark &&
@@ -163,9 +163,9 @@ else
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit
    fi
    sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/freej2me-plus.tar.gz Arkbuild/usr/local/bin/freej2me_files/freej2me-plus-lr.jar
-   sudo curl --silent https:/api.github.com/repos/TASEmulators/freej2me-plus/releases | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/' > Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit
+   sudo curl --silent https://api.github.com/repos/TASEmulators/freej2me-plus/releases | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/' > Arkbuild_package_cache/${CHIPSET}/freej2me-plus.commit
 fi
-if [ -f "Arkbuild_package_cache/${CHIPSET}/freej2me.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me.commit)" == "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me.commit)" == "$(curl -s https:/api.github.com/repos/hex007/freej2me/commits/master | jq -r '.sha')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/freej2me.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me.commit)" == "$(cat Arkbuild_package_cache/${CHIPSET}/freej2me.commit)" == "$(curl -s https://api.github.com/repos/hex007/freej2me/commits/master | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/freej2me.tar.gz
 else
    call_chroot "cd /home/ark &&
@@ -184,7 +184,7 @@ else
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/freej2me.commit
    fi
    sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/freej2me.tar.gz Arkbuild/usr/local/bin/freej2me_files/freej2me-lr.jar
-   sudo curl -s https:/api.github.com/repos/hex007/freej2me/commits/master | jq -r '.sha' > Arkbuild_package_cache/${CHIPSET}/freej2me.commit
+   sudo curl -s https://api.github.com/repos/hex007/freej2me/commits/master | jq -r '.sha' > Arkbuild_package_cache/${CHIPSET}/freej2me.commit
 fi
 
 if [[ "${BUILD_ARMHF}" == "y" ]]; then
