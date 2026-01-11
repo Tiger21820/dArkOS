@@ -17,7 +17,7 @@ sync
 
 
 # Build uboot and install it to the image
-if [ "$UNIT" == "rg351mp" ] || [ "$UNIT" == "g350" ]; then
+if [ "$UNIT" == "rg351mp" ] || [ "$UNIT" == "g350" ] || [ "$UNIT" == "a10mini" ]; then
   git clone --depth=1 https://github.com/christianhaitian/RG351MP-u-boot u-boot-${CHIPSET}
 else
   git clone --depth=1 https://github.com/christianhaitian/u-boot-${CHIPSET}
