@@ -14,8 +14,8 @@ GATEWAY=$(ip route show default 0.0.0.0/0 | awk '{print $3}' | head -n1)
 # get domain (DNS search domain, first entry)
 DOMAIN=$(awk '/^search/ {print $2; exit}' /etc/resolv.conf)
 # get RX and TX bytes
-RX_BYTES=$(cat /sys/class/net/"$NET_IFACE"/statistics/rx_bytes)
-TX_BYTES=$(cat /sys/class/net/"$NET_IFACE"/statistics/tx_bytes)
+RX_BYTES=$(</sys/class/net/"$NET_IFACE"/statistics/rx_bytes)
+TX_BYTES=$(</sys/class/net/"$NET_IFACE"/statistics/tx_bytes)
 # convert to MB
 RX_MB=$(awk -v b="$RX_BYTES" 'BEGIN {printf "%.2f", b/1024/1024}')
 TX_MB=$(awk -v b="$TX_BYTES" 'BEGIN {printf "%.2f", b/1024/1024}')
