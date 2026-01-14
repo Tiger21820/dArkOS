@@ -184,6 +184,11 @@ fi
 sudo chroot Arkbuild/ bash -c "chown -R ark:ark /opt"
 sudo chmod -R 777 Arkbuild/opt/system/
 
+# Add tool copy game roms for device RGB10
+if [[ "$UNIT" == *"rgb10"* ]]; then
+  sudo cp dArkOS_Tools/RGB10/*.sh Arkbuild/opt/system/
+fi
+
 # Copy performance scripts
 sudo cp scripts/perf* Arkbuild/usr/local/bin/
 
