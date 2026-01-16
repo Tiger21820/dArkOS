@@ -265,7 +265,13 @@ elif [[ "$UNIT" == "rg351mp" ]] || [[ "$UNIT" == "g350" ]] || [[ "$UNIT" == "a10
   sudo cp device/rg351mp/checkbrightonboot Arkbuild/usr/local/bin/
   if [[ "$UNIT" == "a10mini" ]]; then
     sudo cp device/a10mini/"Change LED to Green.sh" Arkbuild/opt/system/"Change LED to Orange.sh"
+    sudo sed -i '/Green.sh/s//Orange.sh/g' Arkbuild/opt/system/"Change LED to Orange.sh"
+	sudo sed -i '/Red.sh/s//Blue.sh/g' Arkbuild/opt/system/"Change LED to Orange.sh"
+    sudo cp Arkbuild/opt/system/"Change LED to Orange.sh" Arkbuild/usr/local/bin/"Change LED to Orange.sh"
+    sudo rm Arkbuild/usr/local/bin/"Change LED to Green.sh"
     sudo mv -f Arkbuild/usr/local/bin/"Change LED to Red.sh" Arkbuild/usr/local/bin/"Change LED to Blue.sh"
+    sudo sed -i '/Red.sh/s//Blue.sh/g' Arkbuild/usr/local/bin/"Change LED to Blue.sh"
+	sudo sed -i '/Green.sh/s//Orange.sh/g' Arkbuild/usr/local/bin/"Change LED to Blue.sh"
     sudo chroot Arkbuild/ bash -c "chown -R ark:ark /opt"
     sudo chmod 777 Arkbuild/opt/system/"Change LED to Orange.sh"
   else
