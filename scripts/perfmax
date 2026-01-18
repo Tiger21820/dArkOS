@@ -26,10 +26,41 @@ if [ -e "/home/ark/.config/.GameLoadingIModeASCII" ] && [[ $(tty) != *"pts"* ]];
   else
     continue
   fi
+elif [ -e "/home/ark/.config/.GameLoadingIModeGIF" ] && [[ $(tty) != *"pts"* ]]; then
+  if [ -e "/home/ark/.config/.IMAGEDELAYTIME" ]; then
+    delay="$(cat /home/ark/.config/.IMAGEDELAYTIME)"
+  else
+    delay="1.5"
+  fi
+  if [ -f "/roms/launchimages/loading.gif" ]; then
+    ffplay -x 1280 -y 720 -loglevel quiet -autoexit /roms/launchimages/loading.gif &
+    PROC=$!
+    (sleep ${delay}s; kill -9 $PROC)
+  else
+    continue
+  fi
+elif [ -e "/home/ark/.config/.GameLoadingIModeVID" ] && [[ $(tty) != *"pts"* ]]; then
+  if [ -e "/home/ark/.config/.IMAGEDELAYTIME" ]; then
+    delay="$(cat /home/ark/.config/.IMAGEDELAYTIME)"
+  else
+    delay="1.5"
+  fi
+  if [ -f "/roms/launchimages/loading.mp4" ]; then
+    ffplay -x 1280 -y 720 -loglevel quiet -autoexit /roms/launchimages/loading.mp4 &
+    PROC=$!
+    (sleep ${delay}s; kill -9 $PROC)
+  else
+    continue
+  fi
 elif [ -e "/home/ark/.config/.GameLoadingIModePIC" ] && [[ $(tty) != *"pts"* ]]; then
   directory=$(echo "$(dirname "$2")"/images)
   basefile="$(basename -- "$2")"
   basefilenoext="${basefile%.*}"
+  if [ -e "/home/ark/.config/.IMAGEDELAYTIME" ]; then
+    delay="$(cat /home/ark/.config/.IMAGEDELAYTIME)"
+  else
+    delay="1.5"
+  fi
   if [ -e "/home/ark/.config/.LOADING_IMAGE_MARQUEE" ]; then
     image="marquee"
   elif [ -e "/home/ark/.config/.LOADING_IMAGE_THUMB" ]; then
@@ -40,25 +71,25 @@ elif [ -e "/home/ark/.config/.GameLoadingIModePIC" ] && [[ $(tty) != *"pts"* ]];
     image=""
   fi
   if [ -e "${directory}/${basefilenoext}-${image}.png" ]; then
-    image-viewer "${directory}/${basefilenoext}-${image}.png" &
+    ffplay -x 1280 -y 720 "${directory}/${basefilenoext}-${image}.png" &
     PROC=$!
-    (sleep 2s; kill -9 $PROC)
+    (sleep ${delay}s; kill -9 $PROC)
   else
     if [ -f "/roms/launchimages/loading.jpg" ]; then
-      image-viewer /roms/launchimages/loading.jpg &
+      ffplay -x 1280 -y 720 /roms/launchimages/loading.jpg &
       PROC=$!
-      (sleep 2s; kill -9 $PROC)
-	else
-	  continue
-	fi
+      (sleep ${delay}s; kill -9 $PROC)
+    else
+      continue
+    fi
   fi
 else
   clear > /dev/tty1
 fi
 
-sudo chmod 777 /sys/devices/platform/${gpu}.gpu/devfreq/${gpu}.gpu/governor
-sudo chmod 777 /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-sudo chmod 777 /sys/devices/platform/dmc/devfreq/dmc/governor
+chmod 777 /sys/devices/platform/${gpu}.gpu/devfreq/${gpu}.gpu/governor
+chmod 777 /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+chmod 777 /sys/devices/platform/dmc/devfreq/dmc/governor
 
 if [[ "$1" == "kodi" ]]; then
   echo "performance" > /sys/devices/platform/${gpu}.gpu/devfreq/${gpu}.gpu/governor

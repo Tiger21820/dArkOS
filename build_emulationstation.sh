@@ -21,7 +21,7 @@ fi
 NAME=`echo ${NAME} | tr '[:lower:]' '[:upper:]'`
 echo "export softname=\"dArkOS-${NAME}\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
 
-if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit)" == "$(curl -s https:/api.github.com/repos/christianhaitian/EmulationStation-fcamod/commits/${ES_BRANCH} | jq -r '.sha')" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/EmulationStation-fcamod/commits/${ES_BRANCH} | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz
     sudo rm Arkbuild/home/ark/ES_VARIABLES.txt
 else
@@ -32,10 +32,6 @@ else
 	  git clone --recursive --depth=1 https://github.com/christianhaitian/EmulationStation-fcamod -b ${ES_BRANCH} &&
 	  cd EmulationStation-fcamod &&
 	  git submodule update --init &&
-	  for f in \$(find . -type f \( -name '*.cpp' -o -name '*.h' \) -exec grep -L '<string>' {} \;); do
-		sed -i '1i#include <string>' \"\$f\";
-	  done &&
-	  sed -i '1i#include <ctime>' es-core/src/utils/TimeUtil.h &&
 	  cmake -DSCREENSCRAPER_DEV_LOGIN=\"devid=\$devid&devpassword=\$devpass\" -DGAMESDB_APIKEY=\"\$apikey\" -DSCREENSCRAPER_SOFTNAME=\"\$softname\" . &&
 	  make -j\$(nproc) &&
 	  mkdir -pv /usr/bin/emulationstation &&

@@ -119,6 +119,16 @@ wifi.scan-rand-mac-address=no
 unmanaged-devices=interface-name:p2p0;interface-name:ap0
 EOF
 
+# Remove requirement of sudo for controlling nmcli
+cat <<EOF | sudo tee -a Arkbuild/etc/polkit-1/rules.d/10-networkmanager.rules
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.freedesktop.NetworkManager") == 0 &&
+        subject.isInGroup("netdev")) {
+        return polkit.Result.YES;
+    }
+});
+EOF
+
 # Default set timezone to New York
 sudo chroot Arkbuild/ bash -c "ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime"
 
