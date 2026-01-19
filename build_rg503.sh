@@ -66,6 +66,7 @@ source ./build_linapple.sh
 source ./build_applewinsa.sh
 source ./build_piemu.sh
 source ./build_ti99sim.sh
+source ./build_gametank.sh
 source ./build_openmsxsa.sh
 source ./build_flycastsa.sh
 source ./build_dolphinsa.sh

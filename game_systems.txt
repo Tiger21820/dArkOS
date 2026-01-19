@@ -43,6 +43,7 @@ famicom
 fds
 gameandwatch
 gamegear
+gametank
 gb
 gba
 gbc

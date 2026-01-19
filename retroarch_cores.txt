@@ -46,6 +46,7 @@ gw
 handy
 hatari
 hatarib
+libgametank
 mame
 mame2000
 mame2003

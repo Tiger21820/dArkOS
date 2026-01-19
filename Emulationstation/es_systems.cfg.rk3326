@@ -2412,6 +2412,27 @@
 		<hardware>computer</hardware>
 	</system>
 	<system>
+		<name>gametank</name>
+		<fullname>GameTank</fullname>
+		<path>/roms/gametank/</path>
+		<extension>.7z .7Z .gtr .GTR .zip .ZIP</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/gametank.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
+		<emulators>
+			<emulator name="standalone">
+			</emulator>
+			<emulator name="retroarch">
+				<cores>
+					<core>libgametank</core>
+				</cores>
+			</emulator>
+		</emulators>
+		<platform>gametank</platform>
+		<theme>gametank</theme>
+		<manufacturer>GameTank</manufacturer>
+		<release>2020</release>
+		<hardware>console</hardware>
+	</system>
+	<system>
 		<name>wasm-4</name>
 		<fullname>WASM-4</fullname>
 		<path>/roms/wasm4/</path>
