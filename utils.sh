@@ -8,11 +8,9 @@ git config --global http.postBuffer 524288000
 
 # Verify the correct toolchain is available
 if [ ! -d "/opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu" ]; then
-  sudo mkdir -p /opt/toolchains
-  wget https://releases.linaro.org/components/toolchain/binaries/6.3-2017.05/aarch64-linux-gnu/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz
+  sudo mkdir -p /opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu
+  git clone --depth=1 https://github.com/christianhaitian/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.git /opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu
   verify_action
-  sudo tar Jxvf gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz -C /opt/toolchains/
-  rm gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz
 fi
 
 # Verify package cache directory exists
@@ -70,7 +68,7 @@ function setup_ark_user() {
   echo "Defaults        !secure_path" | sudo tee ${CHROOT_DIR}/etc/sudoers.d/ark-no-secure-path
   sudo chmod 0440 ${CHROOT_DIR}/etc/sudoers.d/ark-no-sudo-password
   sudo chmod 0440 ${CHROOT_DIR}/etc/sudoers.d/ark-no-secure-path
-  sudo chroot ${CHROOT_DIR}/ usermod -G video,sudo,netdev,input,audio,adm,ark ark
+  sudo chroot ${CHROOT_DIR}/ usermod -G video,sudo,render,netdev,input,audio,adm,ark ark
   directories=(".config" ".emulationstation")
   for dir in "${directories[@]}"; do
     sudo mkdir -p "${CHROOT_DIR}/home/ark/${dir}"

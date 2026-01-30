@@ -27,7 +27,7 @@ function Enable {
     Disable Fail
     exit 1
   fi
-  sudo ifconfig wlan0 192.168.1.1 netmask 255.255.255.0
+  sudo ip addr add 192.168.1.1/24 dev wlan0
   if [ $? != 0 ]; then
     echo "Failed setting a static ip for wlan0"
     Disable Fail
@@ -39,8 +39,8 @@ function Enable {
 function Disable {
   sudo systemctl stop hostapd.service
   sudo systemctl stop dnsmasq.service
-  sudo ifconfig wlan0 0.0.0.0
-  nmcli c delete "$(iw dev wlan0 info | grep ssid | cut -c 7-30)"
+  sudo ip addr del 192.168.1.1/24 dev wlan0
+  #nmcli c delete "$(iw dev wlan0 info | grep ssid | cut -c 7-30)"
   nmcli d disconnect wlan0 > /dev/null
   nmcli d connect wlan0 > /dev/null &
   if [ "$1" = "Fail" ]; then

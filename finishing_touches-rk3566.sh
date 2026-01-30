@@ -256,6 +256,9 @@ sudo cp scripts/processcheck.sh Arkbuild/usr/local/bin/
 sudo cp scripts/autosuspend.service Arkbuild/etc/systemd/system/
 sudo chroot Arkbuild/ bash -c "pip install --break-system-packages --root-user-action ignore inputs"
 sudo chroot Arkbuild/ bash -c "systemctl disable autosuspend"
+sudo cp scripts/rk3566/shutdowntasks.service Arkbuild/etc/systemd/system/
+sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/panel_set.sh RestoreSettings &\") | crontab -"
+sudo chroot Arkbuild/ bash -c "systemctl enable shutdowntasks"
 sudo cp scripts/keystroke.py Arkbuild/usr/local/bin/
 sudo cp scripts/b2.sh Arkbuild/usr/local/bin/
 sudo cp scripts/freej2me.sh Arkbuild/usr/local/bin/
@@ -265,6 +268,9 @@ sudo cp scripts/gx4000.sh Arkbuild/usr/local/bin/
 sudo cp scripts/isitpng.sh Arkbuild/usr/local/bin/
 sudo cp scripts/neogeocd.sh Arkbuild/usr/local/bin/
 sudo cp scripts/netplay.sh Arkbuild/usr/local/bin/
+sudo mkdir -p Arkbuild/etc/hostapd
+sudo cp hostapd/hostapd.conf Arkbuild/etc/hostapd/
+sudo cp dnsmasq/dnsmasq.conf Arkbuild/etc/
 sudo cp scripts/sleep_governors.sh Arkbuild/usr/local/bin/
 sudo cp scripts/wasitpng.sh Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
@@ -272,8 +278,8 @@ sudo cp device/${CHIPSET}/uboot.img.anbernic Arkbuild/usr/local/bin/
 sudo cp scripts/Switch* Arkbuild/usr/local/bin/
 # Disable winbind as connectivity to Active Directory is not needed
 sudo chroot Arkbuild/ bash -c "systemctl disable winbind"
-# Disable samba-ad-dc as connectivity to Active Directory is not needed
-sudo chroot Arkbuild/ bash -c "systemctl disable samba-ad-dc"
+# Disable samba-ad-dc as connectivity to Active Directory is not needed as well as some other services
+sudo chroot Arkbuild/ bash -c "systemctl disable samba-ad-dc dnsmasq hostapd"
 # Disable e2scrub_reap if ext file system is not being used for rootfs
 if [ "$ROOT_FILESYSTEM_FORMAT" == "xfs" ] || [ "$ROOT_FILESYSTEM_FORMAT" == "btrfs" ]; then
   sudo chroot Arkbuild/ bash -c "systemctl disable e2scrub_reap"

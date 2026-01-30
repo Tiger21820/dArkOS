@@ -73,7 +73,7 @@ fi
 	sudo mount -t exfat -w /dev/${primary_block}p5 /roms &> /dev/null
 	sleep 2
 	#sudo tar -xf /roms.tar -C / &> /dev/null
-	(pv -n /roms.tar | tar --no-same-permissions --no-same-owner -xf - -C /) &> /tmp/tar_stat.txt &
+	(pv -n /roms.tar | tar --no-same-permissions --no-same-owner --warning=no-timestamp -xf - -C /) &> /tmp/tar_stat.txt &
 	let COUNT=1
 	while true; do
 	  VAL=$(tail -n 1 /tmp/tar_stat.txt)
@@ -102,7 +102,7 @@ fi
 	  sudo rm -rf /tempthemes/es-theme-epic-cody*/ &> /dev/null
 	fi
 	cd /tempthemes
-	(tar --no-same-permissions --no-same-owner -cf - . | pv -n -s $(du -sb /tempthemes/ | awk '{print $1}') | tar --no-same-permissions --no-same-owner -xf - -C /roms/themes/) &> /tmp/tar_stat.txt &
+	(tar --no-same-permissions --no-same-owner --warning=no-timestamp -cf - . | pv -n -s $(du -sb /tempthemes/ | awk '{print $1}') | tar --no-same-permissions --no-same-owner -xf - -C /roms/themes/) &> /tmp/tar_stat.txt &
 	let COUNT=1
 	while true; do
 	  VAL=$(tail -n 1 /tmp/tar_stat.txt)

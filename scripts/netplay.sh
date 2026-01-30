@@ -106,7 +106,7 @@ Select() {
     fi
   fi
 
-  output=`nmcli device wifi connect "$1" password "$PASS"`
+  output=`nmcli device wifi connect "$1" --ask <<< "$PASS"`
   success=`echo "$output" | grep successfully`
 
   if [ -z "$success" ]; then
@@ -130,7 +130,7 @@ Select() {
       Test_Button_B
       if [ "$?" -ne "10" ]; then
         clist2=`sleep 1 && sudo wpa_cli scan > /dev/null && sudo wpa_cli scan_results`
-        output=`nmcli device wifi connect "$1" password "$PASS"`
+        output=`nmcli device wifi connect "$1" --ask <<< "$PASS"`
         success=`echo "$output" | grep successfully`
         if [ ! -z "$success" ]; then
           output="Device successfully connected to $1 ..."
@@ -300,8 +300,8 @@ do
     if [ ! -z "$LastClientIP" ]; then
       LastClientName="$(tail -1 /var/lib/misc/dnsmasq.leases | awk -F ' ' '{print $4}')"
 
-      sudo ping -c 1 -W 5 $LastClientIP > /dev/null
-
+      #sudo ping -c 1 -W 5 $LastClientIP > /dev/null
+      nc -zv $LastClientIP 22 > /dev/null
       if [ $? -eq 0 ]; then
 
         roms2="$(sshpass -p "ark" ssh -o StrictHostKeyChecking=no -l ark $LastClientIP "lsblk | grep roms2")"
@@ -329,7 +329,7 @@ do
         for g in "${game_array[@]}"
         do
           Dest="$(echo $g | sed "/$(echo $g |  awk -F '/' '{print $2}')/s//$DIR/")"
-          sshpass -p "ark" rsync -P -r -v --progress -e ssh "$g" ark@"$LastClientIP":"\"$Dest\"" | \
+          sshpass -p "ark" rsync -P -r -v --progress -e ssh "$g" ark@"$LastClientIP":"$Dest" | \
           stdbuf -i0 -o0 -e0 tr '\r' '\n' | stdbuf -i0 -o0 -e0  awk -W interactive '/^ / { print int(+$2) ; fflush() ;  next } $0 { print "# " $0  }' | \
           dialog --title "Sharing" --gauge "Copying $(echo $g | awk -F '/' '{print $NF}') to $LastClientName ($LastClientIP)\n\nPlease Wait..." $height $width 2>&1 > /dev/tty0
         done
@@ -401,7 +401,8 @@ GameShare() {
             while true
             do
               Test_Button_B
-              if [ "$?" -ne "10" ] && [ -f /dev/shm/gameshare.info ]; then
+			  result=$?
+              if [ "$result" -ne "10" ] && [ -f /dev/shm/gameshare.info ]; then
                 emulator="$(sed '1q;d' /dev/shm/gameshare.info)"
                 core="$(sed '2q;d' /dev/shm/gameshare.info)"
                 game="$(sed '3q;d' /dev/shm/gameshare.info)"
@@ -410,6 +411,7 @@ GameShare() {
                 fi
                 Client "gameshare"
                 Test_Button_B
+                result=$?
                 if [ "$?" -ne "10" ]; then
                   dialog --clear 2>&1 > /dev/tty0
                   printf "\033c" > /dev/tty0
@@ -422,6 +424,10 @@ GameShare() {
                   rm -f /dev/shm/gameshare.info
                   GameShare
                 fi
+              elif [ "$result" -eq "10" ]; then
+                dialog --infobox "\nCancelling transfer..." 6 $width 2>&1 > /dev/tty0
+                sleep 3
+                GameShare
               fi
             done
           else
@@ -555,7 +561,7 @@ fi
 printf "\033c" > /dev/tty0
 dialog --clear
 
-if [[ -z $(ifconfig | grep wlan0 | tr -d '\0') ]]; then
+if [[ -z $(ip a | grep wlan0 | tr -d '\0') ]]; then
   dialog --infobox "\nYou currently do not have a compatible wireless adapter connected or enabled.  Exiting..." 5 $width 2>&1 > /dev/tty0
   sleep 5
   ExitCode="0"

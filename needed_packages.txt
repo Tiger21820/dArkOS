@@ -8,6 +8,7 @@ cmake
 console-setup
 device-tree-compiler
 dialog
+dnsmasq
 dos2unix
 espeak-ng
 exfatprogs
@@ -15,6 +16,7 @@ ffmpeg
 firmware-mediatek
 fonts-noto-cjk
 git
+hostapd
 iw
 liba52-0.7.4
 libarchive-zip-perl
@@ -72,8 +74,10 @@ python3-setuptools
 python3-urwid
 python3-wheel
 rfkill
+rsync
 rustc
 samba
+sshpass
 systemd-timesyncd
 tar
 unzip

@@ -18,7 +18,7 @@ else
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/gametank.commit
 	fi
 	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/gametank.tar.gz Arkbuild/opt/gametank/
-	sudo curl -s https://raw.githubusercontent.com/christianhaitian/${CHIPSET}_core_builds/refs/heads/master/scripts/gametank.sh | grep -oP '(?<=tarname=").*?(?=")' > Arkbuild_package_cache/${CHIPSET}/gametank.commit
+	sudo curl -s https://api.github.com/repos/clydeshaffer/gametankemulator/commits/main | jq -r '.sha' > Arkbuild_package_cache/${CHIPSET}/gametank.commit
 fi
 sudo cp gametank/config/gametank.gptk Arkbuild/opt/gametank/gametank.gptk
 sudo cp gametank/scripts/gametank.sh Arkbuild/usr/local/bin/

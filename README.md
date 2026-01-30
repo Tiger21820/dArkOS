@@ -37,6 +37,9 @@ Now you should be able to just run make <device_name> to build for a supported d
 
 # Credits and Thanks
 [ChatGPT](https://chatgpt.com/) for guidance on how to build a Debian image \
+Jetup13 for many themes \
+dani7959 for the replica theme \
+pix33l for the pixui theme \
 TheGreatCrippler for testing and feedback \
 kloptops for testing and feedback \
 Fraxinus88 for testing and feedback \
