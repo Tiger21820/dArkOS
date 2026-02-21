@@ -73,6 +73,9 @@ source ./build_dolphinsa.sh
 source ./build_sdljoytest.sh
 source ./build_controllertester.sh
 source ./build_drastic.sh
+if [[ "${BUILD_BLUEALSA}" == "y" ]]; then
+  source ./build_bluealsa.sh
+fi
 if [[ "${BUILD_KODI}" == "y" ]]; then
   source ./build_kodi.sh
 fi

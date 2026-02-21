@@ -164,7 +164,7 @@ Select() {
   fi
 
   # try to connect
-  dialog --infobox "\nAttempting onnection to $1 ..." 5 $width > /dev/tty1
+  dialog --infobox "\nAttempting connection to $1 ..." 5 $width > /dev/tty1
   output=`sudo nmcli con delete "$1"`
   if [[ -z "$SEC" ]]; then
     output=`sudo nmcli device wifi connect "$1"`

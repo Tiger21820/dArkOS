@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# create a temporary named pipe to communicate with bluealsa-cli monitor
+# create a temporary named pipe to communicate with bluealsactl monitor
 FIFO_PATH=$(mktemp -u)
 mkfifo $FIFO_PATH
 # attach it to unused file descriptor FIFO_FD
@@ -11,22 +11,22 @@ rm $FIFO_PATH
 # make sure the pipeline is shut down if this script interrupted
 trap "kill %1; exec {FIFO_FD}>&-; ln -sf /dev/null ~/.asoundrc-default; exit 0" INT TERM
 
-# start bluealsa-cli monitor in background
-bluealsa-cli --quiet monitor >&$FIFO_FD &
+# start bluealsactl monitor in background
+bluealsactl --quiet monitor >&$FIFO_FD &
 
 if [ ! -f "/home/ark/.kodi/userdata/advancedsettings.xml.bak" ];then
   cp -f /home/ark/.kodi/userdata/advancedsettings.xml /home/ark/.kodi/userdata/advancedsettings.xml.bak
 fi
 
 until false; do
-	if [[ $(bluealsa-cli --quiet list-pcms | grep -Ec '/a2dp(src|sink)/sink$') -gt 0 ]] ; then
+	if [[ $(bluealsactl --quiet list-pcms | grep -Ec '/a2dp(src|sink)/sink$') -gt 0 ]] ; then
 		if test -z "$(lsmod | grep snd-aloop | tr -d '\0')"
 		then
 		  sudo modprobe snd-aloop
 		fi
-		syncdevice=$(bluealsa-cli --quiet list-pcms | grep -o -E '([[:xdigit:]]{2}_){5}[[:xdigit:]]{2}' | sed '/_/s//:/g')
+		syncdevice=$(bluealsactl --quiet list-pcms | grep -o -E '([[:xdigit:]]{2}_){5}[[:xdigit:]]{2}' | sed '/_/s//:/g')
 		alsaloop -C hw:Loopback,1,0 -P bluealsa:DEV=${syncdevice},PROFILE=a2dp --sync=none -c 2 -r 48000 -f s16_le -t 100000 &
-		cp -f ~/.asoundrcbt ~/.asoundrc
+		cp -f /home/ark/.asoundrcbt /home/ark/.asoundrc
 		if [[ -z $(pgrep -x finish.sh) ]] && [[ -z $(pgrep -x pause.sh) ]]; then
 		  sudo systemctl restart ogage
 		fi
@@ -41,7 +41,7 @@ until false; do
 		fi
 	else
 		pkill alsaloop
-		cp -f ~/.asoundrcbak ~/.asoundrc
+		cp -f /home/ark/.asoundrcbak /home/ark/.asoundrc
 		if [[ -z $(pgrep -x finish.sh) ]] && [[ -z $(pgrep -x pause.sh) ]]; then
 		  sudo systemctl restart ogage
 		fi

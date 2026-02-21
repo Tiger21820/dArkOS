@@ -18,6 +18,7 @@ atarilynx
 atarist
 atarixegs
 atomiswave
+backup
 bbcmicro
 bgmusic
 bios

@@ -3,7 +3,7 @@
 function check() {
   sudo rm -f /var/local/btautoreconnect.state
   if [ ! -z $(pidof rtk_hciattach) ]; then
-    bluetoothctl paired-devices | cut -f2 -d' '|
+    bluetoothctl devices | cut -f2 -d' '|
     while read -r uuid
     do
         info=`bluetoothctl info $uuid`

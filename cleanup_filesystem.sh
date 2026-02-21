@@ -104,6 +104,15 @@ while read NEEDED_PACKAGE; do
 done <needed_packages.txt
 sync
 
+if [[ "$BUILD_BLUEALSA" == "y" ]]; then
+  while read BLUETOOTH_NEEDED_PACKAGE; do
+    if [[ ! "$BLUETOOTH_NEEDED_PACKAGE" =~ ^# ]]; then
+      install_package 64 ${BLUETOOTH_NEEDED_PACKAGE}
+      protect_package 64 ${BLUETOOTH_NEEDED_PACKAGE}
+    fi
+  done <bluetooth_needed_packages.txt
+fi
+
 if [[ "${BUILD_ARMHF}" == "y" ]]; then
   cd Arkbuild/usr/lib/arm-linux-gnueabihf
   for LIB in libEGL.so libEGL.so.1 libGLES_CM.so libGLES_CM.so.1 libGLESv1_CM.so libGLESv1_CM.so.1 libGLESv1_CM.so.1.1.0 libGLESv2.so libGLESv2.so.2 libGLESv2.so.2.0.0 libGLESv2.so.2.1.0 libGLESv3.so libGLESv3.so.3 libgbm.so libgbm.so.1 libgbm.so.1.0.0 libmali.so libmali.so.1 libMaliOpenCL.so libOpenCL.so libwayland-egl.so libwayland-egl.so.1 libwayland-egl.so.1.0.0

@@ -14,24 +14,24 @@ if test ! -z "$(cat /home/ark/.asoundrc | grep softvol)"
 then
   amixer -q sset Master ${value}
 else
-  pcms=$(bluealsa-cli list-pcms)
+  pcms=$(bluealsactl list-pcms)
 
   for pcm in $pcms; do
-    curVol=$(bluealsa-cli volume ${pcm} | awk 'NR==1' | cut -d " " -f3)
+    curVol=$(bluealsactl volume ${pcm} | awk 'NR==1' | cut -d " " -f3)
   done
 
   for pcm in $pcms; do
     if [[ "${value}" == *"-"* ]]; then
       newVol=$(( $curVol - 1 ))
       if (( $newVol >= 0 )); then
-        bluealsa-cli volume ${pcm} ${newVol}
+        bluealsactl volume ${pcm} ${newVol}
       else
         echo "Minimum volume reached"
       fi
     elif [[ "${value}" == *"+"* ]]; then
       newVol=$(( $curVol + 1 ))
       if (( $newVol <= 127 )); then
-        bluealsa-cli volume ${pcm} ${newVol}
+        bluealsactl volume ${pcm} ${newVol}
       else
         echo "Maximum volume reached"
       fi

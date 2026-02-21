@@ -90,12 +90,13 @@ ExitMenu() {
   if [[ ! -e "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick" ]]; then
     sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
   fi
+  sudo systemctl restart ogage &
   exit 0
 }
 
 Activate() {
 
-  alist=`timeout 5s bluetoothctl devices Paired`
+  alist=`timeout 5s bluetoothctl devices`
 
   IFS=' '
   unset aoptions
@@ -227,7 +228,7 @@ Select() {
     bluetoothctl trust "$1"
 	success=`bluetoothctl connect "$1"`
 	if [ -z "$success" ]; then
-      output="Controller paired successfully but failed to connect."
+      output="Device paired successfully but failed to connect."
 	else
       output="Device successfully paired and connected via Bluetooth ..."
 	fi
@@ -317,7 +318,7 @@ DeleteConnect() {
 }
 
 Delete() {
-  dellist=`timeout 5s bluetoothctl devices Paired`
+  dellist=`timeout 5s bluetoothctl devices`
 
   IFS=' '
   unset deloptions
@@ -355,7 +356,7 @@ Delete() {
 
 PairedDevices() {
 
-  pairedlist=`timeout 5s bluetoothctl paired-devices`
+  pairedlist=`timeout 5s bluetoothctl devices Paired`
 
   IFS=' '
   unset list
