@@ -15,7 +15,7 @@ install_lib() {
     # --- ARM64 ---
     local deb_arm64=$(basename "$url")
     wget -t 3 -T 60 --no-check-certificate "$url"
-    verify_action
+    #verify_action
     dpkg --fsys-tarfile "$deb_arm64" | tar -xO --wildcards "*$wildcard*" > "$lib_name"
     if [ ! -s "$lib_name" ]; then
         echo "[Error] Extraction failed for $lib_name"
@@ -30,7 +30,7 @@ install_lib() {
         local url_armhf="${url//_arm64/_armhf}"
         local deb_armhf=$(basename "$url_armhf")
         wget -t 3 -T 60 --no-check-certificate "$url_armhf"
-        verify_action
+        #verify_action
         dpkg --fsys-tarfile "$deb_armhf" | tar -xO --wildcards "*$wildcard*" > "$lib_name"
         if [ ! -s "$lib_name" ]; then
             echo "[Error] Extraction failed for $lib_name (armhf)"
@@ -74,7 +74,7 @@ install_lib \
 
 # libvpx6 (1.9.0, Debian 11 security)
 install_lib \
-    "http://security.debian.org/debian-security/pool/updates/main/libv/libvpx/libvpx6_1.9.0-1+deb11u4_arm64.deb" \
+    "http://security.debian.org/debian-security/pool/updates/main/libv/libvpx/libvpx6_1.9.0-1+deb11u5_arm64.deb" \
     "libvpx.so.6" "libvpx.so.6"
 
 # libwebp6 (0.6.1, Debian 11 security)
@@ -116,4 +116,29 @@ install_lib \
 install_lib \
     "http://ftp.debian.org/debian/pool/main/f/flac/libflac8_1.3.3-2+deb11u2_arm64.deb" \
     "libFLAC.so.8" "libFLAC.so.8"
+
+# libvpx5 (1.7.0, Debian 10 Buster) - PortMaster compatibility
+install_lib \
+    "http://archive.debian.org/debian/pool/main/libv/libvpx/libvpx5_1.7.0-3+deb10u1_arm64.deb" \
+    "libvpx.so.5" "libvpx.so.5"
+
+# libx264-155 (0.155, Debian 10 Buster) - PortMaster compatibility
+install_lib \
+    "http://archive.debian.org/debian/pool/main/x/x264/libx264-155_0.155.2917+git0a84d98-2_arm64.deb" \
+    "libx264.so.155" "libx264.so.155"
+
+# libx265-165 (2.9, Debian 10 Buster) - PortMaster compatibility
+install_lib \
+    "http://archive.debian.org/debian/pool/main/x/x265/libx265-165_2.9-4_arm64.deb" \
+    "libx265.so.165" "libx265.so.165"
+
+# libcodec2-0.8.1 (0.8.1, Debian 10 Buster) - PortMaster compatibility
+install_lib \
+    "http://archive.debian.org/debian/pool/main/c/codec2/libcodec2-0.8.1_0.8.1-2_arm64.deb" \
+    "libcodec2.so.0.8.1" "libcodec2.so.0.8.1"
+
+# libssh-gcrypt4 (0.8.7, Debian 10 Buster) - PortMaster compatibility
+install_lib \
+    "http://archive.debian.org/debian/pool/main/libs/libssh/libssh-gcrypt-4_0.8.7-1+deb10u1_arm64.deb" \
+    "libssh-gcrypt.so.4" "libssh-gcrypt.so.4"
 

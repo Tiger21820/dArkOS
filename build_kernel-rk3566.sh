@@ -93,7 +93,9 @@ if [ "$UNIT" == "503" ] || [[ "$UNIT" == *"353"* ]]; then
   # Next line generates the resource.img file needed to flash to the image and to build the uboot
   git clone --depth=1 https://github.com/rockchip-linux/rkbin
   cd rkbin/tools
-  ./resource_tool --pack ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb
+  cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+  cp ../../../misc/rk3566/device_off_charging_bmps/battery_* .
+  ./resource_tool --pack ${UNIT_DTB}.dtb battery_*
   cp resource.img ../../.
   cd ../..
   rm -rf rkbin

@@ -6,7 +6,7 @@ cat <<EOF | sudo tee ${mountpoint}/extlinux/extlinux.conf
 LABEL ArkOS
   LINUX /Image
   FDT /${UNIT_DTB}.dtb
-  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash net.ifnames=0 console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=0 video=HDMI-A-1:1280x720@60
+  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash vt.global_cursor_default=0 net.ifnames=0 console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=5 video=HDMI-A-1:1280x720@60
 EOF
 
 #sudo cp logo.bmp ${mountpoint}/
