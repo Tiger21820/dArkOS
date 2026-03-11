@@ -9,7 +9,7 @@ if [ ! -d "$KERNEL_SRC" ]; then
     git clone --recursive --depth=1 https://github.com/christianhaitian/kernel_5_10_226.git $KERNEL_SRC
   #else
     #git clone --recursive --depth=1 https://github.com/christianhaitian/RG353VKernel.git -b rk2023 $KERNEL_SRC
-  fi
+  #fi
 fi
 cd $KERNEL_SRC
 # Change the boot logo depending on the device
