@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build and install flycast standalone emulator
-if [ -f "Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz" ]; then
+if [ -f "Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/flycastsa.commit)" == "$(curl -s https://raw.githubusercontent.com/christianhaitian/${CHIPSET}_core_builds/refs/heads/master/scripts/flycastsa.sh | grep -oP '(?<=TAG=").*?(?=")')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz
 else
 	call_chroot "cd /home/ark &&
@@ -19,7 +19,11 @@ else
 	if [ -f "Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz" ]; then
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz
 	fi
+	if [ -f "Arkbuild_package_cache/${CHIPSET}/flycastsa.commit" ]; then
+	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/flycastsa.commit
+	fi
 	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/flycastsa.tar.gz Arkbuild/opt/flycastsa/
+	sudo curl -s https://raw.githubusercontent.com/christianhaitian/${CHIPSET}_core_builds/refs/heads/master/scripts/flycastsa.sh | grep -oP '(?<=TAG=").*?(?=")' > Arkbuild_package_cache/${CHIPSET}/flycastsa.commit
 fi
 
 sudo mkdir -p Arkbuild/home/ark/.config/flycast
