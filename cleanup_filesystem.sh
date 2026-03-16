@@ -64,6 +64,7 @@ call_chroot "apt remove -y autotools-dev \
   libvorbis-dev \
   libvorbisidec-dev \
   libvpx-dev \
+  libvulkan-dev \
   libx11-dev \
   libx11-xcb1 \
   libxcb-dri2-0 \
