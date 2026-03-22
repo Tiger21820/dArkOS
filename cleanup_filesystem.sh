@@ -101,8 +101,17 @@ fi
 
 while read NEEDED_PACKAGE; do
   if [[ ! "$NEEDED_PACKAGE" =~ ^# ]]; then
-    install_package 64 ${NEEDED_PACKAGE}
-    protect_package 64 ${NEEDED_PACKAGE}
+    if [[ "$CHIPSET" != *"3566"* ]]; then
+      install_package 64 ${NEEDED_PACKAGE}
+      protect_package 64 ${NEEDED_PACKAGE}
+    else
+      if [[ "$NEEDED_PACKAGE" != "ffmpeg" ]]; then
+        install_package 64 ${NEEDED_PACKAGE}
+        protect_package 64 ${NEEDED_PACKAGE}
+      else
+        continue
+      fi
+    fi 
   fi
 done <needed_packages.txt
 sync
@@ -149,6 +158,10 @@ do
   sudo ln -sfv libMali.so ${LIB}
 done
 cd ../../../../
+
+# Make sure the built librga shared libs are still available in aarch64
+sudo cp -av Arkbuild/usr/lib/librga.so* Arkbuild/usr/lib/aarch64-linux-gnu/
+
 
 if [[ "${ENABLE_CACHE}" == "y" ]]; then
   sudo rm -f Arkbuild/etc/apt/apt.conf.d/99proxy
