@@ -13,22 +13,22 @@ else
 	  cd rkmpp_build &&
 	  cmake \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_SHARED_LIBS=ON \
-      -DBUILD_TEST=OFF \
-      .. &&
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_SHARED_LIBS=ON \
+          -DBUILD_TEST=OFF \
+          .. &&
 	  make -j $(nproc) &&
 	  make install &&
 	  cd ../.. &&
 	  git clone -b jellyfin-rga --depth=1 https://github.com/nyanmisaka/rk-mirrors.git rkrga &&
 	  meson setup rkrga rkrga_build \
-      --prefix=/usr \
-      --libdir=lib \
-      --buildtype=release \
-      --default-library=shared \
-      -Dcpp_args=-fpermissive \
-      -Dlibdrm=false \
-      -Dlibrga_demo=false &&
+          --prefix=/usr \
+          --libdir=lib \
+          --buildtype=release \
+          --default-library=shared \
+          -Dcpp_args=-fpermissive \
+          -Dlibdrm=false \
+          -Dlibrga_demo=false &&
 	  ninja -C rkrga_build install &&
 	  cp -av rkrga_build/librga.so* /usr/lib/aarch64-linux-gnu/ &&
 	  git clone --depth=1 https://github.com/christianhaitian/ffmpeg-rockchip.git -b 7.1 ffmpeg &&
