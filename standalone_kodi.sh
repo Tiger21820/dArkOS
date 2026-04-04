@@ -98,6 +98,8 @@ fi
 sudo rm -rf ${KODI_DEVENV}/home/ark/kodi
 sudo cp -R kodi/userdata/ ${KODI_DEVENV}/opt/kodi/
 sudo cp kodi_needed_dev_packages.txt ${KODI_DEVENV}/opt/kodi/kodi_needed_packages.txt
+# Rename exit to dArkOS within default estuary skin
+sudo chroot ${KODI_DEVENV} bash -c "sed -i '/Exit to ArkOS/s//Exit to dArkOS/' /opt/kodi/share/kodi/addons/skin.estuary/xml/DialogButtonMenu.xml"
 sudo chroot ${KODI_DEVENV} bash -c "chown -R ark:ark /opt/kodi/"
 sudo cp kodi/scripts/Kodi.sh ${KODI_DEVENV}/usr/local/bin/
 sudo chmod 777 ${KODI_DEVENV}/usr/local/bin/Kodi.sh
