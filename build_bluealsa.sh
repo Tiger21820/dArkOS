@@ -22,7 +22,7 @@ else
 	if [ -f "Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz" ]; then
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz
 	fi
-	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz Arkbuild/usr/lib/systemd/system/blue* Arkbuild/usr/lib/aarch64-linux-gnu/alsa-lib/ Arkbuild/usr/bin/{a2dpconf,bluealsa-aplay,bluealsactl,bluealsad,rtk_hciattach} Arkbuild/usr/share/dbus-1/interfaces/org.bluealsa.xml Arkbuild/usr/share/dbus-1/system.d/org.bluealsa.conf Arkbuild/etc/alsa/conf.d/
+	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz Arkbuild/usr/lib/systemd/system/blue* Arkbuild/usr/lib/aarch64-linux-gnu/alsa-lib/ Arkbuild/usr/bin/{a2dpconf,bluealsa-aplay,bluealsactl,bluealsad} Arkbuild/usr/share/dbus-1/interfaces/org.bluealsa.xml Arkbuild/usr/share/dbus-1/system.d/org.bluealsa.conf Arkbuild/etc/alsa/conf.d/
 fi
 sudo cp bluetooth/scripts/Bluetooth.sh Arkbuild/opt/system/
 sudo cp bluetooth/scripts/bt* Arkbuild/usr/local/bin/
