@@ -22,7 +22,7 @@ fi
 
 until false; do
 	if [[ $(bluealsactl --quiet list-pcms | grep -Ec '/a2dp(src|sink)/sink$') -gt 0 ]] ; then
-		if test -z "$(lsmod | grep snd-aloop | tr -d '\0')"
+		if test -z "$(lsmod | grep snd_aloop | tr -d '\0')"
 		then
 		  sudo modprobe snd-aloop
 		fi
