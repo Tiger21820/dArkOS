@@ -126,6 +126,7 @@ if [[ "$BUILD_BLUEALSA" == "y" ]]; then
       protect_package 64 ${BLUETOOTH_NEEDED_PACKAGE}
     fi
   done <bluetooth_needed_packages.txt
+  call_chroot "systemctl disable watchforbtaudio bluetooth bluealsa"
 fi
 
 if [[ "${BUILD_ARMHF}" == "y" ]]; then

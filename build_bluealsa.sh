@@ -22,15 +22,16 @@ else
 	if [ -f "Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz" ]; then
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz
 	fi
-	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz Arkbuild/usr/lib/systemd/system/blue* Arkbuild/usr/lib/aarch64-linux-gnu/alsa-lib/ Arkbuild/usr/bin/{a2dpconf,bluealsa-aplay,bluealsactl,bluealsad} Arkbuild/usr/share/dbus-1/interfaces/org.bluealsa.xml Arkbuild/usr/share/dbus-1/system.d/org.bluealsa.conf Arkbuild/etc/alsa/conf.d/
+	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/bluealsa.tar.gz Arkbuild/usr/lib/systemd/system/blue* Arkbuild/usr/lib/aarch64-linux-gnu/alsa-lib/ Arkbuild/usr/bin/{a2dpconf,bluealsa-aplay,bluealsactl,bluealsad} Arkbuild/usr/share/dbus-1/interfaces/org.bluealsa.xml Arkbuild/usr/share/dbus-1/system.d/org.bluealsa.conf Arkbuild/usr/share/alsa/alsa.conf.d/20-bluealsa.conf Arkbuild/etc/alsa/conf.d/
 fi
 sudo cp bluetooth/scripts/Bluetooth.sh Arkbuild/opt/system/
 sudo cp bluetooth/scripts/bt* Arkbuild/usr/local/bin/
 sudo cp bluetooth/scripts/watchforbtaudio.sh Arkbuild/usr/local/bin/
 sudo cp bluetooth/systemd/* Arkbuild/etc/systemd/system/
 sudo mkdir -p Arkbuild/etc/alsa/conf.d/
-sudo cp bluetooth/config/20-bluealsa.conf Arkbuild/etc/alsa/conf.d/
+sudo cp cp --remove-destination bluetooth/config/20-bluealsa.conf Arkbuild/usr/share/alsa/alsa.conf.d/20-bluealsa.conf
 sudo chmod 777 Arkbuild/usr/local/bin/*
 sudo chmod -R 777 Arkbuild/opt/system/
 call_chroot "chown -R ark:ark /opt"
+call_chroot "chmod 644 /etc/systemd/system/bluealsa.service"
 call_chroot "systemctl disable watchforbtaudio bluetooth bluealsa"
