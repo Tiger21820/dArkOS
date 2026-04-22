@@ -14,6 +14,7 @@ while read KODI_NEEDED_DEV_PACKAGE; do
     install_package 64 "${KODI_NEEDED_DEV_PACKAGE}"
   fi
 done <kodi_needed_dev_packages.txt
+source ./build_ffmpeg
 call_chroot "cd /home/ark &&
   mkdir -p kodi &&
   cd kodi &&
@@ -38,3 +39,4 @@ while read KODI_NEEDED_DEV_PACKAGE; do
     call_chroot "apt remove -y $KODI_NEEDED_DEV_PACKAGE"
   fi
 done <kodi_needed_dev_packages.txt
+source ./build_ffmpeg

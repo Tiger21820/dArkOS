@@ -41,17 +41,20 @@ else
   sudo cp audio/.asoundrc.${CHIPSET} Arkbuild/home/ark/.asoundrc
   sudo cp audio/.asoundrcbak.${CHIPSET} Arkbuild/home/ark/.asoundrcbak
 fi
+sudo cp audio/99-hdmi-audio.rules Arkbuild/etc/udev/rules.d/99-hdmi-audio.rules
+sudo cp audio/.asoundrchdmi Arkbuild/home/ark/.asoundrchdmi
 sudo cp audio/.asoundrcbt.${CHIPSET} Arkbuild/home/ark/.asoundrcbt
+sudo cp audio/audio-switch.sh Arkbuild/usr/local/bin/audio-switch.sh
 sudo chroot Arkbuild/ bash -c "chown ark:ark /home/ark/.asoundrc*"
 sudo chroot Arkbuild/ bash -c "ln -sfv /home/ark/.asoundrc /etc/asound.conf"
 sudo chroot Arkbuild/ bash -c "cp -fv /usr/share/alsa/alsa.conf /usr/share/alsa/alsa.conf.mednafen"
 sudo chroot Arkbuild/ bash -c "sed -i '/\"\~\/.asoundrc\"/s//\"\~\/.asoundrc.mednafen\"/' /usr/share/alsa/alsa.conf.mednafen"
 
-# Sleep script and set default SuspendState to freeze
+# Sleep script and set default SuspendState to mem
 sudo mkdir -p Arkbuild/usr/lib/systemd/system-sleep
 sudo cp scripts/sleep.${CHIPSET} Arkbuild/usr/lib/systemd/system-sleep/sleep
 sudo chmod 777 Arkbuild/usr/lib/systemd/system-sleep/sleep
-sudo sed -i "/SuspendState\=/c\SuspendState\=freeze" Arkbuild/etc/systemd/sleep.conf
+sudo sed -i "/SuspendState\=/c\SuspendState\=mem" Arkbuild/etc/systemd/sleep.conf
 
 # Set DRM on boot
 sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/hdmi-test.sh &\") | crontab -"
@@ -137,6 +140,18 @@ source ./fetch_compat_libs.sh
 
 # Various tools available through Options added here
 sudo mkdir -p Arkbuild/opt/system/Advanced
+sudo mkdir -p Arkbuild/opt/vulkan
+sudo cp misc/rk3566/vulkan/libmali.so.1.9.0 Arkbuild/opt/vulkan/libmali.so
+sudo cp misc/rk3566/vulkan/rk_vk.json Arkbuild/usr/share/vulkan/icd.d/rk_vk.json
+sudo cp -f misc/rk3566/vulkan/libvulkan.so.1.3.274 Arkbuild/usr/lib/aarch64-linux-gnu/.
+sudo cp -f misc/rk3566/vulkan/libmali-hook.so.1.9.0 Arkbuild/usr/lib/aarch64-linux-gnu/.
+sudo chroot Arkbuild/ bash -c "ln -sf /usr/lib/aarch64-linux-gnu/libmali-hook.so.1.9.0 /usr/lib/aarch64-linux-gnu/libmali-hook.so.1"
+sudo chroot Arkbuild/ bash -c "ln -sf /usr/lib/aarch64-linux-gnu/libmali-hook.so.1 /usr/lib/aarch64-linux-gnu/libmali-hook.so"
+sudo chroot Arkbuild/ bash -c "rm -f /usr/lib/aarch64-linux-gnu/libvulkan.so.1 /usr/lib/aarch64-linux-gnu/libvulkan.so"
+sudo chroot Arkbuild/ bash -c "ln -sf /usr/lib/aarch64-linux-gnu/libvulkan.so.1.3.274 /usr/lib/aarch64-linux-gnu/libvulkan.so.1"
+sudo chroot Arkbuild/ bash -c "find /usr/lib/aarch64-linux-gnu -type f -name 'libvulkan.so*' -not -name 'libvulkan.so.1.3.274' -delete"
+sudo chroot Arkbuild/ bash -c "ln -sf /usr/lib/aarch64-linux-gnu/libvulkan.so.1 /usr/lib/aarch64-linux-gnu/libvulkan.so"
+sudo chown -R ark:ark Arkbuild/opt/vulkan/
 sudo cp dArkOS_Tools/*.sh Arkbuild/opt/system/
 sudo cp dArkOS_Tools/${CHIPSET}/*.sh Arkbuild/opt/system/Advanced/
 sudo cp dArkOS_Tools/${CHIPSET}/"Enable Low Battery Warning".sh Arkbuild/usr/local/bin/
@@ -249,7 +264,7 @@ sudo cp dnsmasq/dnsmasq.conf Arkbuild/etc/
 sudo cp scripts/sleep_governors.sh Arkbuild/usr/local/bin/
 sudo cp scripts/wasitpng.sh Arkbuild/usr/local/bin/
 sudo cp global/* Arkbuild/usr/local/bin/
-sudo cp device/${CHIPSET}/uboot.img.anbernic Arkbuild/usr/local/bin/
+#sudo cp device/${CHIPSET}/uboot.img.anbernic Arkbuild/usr/local/bin/
 sudo cp scripts/Switch* Arkbuild/usr/local/bin/
 # Disable winbind as connectivity to Active Directory is not needed
 sudo chroot Arkbuild/ bash -c "systemctl disable winbind"
@@ -434,6 +449,9 @@ sudo wget -t 3 -T 60 --no-check-certificate https://www.lexaloffle.com/bbs/cpost
 # Copy default game launch images
 sudo cp launchimages/loading.ascii.${UNIT} ${fat32_mountpoint}/launchimages/loading.ascii
 sudo cp launchimages/loading.jpg.${UNIT} ${fat32_mountpoint}/launchimages/loading.jpg
+
+# Copy default shutdown launch image
+sudo cp shutdownimages/bye.gif ${fat32_mountpoint}/shutdownimages/
 
 # Copy various tools to roms folders
 sudo cp -a ecwolf/Scan* ${fat32_mountpoint}/wolf/

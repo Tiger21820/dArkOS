@@ -459,6 +459,9 @@ sudo wget -t 3 -T 60 --no-check-certificate https://www.lexaloffle.com/bbs/cpost
 sudo cp launchimages/loading.ascii.${UNIT} ${fat32_mountpoint}/launchimages/loading.ascii
 sudo cp launchimages/loading.jpg.${UNIT} ${fat32_mountpoint}/launchimages/loading.jpg
 
+# Copy default shutdown launch image
+sudo cp shutdownimages/bye.gif ${fat32_mountpoint}/shutdownimages/
+
 # Copy various tools to roms folders
 sudo cp -a ecwolf/Scan* ${fat32_mountpoint}/wolf/
 sudo cp -a scummvm/scripts/Scan* ${fat32_mountpoint}/scummvm/

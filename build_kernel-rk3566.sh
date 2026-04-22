@@ -3,13 +3,7 @@
 # Build and install custom kernel from christianhaitian/linux
 KERNEL_SRC=main
 if [ ! -d "$KERNEL_SRC" ]; then
-  if [ "$UNIT" == "503" ]; then
-    git clone --recursive --depth=1 https://github.com/christianhaitian/rg503Kernel.git $KERNEL_SRC
-  elif [[ "$UNIT" == *"353"* ]]; then
-    git clone --recursive --depth=1 https://github.com/christianhaitian/RG353VKernel.git $KERNEL_SRC
-  else
-    git clone --recursive --depth=1 https://github.com/christianhaitian/RG353VKernel.git -b rk2023 $KERNEL_SRC
-  fi
+  git clone --recursive --depth=1 https://github.com/christianhaitian/kernel_5_10_226.git $KERNEL_SRC
 fi
 cd $KERNEL_SRC
 # Change the boot logo depending on the device
@@ -19,20 +13,17 @@ if [[ -e "../logos/unrotated/dArkos${UNIT}.png" ]]; then
     sudo apt -y install netpbm
   fi	
   pngtopnm ../logos/unrotated/dArkos${UNIT}.png | ppmquant 224 | pnmnoraw > drivers/video/logo/logo_linux_clut224.ppm
+  pngtopnm ../logos/unrotated/dArkoshdmi.png | ppmquant 224 | pnmnoraw > drivers/video/logo/logo_hdmi_clut224.ppm
 fi
 
-if [ "$UNIT" != "503" ] && [[ "$UNIT" != *"353"* ]]; then
-  make ARCH=arm64 rk3566_optimized_with_wifi_linux_defconfig
-  CFLAGS=-Wno-deprecated-declarations make -j$(nproc) ARCH=arm64 KERNEL_DTS=rk3566 KERNEL_CONFIG=rk3566_optimized_with_wifi_linux_defconfig
-else
-  make ARCH=arm64 rk3566_optimized_linux_defconfig
-  CFLAGS=-Wno-deprecated-declarations make -j$(nproc) ARCH=arm64 KERNEL_DTS=rk3566 KERNEL_CONFIG=rk3566_optimized_linux_defconfig
-fi
+make ARCH=arm64 rk3566_optimized_linux_defconfig
+CFLAGS=-Wno-deprecated-declarations make -j$(nproc) ARCH=arm64 KERNEL_DTS=rk3566 KERNEL_CONFIG=rk3566_optimized_linux_defconfig
 verify_action
 cd ..
 
 # Install kernel modules
 sudo make -C $KERNEL_SRC ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=../Arkbuild modules_install
+sudo cp -Rv $KERNEL_SRC/lib/firmware/ Arkbuild/usr/lib/
 
 mountpoint=mnt/boot
 mkdir -p ${mountpoint}
@@ -43,8 +34,8 @@ KERNEL_VERSION=$(basename $(ls Arkbuild/lib/modules))
 sudo cp $KERNEL_SRC/.config Arkbuild/boot/config-${KERNEL_VERSION}
 sudo cp $KERNEL_SRC/arch/arm64/boot/Image ${mountpoint}/
 if [ "$UNIT" == "503" ]; then
-  sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/rk3566.dtb ${mountpoint}/${UNIT_DTB}.dtb
-  cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/rk3566.dtb $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb
+  sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb ${mountpoint}/${UNIT_DTB}.dtb
+  cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb
 else
   sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb ${mountpoint}/
   if [[ "$UNIT" == *"353"* ]]; then
@@ -56,6 +47,13 @@ else
   fi
 fi
 
+# Copy firmware blobs (follow symlinks, ignore dangling ones)
+echo "Installing firmware..."
+sudo mkdir -p Arkbuild/lib/firmware/
+# Use rsync to handle symlinks gracefully
+sudo rsync -aL --ignore-errors $KERNEL_SRC/lib/firmware/ Arkbuild/lib/firmware/ 2>/dev/null || \
+ sudo cp -rL $KERNEL_SRC/lib/firmware/* Arkbuild/lib/firmware/ 2>/dev/null || true
+ 
 # Create uInitrd from generated initramfs
 #sudo cp /usr/bin/qemu-aarch64-static Arkbuild/usr/bin/
 KERNEL_VERSION=$(basename $(find Arkbuild/lib/modules -maxdepth 1 -mindepth 1 -type d))
@@ -73,13 +71,31 @@ mkdir initrd
 #Update uInitrd to force booting from mmcblk1p4
 sudo mv ${mountpoint}/initrd.img initrd/.
 cd initrd
-gunzip -c initrd.img | cpio -idmv
+zstd -d -c initrd.img | cpio -idmv
 rm -f initrd.img
 sed -i '/local dev_id\=/c\\tlocal dev_id\=\"/dev/mmcblk1p4\"' scripts/local
-#Add regulatory.db and regualtory.db.p7s
-mkdir -p usr/lib/firmware
+#Add regulatory.db and regulatory.db.p7s
+mkdir -p lib/firmware
 wget https://github.com/CaffeeLake/wireless-regdb/raw/refs/heads/master/regulatory.db -O lib/firmware/regulatory.db -O lib/firmware/regulatory.db
 #wget -t 5 -T 60 https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/plain/regulatory.db.p7s -O lib/firmware/regulatory.db.p7s
+# Fix: fsck hook fails to detect root fstype during chroot build because
+# /dev/mmcblk1p4 doesn't exist, so it skips copying fsck/logsave entirely.
+# The initramfs scripts/functions still calls logsave unconditionally, and
+# the missing binary causes exit code 127 -> panic at boot.
+for bin in /sbin/fsck /sbin/logsave /sbin/e2fsck /sbin/fsck.ext4; do
+  src="../Arkbuild${bin}"
+  if [ -f "$src" ]; then
+    cp "$src" ".${bin}"
+    # Copy required shared libraries
+    for lib in $(ldd "$src" 2>/dev/null | grep -o '/lib[^ ]*'); do
+      mkdir -p ".$(dirname "$lib")"
+      cp -n "$lib" ".$lib" 2>/dev/null || true
+    done
+  fi
+done
+# We also need to copy the 5.10 kernel compatible BT firmware files or BT will not initialize correctly
+mkdir -p lib/firmware/rtl_bt/
+sudo cp ../Arkbuild/usr/lib/firmware/rtl_bt/rtl8821cs_* lib/firmware/rtl_bt/
 find . | cpio -H newc -o | gzip -c > ../uInitrd
 sudo mv ../uInitrd ../${mountpoint}/uInitrd
 cd ..
@@ -88,14 +104,19 @@ sudo rm -f ${mountpoint}/initrd.img
 
 # Build uboot and resource and install it to the image
 cd $KERNEL_SRC
-if [ "$UNIT" == "503" ] || [[ "$UNIT" == *"353"* ]]; then
+if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]]; then
   #cp arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
   # Next line generates the resource.img file needed to flash to the image and to build the uboot
   git clone --depth=1 https://github.com/rockchip-linux/rkbin
   cd rkbin/tools
-  cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-  cp ../../../misc/rk3566/device_off_charging_bmps/battery_* .
-  ./resource_tool --pack ${UNIT_DTB}.dtb battery_*
+  #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+  if [[ "$UNIT" == "503" ]]; then
+    cp ../../../misc/rk3566/device_off_charging_bmps/rg503/* .
+  else
+    cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
+  fi
+  # Use Anbernic's resource.img files to provide onscreen battery charging state while off
+  ./resource_tool --pack battery_* rk3566* rk-kernel.dtb
   cp resource.img ../../.
   cd ../..
   rm -rf rkbin
@@ -124,7 +145,7 @@ cp ../resource.img rk3566_tool/Image/
 # More information on how it was obtained is available from
 # here: https://github.com/christianhaitian/rkbin/commit/1302e7af2b34f18496997f52e3cf5a358829db73
 cp ../rkbin/bin/rk35/Anbernic_Stock_loader1.img .
-sudo cp uboot.img ../../Arkbuild/usr/local/bin/uboot.img.jelos
+#sudo cp uboot.img ../../Arkbuild/usr/local/bin/uboot.img.jelos
 
 echo "Flashing loader1.img, trust.img, uboot.img and resource.img..."
 sudo dd if=Anbernic_Stock_loader1.img of=$LOOP_DEV bs=$SECTOR_SIZE seek=64 conv=notrunc

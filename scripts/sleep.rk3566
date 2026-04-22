@@ -24,7 +24,6 @@ case $1 in
       systemctl is-active --quiet emulationstation.service && echo ok || systemctl start emulationstation
     fi
     sleep 2
-    systemctl is-active --quiet enable_bluetooth.service && sudo systemctl restart enable_bluetooth
     systemctl is-active --quiet bluetooth.service && sudo systemctl restart bluetooth
     systemctl is-active --quiet bluealsa.service && sudo systemctl restart bluealsa
     systemctl is-active --quiet watchforbtaudio.service && sudo systemctl restart watchforbtaudio --no-block

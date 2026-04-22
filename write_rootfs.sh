@@ -15,10 +15,24 @@ elif [[ "${ROOT_FILESYSTEM_FORMAT}" == *"ext"* ]]; then
 elif [ "${ROOT_FILESYSTEM_FORMAT}" == "btrfs" ]; then
   sudo btrfs balance start --full-balance Arkbuild
   sync Arkbuild
-  sudo btrfs filesystem resize 7100M Arkbuild/
-  verify_action
+  sizes="8000 7700 7300 7250 7100"
+  for size in $sizes
+  do
+    sudo btrfs filesystem resize ${size}M Arkbuild/
+    if [ $? -eq 0 ]; then
+      tsize=$((${size} + 350))
+    else
+      break  
+    fi
+  done
+  #verify_action
   sync Arkbuild
-  sudo truncate -s 7450MB ${FILESYSTEM}
+  if [[ ! -z $tsize ]]; then
+    sudo truncate -s ${tsize}MB ${FILESYSTEM}
+  else
+    printf "\n\nFailed to resize Arkbuild.  Exiting...\n\n"
+    exit 1
+  fi
   sync Arkbuild
   sudo dd if="${FILESYSTEM}" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc
 fi

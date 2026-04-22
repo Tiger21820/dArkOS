@@ -2,6 +2,9 @@
 
 . /usr/local/bin/buttonmon.sh
 
+echo "VAR=duckstation-min" > /home/ark/.config/KILLIT
+sudo systemctl restart killer_daemon.service
+
 filename=$(basename "$3")
 filename="${filename%.*}"
 
@@ -11,11 +14,18 @@ if [ ! -d "/$directory/psx/savestates" ]; then
     mkdir -p "/$directory/psx/savestates"
 fi
 
-if [ -d "$HOME/.config/duckstation/savestates" ]; then
-    rm -rf "$HOME/.config/duckstation/savestates"
+if [ -d "$HOME/.local/share/duckstation/savestates" ]; then
+    rm -rf "$HOME/.local/share/duckstation/savestates"
 fi
 
-ln -sfv "/$directory/psx/savestates" "$HOME/.config/duckstation/savestates"
+if [[ $directory == "roms2" ]]; then
+ sed -i '/\/roms\//s//\/roms2\//g' $HOME/.local/share/duckstation/settings.ini
+else
+ sed -i '/\/roms2\//s//\/roms\//g' $HOME/.local/share/duckstation/settings.ini
+fi
+
+ln -sfv "/$directory/psx/savestates" "$HOME/.local/share/duckstation/savestates"
+ln -sf /opt/inttools/gamecontrollerdb.txt "$HOME/.local/share/gamecontrollerdb.txt"
 
 Test_Button_A
 if [ "$?" -eq "10" ]; then
@@ -32,13 +42,15 @@ if [ "$?" -eq "10" ]; then
   printf "\033c" >> /dev/tty1
   printf "\033[0m" >> /dev/tty1
   if [ ! -f "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini" ]; then
-      cp "$HOME/.config/duckstation/settings.ini" "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini"
+      cp "$HOME/.local/share/duckstation/settings.ini" "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini"
   fi
-  /opt/duckstation/duckstation-nogui -fullscreen -settings "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini" -- "${3}" > /dev/null 2>&1
+  /opt/duckstation/duckstationsa -fullscreen -- "${3}" > /dev/null 2>&1
 else
   if [ -f "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini" ]; then
-    /opt/duckstation/duckstation-nogui -fullscreen -settings "/$directory/psx/duckstation_gamesettings/${filename}.settings.ini" -- "${3}" > /dev/null 2>&1
+    /opt/duckstation/duckstationsa -fullscreen -- "${3}" > /dev/null 2>&1
   else
-    /opt/duckstation/duckstation-nogui -fullscreen -settings "$HOME/.config/duckstation/settings.ini" -- "${3}" > /dev/null 2>&1
+    /opt/duckstation/duckstationsa -fullscreen -- "${3}" > /dev/null 2>&1
   fi
 fi
+
+sudo systemctl stop killer_daemon.service

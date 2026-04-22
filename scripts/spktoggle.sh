@@ -37,9 +37,9 @@ else
   if [ -z "$spktoggle" ]
   then
     if [ "$(cat /home/ark/.config/.DEVICE)" != "A10MINI" ]; then
-      amixer -q sset 'Playback Path' SPK
-    else
       amixer -q sset 'Playback Path' SPK_HP
+    else
+      amixer -q sset 'Playback Path' SPK
     fi
   fi
   if [ -f "/var/local/asound.state" ]

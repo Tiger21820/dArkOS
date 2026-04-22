@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bton=$(sudo systemctl status bluetooth | grep "disabled")
+bton=$(sudo systemctl status bluetooth | grep "disabled;")
 
 if [ -z "$bton" ]
 then
@@ -10,13 +10,9 @@ then
       sudo systemctl disable bluetooth
       sudo systemctl stop bluealsa
       sudo systemctl disable bluealsa
-      sudo systemctl stop enable_bluetooth
-      sudo systemctl disable enable_bluetooth
       sudo systemctl restart ogage
       cp -f /home/ark/.asoundrcbak /home/ark/.asoundrc
 else
-      sudo systemctl start enable_bluetooth
-      sudo systemctl enable enable_bluetooth
       sudo systemctl start bluetooth
       sudo systemctl enable bluetooth
       sudo systemctl start bluealsa

@@ -6,6 +6,9 @@ call_chroot "rm -rf /home/ark/EmulationStation-fcamod"
 call_chroot "rm -rf /home/ark/libgo2"
 call_chroot "rm -rf /home/ark/linux-rga"
 call_chroot "rm -rf /home/ark/${CHIPSET}_core_builds"
+if [[ "${CHIPSET}" == "rk3566" ]]; then
+  call_chroot "apt-mark hold ffmpeg"
+fi
 call_chroot "apt remove -y autotools-dev \
   build-essential \
   ccache \
@@ -31,6 +34,7 @@ call_chroot "apt remove -y autotools-dev \
   libfreetype-dev \
   libfribidi-dev \
   libglew-dev \
+  libglfw3-dev \
   libjpeg62-turbo-dev \
   libluajit-5.1-dev \
   libmad0-dev \
@@ -48,6 +52,7 @@ call_chroot "apt remove -y autotools-dev \
   libsdl2-image-dev \
   libsdl2-mixer-dev \
   libsdl2-ttf-dev \
+  libshaderc-dev \
   libslirp-dev \
   libsm-dev \
   libsoxr-dev \
@@ -62,6 +67,7 @@ call_chroot "apt remove -y autotools-dev \
   libvorbis-dev \
   libvorbisidec-dev \
   libvpx-dev \
+  libvulkan-dev \
   libx11-dev \
   libx11-xcb1 \
   libxcb-dri2-0 \
@@ -98,8 +104,17 @@ fi
 
 while read NEEDED_PACKAGE; do
   if [[ ! "$NEEDED_PACKAGE" =~ ^# ]]; then
-    install_package 64 ${NEEDED_PACKAGE}
-    protect_package 64 ${NEEDED_PACKAGE}
+    if [[ "$CHIPSET" != *"3566"* ]]; then
+      install_package 64 ${NEEDED_PACKAGE}
+      protect_package 64 ${NEEDED_PACKAGE}
+    else
+      if [[ "$NEEDED_PACKAGE" != "ffmpeg" ]]; then
+        install_package 64 ${NEEDED_PACKAGE}
+        protect_package 64 ${NEEDED_PACKAGE}
+      else
+        continue
+      fi
+    fi 
   fi
 done <needed_packages.txt
 sync
@@ -111,6 +126,7 @@ if [[ "$BUILD_BLUEALSA" == "y" ]]; then
       protect_package 64 ${BLUETOOTH_NEEDED_PACKAGE}
     fi
   done <bluetooth_needed_packages.txt
+  call_chroot "systemctl disable watchforbtaudio bluetooth bluealsa"
 fi
 
 if [[ "${BUILD_ARMHF}" == "y" ]]; then
@@ -147,6 +163,10 @@ do
 done
 cd ../../../../
 
+# Make sure the built librga shared libs are still available in aarch64
+sudo cp -av Arkbuild/usr/lib/librga.so* Arkbuild/usr/lib/aarch64-linux-gnu/
+
+
 if [[ "${ENABLE_CACHE}" == "y" ]]; then
   sudo rm -f Arkbuild/etc/apt/apt.conf.d/99proxy
   sudo sed -i '/127.0.0.1:3142\//s///' Arkbuild/etc/apt/sources.list
@@ -179,3 +199,12 @@ sudo rm -rf Arkbuild/var/lib/apt/lists/*
 sudo rm -f Arkbuild/var/log/*.log
 sudo rm -f Arkbuild/var/log/apt/*.log
 sudo rm -f Arkbuild/tmp/reboot-needed
+if [[ "${CHIPSET}" == "rk3566" ]]; then
+  sudo rm -f Arkbuild/usr/share/vulkan/icd.d/*_icd.*
+fi
+
+# Ensure libvulkan is symlinked properly
+call_chroot "find /usr/lib/aarch64-linux-gnu -type f -name 'libvulkan.so*' -not -name 'libvulkan.so.1.3.274' -delete"
+call_chroot "rm -f /usr/lib/aarch64-linux-gnu/libvulkan.so.1 /usr/lib/aarch64-linux-gnu/libvulkan.so"
+call_chroot "ln -sf /usr/lib/aarch64-linux-gnu/libvulkan.so.1.3.274 /usr/lib/aarch64-linux-gnu/libvulkan.so.1"
+call_chroot "ln -sf /usr/lib/aarch64-linux-gnu/libvulkan.so.1 /usr/lib/aarch64-linux-gnu/libvulkan.so"

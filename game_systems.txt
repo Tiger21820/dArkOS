@@ -98,6 +98,7 @@ segacd
 sfc
 sg-1000
 sgb
+shutdownimages
 solarus
 snes
 snes-hacks

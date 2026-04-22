@@ -32,7 +32,7 @@ PatchFastBoot = false
 
 
 [GPU]
-Renderer = OpenGL
+Renderer = Vulkan
 Adapter = 
 ResolutionScale = 1
 Multisamples = 1

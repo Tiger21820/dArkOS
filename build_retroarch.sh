@@ -90,7 +90,6 @@ done <retroarch_cores.txt
 
 # Copy other core info files not available from libretro's repo
 sudo cp core_info_files/* Arkbuild/home/ark/.config/retroarch/cores/
-sudo cp core_info_files/* Arkbuild/home/ark/.config/retroarch32/cores/
 
 # Download and add retroarch assets
 sudo git clone --depth=1 https://github.com/libretro/retroarch-assets.git Arkbuild/home/ark/.config/retroarch/assets/
@@ -274,6 +273,9 @@ if [[ "${BUILD_ARMHF}" == "y" ]]; then
 		fi
 	  fi
 	done <retroarch_cores32.txt
+
+	# Copy other core info files not available from libretro's repo
+	sudo cp core_info_files/* Arkbuild/home/ark/.config/retroarch32/cores/
 
 	# Download and add retroarch assets
 	sudo git clone --depth=1 https://github.com/libretro/retroarch-assets.git Arkbuild/home/ark/.config/retroarch32/assets/

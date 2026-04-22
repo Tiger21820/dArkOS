@@ -8,35 +8,35 @@
 ##################################################################
 
 function set_brightness() {
-   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 133 brightness "$1"
+   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 130 brightness "$1"
 }
 
 function set_contrast() {
-   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 133 contrast "$1"
+   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 130 contrast "$1"
 }
 
 function set_saturation() {
-   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 133 saturation "$1"
+   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 130 saturation "$1"
 }
 
 function set_hue() {
-   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 133 hue "$1"
+   sudo /usr/local/bin/panel_drm_tool set /dev/dri/card0 130 hue "$1"
 }
 
 function get_brightness() {
-   /usr/local/bin/panel_drm_tool list | grep -A 9 133 | grep brightness | awk -F 'brightness = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep brightness | awk -F 'brightness = ' '{print $2}'
 }
 
 function get_contrast() {
-   /usr/local/bin/panel_drm_tool list | grep -A 9 133 | grep contrast | awk -F 'contrast = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep contrast | awk -F 'contrast = ' '{print $2}'
 }
 
 function get_saturation() {
-   /usr/local/bin/panel_drm_tool list | grep -A 9 133 | grep saturation | awk -F 'saturation = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep saturation | awk -F 'saturation = ' '{print $2}'
 }
 
 function get_hue() {
-   /usr/local/bin/panel_drm_tool list | grep -A 9 133 | grep hue | awk -F 'hue = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep hue | awk -F 'hue = ' '{print $2}'
 }
 
 function SaveSettingsOnShutdown() {

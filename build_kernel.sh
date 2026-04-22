@@ -7,6 +7,8 @@ if [ "$UNIT" == "rgb10" ] || [ "$UNIT" == "rk2020" ]; then
   SCREEN_ROTATION="3"
   if [ "$UNIT" == "rgb10" ]; then
     KERNEL_DTB="${CHIPSET}-odroidgo2-linux-v11.dtb"
+    KERNEL_DTB_ALT="${CHIPSET}-odroidgo2-linux-v11-alt.dtb"
+    KERNEL_DTB_RGB10S="${CHIPSET}-odroidgo2-linux-v11-rgb10s.dtb"
   else
     KERNEL_DTB="${CHIPSET}-odroidgo2-linux.dtb"
   fi
@@ -46,6 +48,9 @@ sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${KERNEL_DTB} ${mountpoint}/
 if [ "$UNIT" == "rg351mp" ] || [ "$UNIT" == "g350" ] || [ "$UNIT" == "a10mini" ]; then
   sudo cp /tmp/${UNIT}-uboot.dtb ${mountpoint}/rg351mp-uboot.dtb
   sudo rm /tmp/${UNIT}-uboot.dtb
+elif [ "$UNIT" == "rgb10" ]; then
+  sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${KERNEL_DTB_ALT} ${mountpoint}/rk3326-odroidgo2-linux-v11.dtb.oga11
+  sudo cp $KERNEL_SRC/arch/arm64/boot/dts/rockchip/${KERNEL_DTB_ALT_RGB10S} ${mountpoint}/rk3326-odroidgo2-linux-v11.dtb.rgb10s
 fi
 
 # Create uInitrd from generated initramfs

@@ -125,17 +125,17 @@ if [ "$?" -eq "10" ]; then
                                 boot_controls
                                 ;;
                           "8)") sudo cp /boot/rk3326-odroidgo2-linux-v11.dtb.oga11 /boot/rk3326-odroidgo2-linux-v11.dtb
-			                    printf "The Trigger (L2 and R2) buttons have been activated for the OGA 1.1.\nArkos will now be restarted." >> /dev/tty1
+			                    printf "The Trigger (L2 and R2) buttons have been activated for the OGA 1.1.\ndArkos will now be restarted." >> /dev/tty1
 				                sleep 5
 				                sudo reboot
 			                    ;;
                           "9)") sudo cp /boot/rk3326-odroidgo2-linux-v11.dtb.rgb10 /boot/rk3326-odroidgo2-linux-v11.dtb
-			                    printf "The Trigger (L2 and R2) buttons and analog stick have been set for the RGB10.\nArkos will now be restarted." >> /dev/tty1
+			                    printf "The Trigger (L2 and R2) buttons and analog stick have been set for the RGB10.\ndArkos will now be restarted." >> /dev/tty1
 				                sleep 5
 				                sudo reboot
 			                    ;;
                           "10)") sudo cp /boot/rk3326-odroidgo2-linux-v11.dtb.rgb10s /boot/rk3326-odroidgo2-linux-v11.dtb
-			                     printf "The analog stick has been set for the RGB10s.\nArkos will now be restarted." >> /dev/tty1
+			                     printf "The analog stick has been set for the RGB10s.\ndArkos will now be restarted." >> /dev/tty1
 				                 sleep 5
 				                 sudo reboot
 			                     ;;

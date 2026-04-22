@@ -41,7 +41,43 @@ while read KODI_NEEDED_DEV_PACKAGE; do
     sudo chroot ${KODI_DEVENV} bash -c "apt -y install ${KODI_NEEDED_DEV_PACKAGE}"
   fi
 done <kodi_needed_dev_packages.txt
-
+if [[ ! -f ${KODI_DEVENV}/home/ark/.ffmpeg_mpp_rga_ready ]]; then
+  	sudo chroot ${KODI_DEVENV} bash -c "cd /home/ark &&
+	  git clone -b jellyfin-mpp --depth=1 https://github.com/nyanmisaka/mpp.git rkmpp &&
+	  cd rkmpp &&
+	  mkdir rkmpp_build &&
+	  cd rkmpp_build &&
+	  cmake \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DBUILD_SHARED_LIBS=ON \
+	  -DBUILD_TEST=OFF \
+	  .. &&
+	  make -j $(nproc) &&
+	  make install &&
+	  cd ../.. &&
+	  git clone -b jellyfin-rga --depth=1 https://github.com/nyanmisaka/rk-mirrors.git rkrga &&
+	  meson setup rkrga rkrga_build \
+	  --prefix=/usr \
+	  --libdir=lib \
+	  --buildtype=release \
+	  --default-library=shared \
+	  -Dcpp_args=-fpermissive \
+	  -Dlibdrm=false \
+	  -Dlibrga_demo=false &&
+	  ninja -C rkrga_build install &&
+	  cp -av rkrga_build/librga.so* /usr/lib/aarch64-linux-gnu/ &&
+	  git clone --depth=1 https://github.com/nyanmisaka/ffmpeg-rockchip.git -b 7.1 ffmpeg &&
+	  cd ffmpeg &&
+	  rm /usr/lib/aarch64-linux-gnu/librga.so.2.0.0 /usr/lib/aarch64-linux-gnu/librga.so.2 /usr/lib/aarch64-linux-gnu/librga.so &&
+	  rm -rf /usr/local/include/rga &&
+	  ./configure --prefix=/usr --libdir=/usr/lib/aarch64-linux-gnu --shlibdir=/usr/lib/aarch64-linux-gnu --enable-gpl --enable-version3 --enable-libdrm --enable-rkmpp --enable-rkrga --disable-vulkan --disable-autodetect --enable-shared --disable-static &&
+	  make -j $(nproc) &&
+	  make install &&
+	  cd ../ &&
+	  touch .ffmpeg_mpp_rga_ready
+	  "
+fi
 sudo chroot ${KODI_DEVENV} bash -c "cd /home/ark &&
   [ -d kodi ] && rm -rf kodi || echo \"ok\" &&
   mkdir -p kodi &&
@@ -62,12 +98,14 @@ fi
 sudo rm -rf ${KODI_DEVENV}/home/ark/kodi
 sudo cp -R kodi/userdata/ ${KODI_DEVENV}/opt/kodi/
 sudo cp kodi_needed_dev_packages.txt ${KODI_DEVENV}/opt/kodi/kodi_needed_packages.txt
+# Rename exit to dArkOS within default estuary skin
+sudo chroot ${KODI_DEVENV} bash -c "sed -i '/Exit to ArkOS/s//Exit to dArkOS/' /opt/kodi/share/kodi/addons/skin.estuary/xml/DialogButtonMenu.xml"
 sudo chroot ${KODI_DEVENV} bash -c "chown -R ark:ark /opt/kodi/"
 sudo cp kodi/scripts/Kodi.sh ${KODI_DEVENV}/usr/local/bin/
 sudo chmod 777 ${KODI_DEVENV}/usr/local/bin/Kodi.sh
 
 # Create the compressed tar of the setup
-sudo chroot ${KODI_DEVENV} bash -c "tar -cJvf Kodi-${KODI_VERSION_TAG}.tar.xz /opt/kodi/* /usr/local/bin/Kodi.sh"
+sudo chroot ${KODI_DEVENV} bash -c "tar -cJvf Kodi-${KODI_VERSION_TAG}.tar.xz /opt/kodi/* /usr/bin/ff* /usr/local/bin/Kodi.sh /usr/lib/aarch64-linux-gnu/{libavcodec.so*,libavdevice.so*,libavfilter.so*,libpostproc.so*,libavutil.so*,libswresample.so*,libavformat.so*,libswscale.so*,librockchip_*}"
 
 cat <<EOF | tee Kodi-${KODI_VERSION_TAG}-install.sh
 #!/bin/bash
@@ -118,14 +156,14 @@ process_tar() {
 
 if test ! -z \$(tr -d '\0' < /proc/device-tree/compatible | grep rk3566)
 then
-  PAYLOAD_LINE=\$(awk '/^__PAYLOAD_BEGINS__/ { print NR + 1; exit 0; }' \$0)
-  WORK_DIR=/
   printf "\nStarting the process.  Please wait..." >> /dev/tty1
-  process_tar
   if test -z "\$(cat /etc/apt/sources.list | grep ${DEBIAN_CODE_NAME}-backports)"
   then
     echo "deb http://deb.debian.org/debian ${DEBIAN_CODE_NAME}-backports main" | sudo tee -a /etc/apt/sources.list
   fi
+  PAYLOAD_LINE=\$(awk '/^__PAYLOAD_BEGINS__/ { print NR + 1; exit 0; }' \$0)
+  WORK_DIR=/
+  process_tar
   sudo apt -y update
   while read KODI_NEEDED_PACKAGE; do
     if [[ ! "\$KODI_NEEDED_PACKAGE" =~ ^# ]] && [[ ! "\$KODI_NEEDED_PACKAGE" == *"-dev"* ]]; then
@@ -134,6 +172,7 @@ then
   done </opt/kodi/kodi_needed_packages.txt
 
   sudo rm /opt/kodi/kodi_needed_packages.txt
+
   printf "\nThis process has completed.  Kodi ${KODI_VERSION_TAG} should now been installed." >> /dev/tty1
   sleep 5
   clear

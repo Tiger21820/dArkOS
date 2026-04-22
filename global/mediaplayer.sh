@@ -11,7 +11,25 @@ if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | grep "190000004b4800000010
   export HOTKEY="l3"
 fi
 /opt/inttools/gptokeyb -1 "ffplay" -c "/opt/inttools/mediaplayer.gptk" &
-ffplay -loglevel +quiet -seek_interval 1 -loop 0 -x "$xres" -y "$yres" "$1"
+if [[ "$(tr -d '\0' < /proc/device-tree/compatible)" == *"rk3566"* ]]; then
+  format=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$1")
+  if [[ "$format" == *"h263"* ]]; then
+    codec="h263"
+  elif [[ "$format" == *"h264"* ]]; then
+    codec="h264"
+  elif [[ "$format" == *"hevc"* ]]; then
+    codec="hevc"
+  else
+    codec=""
+  fi
+  if [[ ! -z $codec ]]; then
+    ffplay -loglevel +quiet -seek_interval 1 -loop 0 -x "$xres" -y "$yres" -vcodec ${codec}_rkmpp "$1"
+  else
+    ffplay -loglevel +quiet -seek_interval 1 -loop 0 -x "$xres" -y "$yres" "$1"
+  fi
+else
+  ffplay -loglevel +quiet -seek_interval 1 -loop 0 -x "$xres" -y "$yres" "$1"
+fi
 unset SDL_GAMECONTROLLERCONFIG_FILE
 if [[ ! -z $(pidof gptokeyb) ]]; then
   sudo kill -9 $(pidof gptokeyb)

@@ -2,7 +2,7 @@
 
 function check() {
   sudo rm -f /var/local/btautoreconnect.state
-  if [ ! -z $(pidof rtk_hciattach) ]; then
+  if [[ ! -z $(systemctl status bluetooth | grep "enabled;") ]]; then
     bluetoothctl devices | cut -f2 -d' '|
     while read -r uuid
     do

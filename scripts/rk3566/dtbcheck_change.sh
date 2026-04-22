@@ -6,7 +6,7 @@ BASE_DTB_NAME=`echo ${CURRENT_DTB} | sed 's/.undervolt.*//'`
 MAX_VOLTAGE="$(hexdump -C /proc/device-tree/cpu0-opp-table/opp-1800000000/opp-microvolt | cut -c 11-21)"
 
 function check() {
-  if [[ "$MAX_VOLTAGE" == *"00 10 05 90"* ]]; then
+  if [[ "$MAX_VOLTAGE" == *"00 0e e0 98"* ]]; then
     echo "STOCK"
   elif [[ "$MAX_VOLTAGE" == *"00 0e 7e f0"* ]]; then
     echo "LIGHT"

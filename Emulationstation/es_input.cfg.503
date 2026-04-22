@@ -2583,6 +2583,6 @@
 			<input name="y" type="button" id="3" value="1" />
 			<input name="pagedown" type="button" id="5" value="1" />
 			<input name="pageup" type="button" id="4" value="1" />
-			<input name="system_hk" type="button" id="10" value="1" />
+			<input name="system_hk" type="button" id="12" value="1" />
 		</inputConfig>
 </inputList>

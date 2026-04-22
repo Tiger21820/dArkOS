@@ -70,6 +70,7 @@ source ./build_gametank.sh
 source ./build_openmsxsa.sh
 source ./build_flycastsa.sh
 source ./build_dolphinsa.sh
+source ./build_ffmpeg.sh
 source ./build_sdljoytest.sh
 source ./build_controllertester.sh
 source ./build_drastic.sh
