@@ -71,6 +71,7 @@ source ./build_flycastsa.sh
 source ./build_sdljoytest.sh
 source ./build_controllertester.sh
 source ./build_drastic.sh
+source ./build_amiberrysa.sh
 source ./finishing_touches.sh
 source ./cleanup_filesystem.sh
 source ./write_rootfs.sh

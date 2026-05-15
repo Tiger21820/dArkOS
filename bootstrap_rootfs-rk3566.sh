@@ -70,6 +70,7 @@ KERNEL==\"rga\", GROUP=\"video\", MODE=\"0660\"
 ACTION==\"add\", SUBSYSTEM==\"backlight\", RUN+=\"/bin/chgrp video /sys/class/backlight/%k/brightness\"
 ACTION==\"add\", SUBSYSTEM==\"backlight\", RUN+=\"/bin/chmod g+w /sys/class/backlight/%k/brightness\"
 ACTION==\"add|change\", KERNEL==\"sd[a-z]*|mmcblk[0-9]*\", ATTR{queue/rotational}==\"0\", ATTR{queue/scheduler}=\"bfq\"
+ACTION==\"change\", SUBSYSTEM==\"extcon\", RUN+=\"/usr/local/bin/headphone-audio-switch.sh\"
 SUBSYSTEM==\"dma_heap\", MODE=\"0666\"" | sudo tee Arkbuild/etc/udev/rules.d/10-standard.rules
 echo -e "Generating 40-usb_modeswitch.rules for udev"
 echo -e "# Rules

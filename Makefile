@@ -6,16 +6,21 @@ BUILD_KODI ?= n
 BUILD_ARMHF ?= y
 BUILD_BLUEALSA ?= y
 
+# Ensure system binaries like parted are in the path, and silence strict GCC warnings
+PATH := $(PATH):/usr/sbin:/sbin
+KCFLAGS := -w
+
 export DEBIAN_CODE_NAME
 export ENABLE_CACHE
 export BUILD_KODI
 export BUILD_ARMHF
 export BUILD_BLUEALSA
+export PATH
+export KCFLAGS
 
 ifeq ($(DEBIAN_CODE_NAME),)
   $(error DEBIAN_CODE_NAME is not set. Please run with DEBIAN_CODE_NAME=suite (e.g., trixie))
 endif
-
 
 all:
 	@echo "Please specify a valid build target: make rgb10 or make rg353m"

@@ -26,7 +26,6 @@ c16
 c64
 c128
 cavestory
-cdimono1
 channelf
 coco3
 coleco
@@ -110,7 +109,6 @@ themes
 thomson
 ti99
 tic80
-tigerlcd
 tools
 turbografx
 turbografxcd

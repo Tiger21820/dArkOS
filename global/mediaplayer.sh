@@ -13,12 +13,26 @@ fi
 /opt/inttools/gptokeyb -1 "ffplay" -c "/opt/inttools/mediaplayer.gptk" &
 if [[ "$(tr -d '\0' < /proc/device-tree/compatible)" == *"rk3566"* ]]; then
   format=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$1")
-  if [[ "$format" == *"h263"* ]]; then
+  if [[ "$format" == *"av1"* ]]; then
+    codec="av1"
+  elif [[ "$format" == *"h263"* ]]; then
     codec="h263"
   elif [[ "$format" == *"h264"* ]]; then
     codec="h264"
   elif [[ "$format" == *"hevc"* ]]; then
     codec="hevc"
+  elif [[ "$format" == *"mjpeg"* ]]; then
+    codec="mjpeg"
+  elif [[ "$format" == *"mpeg1"* ]]; then
+    codec="mpeg1"
+  elif [[ "$format" == *"mpeg2"* ]]; then
+    codec="mpeg2"
+  elif [[ "$format" == *"mpeg4"* ]]; then
+    codec="mpeg4"
+  elif [[ "$format" == *"vp8"* ]]; then
+    codec="vp8"
+  elif [[ "$format" == *"vp9"* ]]; then
+    codec="vp9"
   else
     codec=""
   fi

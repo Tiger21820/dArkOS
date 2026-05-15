@@ -1174,7 +1174,14 @@
 		<fullname>Gamecube</fullname>
 		<path>/roms/gc/</path>
 		<extension>.elf .ELF .gcz .GCZ .iso .ISO .m3u .M3U .rvz .RVZ .wad .WAD .wbfs .WBFS .wia .WIA</extension>
-		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 dolphin.sh %ROM%; sudo perfnorm</command>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 dolphin.sh %EMULATOR% %CORE% %ROM%; sudo perfnorm</command>
+		<emulators>
+			<emulator name="standalone">
+				<cores>
+					<core>Normal</core>
+				</cores>
+			</emulator>
+		</emulators>
 		<platform>gc</platform>
 		<theme>gc</theme>
 		<manufacturer>Nintendo</manufacturer>

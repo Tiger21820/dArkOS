@@ -45,6 +45,7 @@ sudo cp audio/99-hdmi-audio.rules Arkbuild/etc/udev/rules.d/99-hdmi-audio.rules
 sudo cp audio/.asoundrchdmi Arkbuild/home/ark/.asoundrchdmi
 sudo cp audio/.asoundrcbt.${CHIPSET} Arkbuild/home/ark/.asoundrcbt
 sudo cp audio/audio-switch.sh Arkbuild/usr/local/bin/audio-switch.sh
+sudo cp audio/headphone-audio-switch.sh Arkbuild/usr/local/bin/headphone-audio-switch.sh
 sudo chroot Arkbuild/ bash -c "chown ark:ark /home/ark/.asoundrc*"
 sudo chroot Arkbuild/ bash -c "ln -sfv /home/ark/.asoundrc /etc/asound.conf"
 sudo chroot Arkbuild/ bash -c "cp -fv /usr/share/alsa/alsa.conf /usr/share/alsa/alsa.conf.mednafen"
@@ -62,8 +63,8 @@ sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/loca
 # Set performance governor to ondemand on boot
 sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/perfnorm quiet &\") | crontab -"
 
-# Restore screen colors, saturation and such on boot
-#sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/panel_set.sh RestoreSettings &\") | crontab -"
+# Check for connected headphones on boot
+sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/headphone-audio-switch.sh &\") | crontab -"
 
 # Find and record panel id on boot (for rg353 devices only)
 if [[ "$UNIT" == *"353"* ]]; then
@@ -408,6 +409,12 @@ while read GAME_SYSTEM; do
     sudo mkdir -p ${fat32_mountpoint}/${GAME_SYSTEM}
   fi
 done <game_systems.txt
+
+for extra_dir in cdimono1 gc tigerlcd
+do
+  echo -e "Creating ${fat32_mountpoint}/${extra_dir} for rk3566 only\n"
+  sudo mkdir -p ${fat32_mountpoint}/${extra_dir}
+done
 
 # Add latest version of PortMaster install to roms/tools folder
 for (( ; ; ))

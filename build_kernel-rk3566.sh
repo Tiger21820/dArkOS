@@ -95,7 +95,12 @@ for bin in /sbin/fsck /sbin/logsave /sbin/e2fsck /sbin/fsck.ext4; do
 done
 # We also need to copy the 5.10 kernel compatible BT firmware files or BT will not initialize correctly
 mkdir -p lib/firmware/rtl_bt/
-sudo cp ../Arkbuild/usr/lib/firmware/rtl_bt/rtl8821cs_* lib/firmware/rtl_bt/
+if [[ "$UNIT" != "rgb20pro" ]]; then
+  sudo cp ../Arkbuild/usr/lib/firmware/rtl_bt/rtl8821cs_* lib/firmware/rtl_bt/
+else
+  sudo cp ../firmware/rtl8723ds/rtl8723ds_config.bin lib/firmware/rtl_bt/rtl8723d_config.bin
+  sudo cp ../firmware/rtl8723ds/rtl8723ds_fw.bin lib/firmware/rtl_bt/rtl8723d_fw.bin
+fi
 find . | cpio -H newc -o | gzip -c > ../uInitrd
 sudo mv ../uInitrd ../${mountpoint}/uInitrd
 cd ..
@@ -135,7 +140,11 @@ fi
 git clone --depth=1 https://github.com/christianhaitian/rk356x-uboot.git
 git clone https://github.com/christianhaitian/rkbin.git
 mkdir -p ./prebuilts/gcc/linux-x86/aarch64/
-ln -s /opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu ./prebuilts/gcc/linux-x86/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu
+OPT_TOOLCHAIN_DIR="/opt/toolchains/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu"
+LOCAL_TOOLCHAIN_DIR="./prebuilts/gcc/linux-x86/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu"
+if [[ -d "$OPT_TOOLCHAIN_DIR" && ! -d "$LOCAL_TOOLCHAIN_DIR" ]]; then
+    ln -s "$OPT_TOOLCHAIN_DIR" "$LOCAL_TOOLCHAIN_DIR"
+fi
 cd rk356x-uboot
 cp ../resource.img rk3566_tool/Image/
 ./make.sh rk3566

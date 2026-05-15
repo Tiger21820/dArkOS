@@ -16,10 +16,12 @@ libdrm-dev
 libeigen3-dev
 libevdev-dev
 libfmt-dev
+libfontconfig1-dev
 libfreeimage-dev
 libfreetype-dev
 libinih-dev
 libluajit-5.1-dev
+libmpeg2-4-dev
 libncurses-dev
 libnl-3-dev
 libnl-genl-3-dev

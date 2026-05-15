@@ -44,6 +44,9 @@ if [[ "${BUILD_ARMHF}" == "y" ]]; then
 else
   sudo cp Emulationstation/es_systems.cfg.${CHIPSET}-64bit_Only Arkbuild/etc/emulationstation/es_systems.cfg
 fi
+if [[ "${UNIT}" == "503" ]]; then
+  sudo sed -i '/<core>Normal<\/core>/s//<core>Normal<\/core>\n\t\t\t\t\t<core>Stretch<\/core>/g' Arkbuild/etc/emulationstation/es_systems.cfg
+fi
 sudo cp Emulationstation/es_input.cfg.${UNIT} Arkbuild/etc/emulationstation/es_input.cfg
 sudo cp Emulationstation/es_settings.cfg.${UNIT} Arkbuild/home/ark/.emulationstation/es_settings.cfg
 sudo cp Emulationstation/emulationstation.sh.${UNIT} Arkbuild/usr/bin/emulationstation/emulationstation.sh
