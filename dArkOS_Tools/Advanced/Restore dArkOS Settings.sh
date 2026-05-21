@@ -14,11 +14,15 @@ if compgen -G "/boot/rk3566*" > /dev/null; then
   width="60"
 fi
 
-if [ ! -f "/roms/backup/arkosbackup.tar.gz" ]; then
+if [ -f "/roms/backup/arkosbackup.tar.gz" ]; then
+  BACKUP_FILE="/roms/backup/arkosbackup.tar.gz"
+elif [ -f "/roms2/backup/arkosbackup.tar.gz" ]; then
+  BACKUP_FILE="/roms2/backup/arkosbackup.tar.gz"
+else
   printf "\nNo arkosbackup.tar.gz file was found in the"
-  printf "\n/roms/backup folder.\n"
-  printf "Please place the arkosbackup.tar.gz file there\n"
-  printf "and try again."
+  printf "\n/roms/backup or /roms2/backup folder.\n"
+  printf "Please place the arkosbackup.tar.gz file in\n"
+  printf "either folder and try again."
   sleep 7
   printf "\033[0m"
   exit 1
@@ -32,13 +36,23 @@ do
     if [ "$?" -eq "10" ]; then
 		LOG_FILE="/roms/backup/lastarkosrestore.log"
 
-		printf "\033[0mRestoring a backup.  Please wait...\n"
+		printf "\033[0mRestoring a backup from %s.  Please wait...\n" "$BACKUP_FILE"
 		sleep 2
 
 		sudo chmod 666 /dev/tty1
 
-		sudo tar --same-owner -zxhvf /roms/backup/arkosbackup.tar.gz -C / | tee -a "$LOG_FILE"
-		if [ $? -eq 0 ]; then
+		# Stop NetworkManager during extract to prevent its inotify watcher on
+		# /etc/NetworkManager/system-connections/ from racing tar's writes and
+		# leaving the .nmconnection files at 0 bytes.
+		sudo systemctl stop NetworkManager
+		# Stop filebrowser so its open SQLite handle on filebrowser.db
+		# doesn't get a truncated file from tar mid-write.
+		sudo pkill -f filebrowser || true
+
+		sudo tar --same-owner -zxhvf "$BACKUP_FILE" -C / | tee -a "$LOG_FILE"
+		TAR_STATUS=$?
+		sudo systemctl start NetworkManager
+		if [ $TAR_STATUS -eq 0 ]; then
 			# Properly restore previously set timezone
 			[ -f /dev/shm/TZ ] && ln -sf /usr/share/zoneinfo/$(cat /dev/shm/TZ) /etc/localtime && sudo rm /dev/shm/TZ
 			# Properly restore preferred Switch button tap to off state
@@ -98,23 +112,23 @@ do
 			do
 				Test_Button_A
 				if [ "$?" -eq "10" ]; then
-					sudo rm -fv /roms/backup/arkosbackup.tar.gz | tee -a "$LOG_FILE"
+					sudo rm -fv "$BACKUP_FILE" | tee -a "$LOG_FILE"
 					sleep 1
-					printf "\n The arkosbackup.tar.gz file has been deleted from the /roms/backup folder.  Exiting..."
+					printf "\n The arkosbackup.tar.gz file has been deleted from %s.  Exiting..." "$(dirname "$BACKUP_FILE")"
 					sleep 3
 					exit 0
 				fi
 
 				Test_Button_B
 				if [ "$?" -eq "10" ]; then
-					printf "\n Exiting without deleting the arkosbackup.tar.gz file from the /roms/backup folder." | tee -a "$LOG_FILE"
+					printf "\n Exiting without deleting the arkosbackup.tar.gz file from %s." "$(dirname "$BACKUP_FILE")" | tee -a "$LOG_FILE"
 					printf "\033[0m" | tee -a "$LOG_FILE"
 					sleep 3
 					exit 0
 				fi
 			done
 		else
-			printf "\n\n\e[31mThe restore did NOT complete successfully! \n\e[33mVerify a valid arkosbackup.tar.gz exist in \nyour easyroms/backup folder then try again.\n" | tee -a "$LOG_FILE"
+			printf "\n\n\e[31mThe restore did NOT complete successfully! \n\e[33mVerify a valid arkosbackup.tar.gz exist in \nyour easyroms/backup or roms2/backup folder then try again.\n" | tee -a "$LOG_FILE"
 			printf "\033[0m" | tee -a "$LOG_FILE"
 			sleep 10
 			exit 0

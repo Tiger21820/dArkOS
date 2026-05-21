@@ -1,0 +1,9 @@
+.log
+.log.*
+Ark_devenv/
+Ark_devenv32/
+Arkbuild_ccache/
+Arkbuild_package_cache/
+builddevenv.log
+.img
+.img.*

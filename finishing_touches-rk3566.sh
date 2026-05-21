@@ -285,6 +285,10 @@ sudo chmod 777 Arkbuild/usr/local/bin/*
 sudo rm -rf Arkbuild/etc/emulationstation/themes/
 sudo chroot Arkbuild/ bash -c "ln -sfv /roms/themes/ /etc/emulationstation/themes"
 
+# Also expose /roms2/themes via the user themes path so ES picks up themes
+# from the second SD card in SD2-for-Roms mode (dangles harmlessly otherwise).
+sudo chroot Arkbuild/ bash -c "ln -sfv /roms2/themes/ /home/ark/.emulationstation/themes"
+
 # Link music folder to /roms/bgmusic
 sudo rm -rf Arkbuild/home/ark/.emulationstation/music
 sudo chroot Arkbuild/ bash -c "ln -sfv /roms/bgmusic/ /home/ark/.emulationstation/music"
