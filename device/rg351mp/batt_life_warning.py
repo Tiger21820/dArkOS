@@ -26,7 +26,7 @@ while(True):
                         f.write("1")
                         f.close()
                         time.sleep(30)
-                else
+                else:
                         time.sleep(30)
         else:
                 if int(open(pwr_led, "r").read()) == 1:

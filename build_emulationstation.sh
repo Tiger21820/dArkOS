@@ -5,27 +5,31 @@ if [ -f ../exports.sh ];
 then
   source ../exports.sh
 fi
-echo "export devid=$(printenv DEV_ID)" | sudo tee Arkbuild/home/ark/ES_VARIABLES.txt
-echo "export devpass=$(printenv DEV_PASS)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
-echo "export apikey=$(printenv TGDB_APIKEY)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
+
+function set_es_variables() {
+  echo "export devid=$(printenv DEV_ID)" | sudo tee Arkbuild/home/ark/ES_VARIABLES.txt
+  echo "export devpass=$(printenv DEV_PASS)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
+  echo "export apikey=$(printenv TGDB_APIKEY)" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
+  NAME=`echo ${NAME} | tr '[:lower:]' '[:upper:]'`
+  echo "export softname=\"dArkOS-${NAME}\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
+}
+
 if [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"503"* ]]; then
   NAME="RG${UNIT}"
   ES_BRANCH="503noTTS"
 elif [[ "$UNIT" == "rgb10" ]] || [[ "$UNIT" == "rk2020" ]]; then
   NAME="${UNIT}"
   ES_BRANCH="master"
+  ES_BRANCH_ALT="351v"
 else
   NAME="${UNIT}"
   ES_BRANCH="351v"
 fi
-NAME=`echo ${NAME} | tr '[:lower:]' '[:upper:]'`
-echo "export softname=\"dArkOS-${NAME}\"" | sudo tee -a Arkbuild/home/ark/ES_VARIABLES.txt
 
 if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/EmulationStation-fcamod/commits/${ES_BRANCH} | jq -r '.sha')" ]; then
     sudo tar -xvzpf Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz
-    sudo rm Arkbuild/home/ark/ES_VARIABLES.txt
 else
-	call_chroot "apt-get -y update && eatmydata apt-get -y install libfreeimage3 fonts-droid-fallback libfreetype6 curl vlc-bin libsdl2-mixer-2.0-0"
+	set_es_variables
 	call_chroot "cd /home/ark &&
 	  source ES_VARIABLES.txt &&
 	  rm ES_VARIABLES.txt &&
@@ -39,6 +43,21 @@ else
 	  chmod 777 /usr/bin/emulationstation &&
 	  cp -a resources /usr/bin/emulationstation/
 	  "
+	if [[ "$UNIT" == "rgb10" ]] || [[ "$UNIT" == "rk2020" ]]; then
+	   set_es_variables
+	   call_chroot "cd /home/ark &&
+	     source ES_VARIABLES.txt &&
+	     rm ES_VARIABLES.txt &&
+	     git clone --recursive --depth=1 https://github.com/christianhaitian/EmulationStation-fcamod -b ${ES_BRANCH_ALT} EmulationStation-fcamod-${ES_BRANCH_ALT} &&
+	     cd EmulationStation-fcamod-${ES_BRANCH_ALT} &&
+	     git submodule update --init &&
+	     cmake -DSCREENSCRAPER_DEV_LOGIN=\"devid=\$devid&devpassword=\$devpass\" -DGAMESDB_APIKEY=\"\$apikey\" -DSCREENSCRAPER_SOFTNAME=\"\$softname\" . &&
+	     make -j\$(nproc) &&
+	     cp -a emulationstation /usr/bin/emulationstation/emulationstation.fullscreen &&
+	     chmod 777 /usr/bin/emulationstation/emulationstation.fullscreen &&
+	     cp -a resources /usr/bin/emulationstation/
+	     "
+	fi
 	if [ -f "Arkbuild_package_cache/${CHIPSET}/emulationstation.tar.gz" ]; then
 	  sudo rm -f Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz
 	fi
@@ -48,7 +67,7 @@ else
 	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.tar.gz Arkbuild/usr/bin/emulationstation/
 	sudo git --git-dir=Arkbuild/home/ark/EmulationStation-fcamod/.git --work-tree=Arkbuild/home/ark/EmulationStation-fcamod rev-parse HEAD > Arkbuild_package_cache/${CHIPSET}/emulationstation_${ES_BRANCH}.commit
 fi
-sudo rm -rf Arkbuild/home/ark/EmulationStation-fcamod
+sudo rm -rf Arkbuild/home/ark/EmulationStation-fcamod*
 sudo mkdir -p Arkbuild/etc/emulationstation/themes
 if [[ "${BUILD_ARMHF}" == "y" ]]; then
   sudo cp Emulationstation/es_systems.cfg.${CHIPSET} Arkbuild/etc/emulationstation/es_systems.cfg
