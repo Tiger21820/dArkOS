@@ -2,11 +2,18 @@
 
 # Create extlinux.conf
 sudo mkdir -p ${mountpoint}/extlinux
+
+if [[ "$UNIT" == "miniloong" ]]; then
+  ROTATE=" fbcon=rotate:3"
+else
+  ROTATE=""
+fi
+
 cat <<EOF | sudo tee ${mountpoint}/extlinux/extlinux.conf
 LABEL ArkOS
   LINUX /Image
   FDT /${UNIT_DTB}.dtb
-  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash vt.global_cursor_default=0 net.ifnames=0 console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=5 video=HDMI-A-1:1280x720@60
+  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash vt.global_cursor_default=0 net.ifnames=0${ROTATE} console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=5 video=HDMI-A-1:1280x720@60
 EOF
 
 #sudo cp logo.bmp ${mountpoint}/
@@ -54,6 +61,9 @@ sudo chroot Arkbuild/ bash -c "sed -i '/\"\~\/.asoundrc\"/s//\"\~\/.asoundrc.med
 # Sleep script and set default SuspendState to mem
 sudo mkdir -p Arkbuild/usr/lib/systemd/system-sleep
 sudo cp scripts/sleep.${CHIPSET} Arkbuild/usr/lib/systemd/system-sleep/sleep
+if [[ "$UNIT" == "miniloong" ]]; then
+  sudo sed -i '/post)/a\    \/usr\/local\/bin\/miniloong-led-mode.sh' Arkbuild/usr/lib/systemd/system-sleep/sleep
+fi
 sudo chmod 777 Arkbuild/usr/lib/systemd/system-sleep/sleep
 sudo sed -i "/SuspendState\=/c\SuspendState\=mem" Arkbuild/etc/systemd/sleep.conf
 
@@ -69,6 +79,11 @@ sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/loca
 # Find and record panel id on boot (for rg353 devices only)
 if [[ "$UNIT" == *"353"* ]]; then
   sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot dmesg | grep 'panel id' > /home/ark/.config/.panel_info &\") | crontab -"
+fi
+
+# Set the default LED mode on boot (for MiniLoong only)
+if [[ "$UNIT" == *"miniloong"* ]]; then
+  sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/miniloong-led-mode.sh &\") | crontab -"
 fi
 
 # Copy necessary tools for expansion of ROOTFS and convert fat32 games partition to exfat on initial boot
@@ -142,7 +157,7 @@ source ./fetch_compat_libs.sh
 # Various tools available through Options added here
 sudo mkdir -p Arkbuild/opt/system/Advanced
 sudo mkdir -p Arkbuild/opt/vulkan
-sudo cp misc/rk3566/vulkan/libmali.so.1.9.0 Arkbuild/opt/vulkan/libmali.so
+sudo cp misc/rk3566/vulkan/libmali-bifrost-g52-g29p1.so Arkbuild/opt/vulkan/libmali.so
 sudo cp misc/rk3566/vulkan/rk_vk.json Arkbuild/usr/share/vulkan/icd.d/rk_vk.json
 sudo cp -f misc/rk3566/vulkan/libvulkan.so.1.3.274 Arkbuild/usr/lib/aarch64-linux-gnu/.
 sudo cp -f misc/rk3566/vulkan/libmali-hook.so.1.9.0 Arkbuild/usr/lib/aarch64-linux-gnu/.
@@ -187,6 +202,13 @@ sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/loca
 
 # Disable requirement for sudo for setting niceness
 echo "ark              -       nice            -20" | sudo tee -a Arkbuild/etc/security/limits.conf
+
+# For MiniLoong Units Only.  Include led control script and systemd
+if [[ "$UNIT" == "miniloong" ]]; then
+  sudo cp scripts/miniloong/*.service Arkbuild/etc/systemd/system/
+  sudo cp scripts/miniloong/*.sh Arkbuild/usr/local/bin/
+  sudo chroot Arkbuild/ bash -c "systemctl enable miniloong_led"
+fi
 
 # For RGB30 Units Only.  Check for v1 or v2 units and change dtbs due to performance issues.
 # Also provide some battery life status indication
@@ -250,6 +272,8 @@ sudo chroot Arkbuild/ bash -c "systemctl disable autosuspend"
 sudo cp scripts/rk3566/shutdowntasks.service Arkbuild/etc/systemd/system/
 sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/panel_set.sh RestoreSettings &\") | crontab -"
 sudo chroot Arkbuild/ bash -c "systemctl enable shutdowntasks"
+sudo cp scripts/wifi_importer.service Arkbuild/etc/systemd/system/
+sudo chroot Arkbuild/ bash -c "systemctl enable wifi_importer"
 sudo cp scripts/keystroke.py Arkbuild/usr/local/bin/
 sudo cp scripts/b2.sh Arkbuild/usr/local/bin/
 sudo cp scripts/freej2me.sh Arkbuild/usr/local/bin/

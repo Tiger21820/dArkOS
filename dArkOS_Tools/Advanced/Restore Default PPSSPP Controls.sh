@@ -20,7 +20,7 @@ elif [ -f "/boot/rk3326-odroidgo3-linux.dtb" ]; then
   else
     DEVICE="Maybe an OGS"
   fi
-elif [ -f "/boot/rk3566.dtb" ] || [ -f "/boot/rk3566-OC.dtb" ]; then
+elif compgen -G "/boot/rk3566*"; then
   if [ "$(cat ~/.config/.DEVICE)" == "RG353M" ]; then
     DEVICE="RG353M"
   elif [ "$(cat ~/.config/.DEVICE)" == "RG353V" ]; then
@@ -29,6 +29,8 @@ elif [ -f "/boot/rk3566.dtb" ] || [ -f "/boot/rk3566-OC.dtb" ]; then
     DEVICE="RK2023"
   elif [ "$(cat ~/.config/.DEVICE)" == "RGB30" ]; then
     DEVICE="RGB30"
+  elif [ "$(cat ~/.config/.DEVICE)" == "MINILOONG" ]; then
+    DEVICE="MINILOONG"
   else
     DEVICE="RG503"
   fi

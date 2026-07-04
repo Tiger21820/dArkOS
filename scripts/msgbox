@@ -35,7 +35,7 @@ dialog --clear
 height="10"
 width="20"
 
-if test ! -z "$(cat /home/ark/.config/.DEVICE | grep RG503 | tr -d '\0')"
+if test ! -z "$(grep -E 'RG503|MINILOONG' /home/ark/.config/.DEVICE | tr -d '\0')"
 then
   height="15"
   width="60"

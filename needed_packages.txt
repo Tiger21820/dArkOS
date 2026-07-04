@@ -14,6 +14,7 @@ espeak-ng
 exfatprogs
 ffmpeg
 firmware-mediatek
+firmware-realtek
 fonts-noto-cjk
 git
 hostapd

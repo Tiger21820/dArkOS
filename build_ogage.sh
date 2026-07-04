@@ -21,6 +21,8 @@ elif [[ "$UNIT" == "503" ]]; then
   branch="rg503"
 elif [ "$UNIT" == "rk2023" ] || [ "$UNIT" == "rgb30" ] || [ "$UNIT" == "rgb20pro" ]; then
   branch="rk2023"
+elif [[ "$UNIT" == "miniloong" ]]; then
+  branch="miniloong"
 fi
 
 if [ -f "Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.tar.gz" ] && [ "$(cat Arkbuild_package_cache/${CHIPSET}/ogage_${branch}.commit)" == "$(curl -s https://api.github.com/repos/christianhaitian/ogage/commits/${branch} | jq -r '.sha')" ]; then

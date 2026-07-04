@@ -39,6 +39,14 @@ g350:
 	@sleep 5
 	./build_g350.sh
 
+miniloong:
+	$(info dArkOS will be built using the $(DEBIAN_CODE_NAME) release of Debian.)
+	$(info debian building caching enabled? ${ENABLE_CACHE})
+	$(info adding armhf 32bit userspace? ${BUILD_ARMHF})
+	$(info adding bluetooth support? ${BUILD_BLUEALSA})
+	@sleep 5
+	./build_miniloong.sh
+
 rgb10:
 	$(info dArkOS will be built using the $(DEBIAN_CODE_NAME) release of Debian.)
 	$(info debian building caching enabled? ${ENABLE_CACHE})

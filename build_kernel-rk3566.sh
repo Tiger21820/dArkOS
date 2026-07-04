@@ -95,7 +95,7 @@ for bin in /sbin/fsck /sbin/logsave /sbin/e2fsck /sbin/fsck.ext4; do
 done
 # We also need to copy the 5.10 kernel compatible BT firmware files or BT will not initialize correctly
 mkdir -p lib/firmware/rtl_bt/
-if [[ "$UNIT" != "rgb20pro" ]]; then
+if [[ "$UNIT" != "rgb20pro" ]] || [[ "$UNIT" != *"miniloong"* ]]; then
   sudo cp ../Arkbuild/usr/lib/firmware/rtl_bt/rtl8821cs_* lib/firmware/rtl_bt/
 else
   sudo cp ../firmware/rtl8723ds/rtl8723ds_config.bin lib/firmware/rtl_bt/rtl8723d_config.bin
@@ -109,13 +109,13 @@ sudo rm -f ${mountpoint}/initrd.img
 
 # Build uboot and resource and install it to the image
 cd $KERNEL_SRC
-if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]]; then
+if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloong"* ]]; then
   #cp arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
   # Next line generates the resource.img file needed to flash to the image and to build the uboot
   git clone --depth=1 https://github.com/rockchip-linux/rkbin
   cd rkbin/tools
   #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-  if [[ "$UNIT" == "503" ]]; then
+  if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"miniloong"* ]]; then
     cp ../../../misc/rk3566/device_off_charging_bmps/rg503/* .
   else
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .

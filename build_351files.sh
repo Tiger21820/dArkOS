@@ -13,6 +13,8 @@ elif [[ "$UNIT" == "rgb30" ]]; then
   BUILD_UNIT="RGB30"
 elif [[ "$UNIT" == "rgb20pro" ]]; then
   BUILD_UNIT="RGB20PRO"
+elif [[ "$UNIT" == "miniloong" ]]; then
+  BUILD_UNIT="MINILOONG"
 fi
 
 call_chroot "cd /home/ark &&

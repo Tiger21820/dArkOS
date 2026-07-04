@@ -36,6 +36,6 @@ else
 fi
 
 
-LD_PRELOAD=/opt/dolphin/lib/libmali.so /opt/dolphin/dolphin-emu-nogui -p drm -a HLE -e "${3}"
+/opt/dolphin/dolphin-emu-nogui -p drm -a HLE -e "${3}"
 
 printf "\033c" >> /dev/tty1

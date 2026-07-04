@@ -40,6 +40,9 @@ elif [ -f "/boot/rk3566.dtb" ] || [ -f "/boot/rk3566-OC.dtb" ]; then
   elif [ "$(cat ~/.config/.DEVICE)" == "RK2023" ]; then
     DEVICE="RK2023"
     CONFIG="gzdoom.ini.rk2023"
+  elif [ "$(cat ~/.config/.DEVICE)" == "MINILOONG" ]; then
+    DEVICE="MINILOONG"
+    CONFIG="gzdoom.ini.miniloong"
   else
     DEVICE="RG503"
     CONFIG="gzdoom.ini.503"

@@ -40,6 +40,9 @@ elif [ -f "/boot/rk3566.dtb" ] || [ -f "/boot/rk3566-OC.dtb" ]; then
   elif [ "$(cat ~/.config/.DEVICE)" == "RGB30" ]; then
     DEVICE="RGB30"
     CONFIG="drastic.cfg.rk2023"
+  elif [ "$(cat ~/.config/.DEVICE)" == "MINILOONG" ]; then
+    DEVICE="MINILOONG"
+    CONFIG="drastic.cfg.miniloong"
   else
     DEVICE="RG503"
     CONFIG="drastic.cfg.503"

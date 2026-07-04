@@ -21,6 +21,8 @@ if compgen -G "/boot/rk3566*" > /dev/null; then
     DEVICE="rg503"
   elif [ "$(cat /home/ark/.config/.DEVICE)" == "RG503" ]; then
     DEVICE="rg503"
+  elif [ "$(cat /home/ark/.config/.DEVICE)" == "MINILOONG" ]; then
+    DEVICE="rg503"
   else
     echo "This device is not compatible with this process."
 	echo "Exiting..."

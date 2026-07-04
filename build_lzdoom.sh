@@ -31,7 +31,7 @@ else
 	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/lzdoom.tar.gz Arkbuild/opt/lzdoom/ Arkbuild/home/ark/.config/lzdoom/
 fi
 sudo cp lzdoom/configs/${UNIT}/lzdoom.ini Arkbuild/home/ark/.config/lzdoom/
-sudo cp -R lzdoom/backup/ Arkbuild/home/ark/.config/lzdoom/
+sudo cp -rL lzdoom/backup/ Arkbuild/home/ark/.config/lzdoom/
 call_chroot "chown -R ark:ark /home/ark/.config/"
 call_chroot "chown -R ark:ark /opt/"
 sudo chmod 777 Arkbuild/opt/lzdoom/*

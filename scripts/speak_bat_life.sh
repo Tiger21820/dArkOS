@@ -22,10 +22,15 @@ if [ "$?" -eq "10" ] && [[ -z "$@" ]]; then
     runuser -u ark -- espeak-ng -vmb-us${voice} -s130 "CPU speed is currently $(awk 'length==6{printf("%.0f MHz\n", $0/10^3); next} length==7{printf("%.1f GHz\n", $0/10^6)}' /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq)" &
   fi
 else
-  if [[ ! -z "$@" ]]; then
-    runuser -u ark -- espeak-ng -vmb-us${voice} -s130 "${@} $(cat /sys/class/power_supply/battery/capacity) percent"
+  if [[ -f /tmp/battery.percent ]]; then
+    BAT_FILE="/tmp/battery.percent"
   else
-    runuser -u ark -- espeak-ng -vmb-us${voice} -s130 "Your battery level is at $(cat /sys/class/power_supply/battery/capacity) percent"
+    BAT_FILE="/sys/class/power_supply/battery/capacity"
+  fi
+  if [[ ! -z "$@" ]]; then
+    runuser -u ark -- espeak-ng -vmb-us${voice} -s130 "${@} $(cat $BAT_FILE) percent"
+  else
+    runuser -u ark -- espeak-ng -vmb-us${voice} -s130 "Your battery level is at $(cat $BAT_FILE) percent"
   fi
 
   Test_Button_R2

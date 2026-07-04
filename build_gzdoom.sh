@@ -29,7 +29,7 @@ else
 fi
 sudo cp gzdoom/configs/${UNIT}/gzdoom.ini Arkbuild/home/ark/.config/gzdoom/
 sudo cp gzdoom/scripts/doom* Arkbuild/usr/local/bin/
-sudo cp -R gzdoom/backup/ Arkbuild/home/ark/.config/gzdoom/
+sudo cp -rL gzdoom/backup/ Arkbuild/home/ark/.config/gzdoom/
 call_chroot "chown -R ark:ark /home/ark/.config/"
 call_chroot "chown -R ark:ark /opt/"
 sudo chmod 777 Arkbuild/opt/gzdoom/*

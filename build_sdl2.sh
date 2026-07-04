@@ -22,6 +22,8 @@ if [ "$ARCH" == "arm-linux-gnueabihf" ]; then
     export CFLAGS=\"-Wno-error=int-conversion\" &&
     if [ ! -d ${CHIPSET}_core_builds ]; then git clone https://github.com/christianhaitian/${CHIPSET}_core_builds.git; fi &&
     cd ${CHIPSET}_core_builds &&
+    if [[ ${UNIT} == *"miniloong"* ]]; then wget -t 3 -T 60 --no-check-certificate -P patches https://github.com/christianhaitian/rk3326_core_builds/raw/refs/heads/rk3326/patches/sdl2-patch-0004-odroidgoa-kmsdrm.patch; fi &&
+    if [[ ${UNIT} == *"miniloong"* ]]; then wget -t 3 -T 60 --no-check-certificate -P patches https://github.com/christianhaitian/rk3326_core_builds/raw/refs/heads/rk3326/patches/sdl2-patch-0005-odroidgoa-rotate-cursor.patch; fi &&
     chmod 777 builds-alt.sh &&
     eatmydata ./builds-alt.sh sdl2 &&
     cd SDL/${sub_folder} &&
@@ -31,6 +33,8 @@ else
   sudo chroot ${CHROOT_DIR}/ bash -c "source /root/.bashrc && cd /home/ark &&
     if [ ! -d ${CHIPSET}_core_builds ]; then git clone https://github.com/christianhaitian/${CHIPSET}_core_builds.git; fi &&
     cd ${CHIPSET}_core_builds &&
+    if [[ ${UNIT} == *"miniloong"* ]]; then wget -t 3 -T 60 --no-check-certificate -P patches https://github.com/christianhaitian/rk3326_core_builds/raw/refs/heads/rk3326/patches/sdl2-patch-0004-odroidgoa-kmsdrm.patch; fi &&
+    if [[ ${UNIT} == *"miniloong"* ]]; then wget -t 3 -T 60 --no-check-certificate -P patches https://github.com/christianhaitian/rk3326_core_builds/raw/refs/heads/rk3326/patches/sdl2-patch-0005-odroidgoa-rotate-cursor.patch; fi &&
     chmod 777 builds-alt.sh &&
     eatmydata ./builds-alt.sh sdl2 &&
     cd SDL/build &&

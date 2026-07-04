@@ -32,7 +32,7 @@ dialog --clear
 height="15"
 width="55"
 
-if test ! -z "$(cat /home/ark/.config/.DEVICE | grep RG503 | tr -d '\0')"
+if test ! -z "$(grep -E 'RG503|MINILOONG' /home/ark/.config/.DEVICE | tr -d '\0')"
 then
   height="20"
   width="60"
@@ -52,6 +52,9 @@ if [[ ! -e "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick" ]]; the
   elif test ! -z "$(cat /home/ark/.config/.DEVICE | grep RGB20PRO | tr -d '\0')"
   then
     sudo setfont /usr/share/consolefonts/Lat7-TerminusBold32x16.psf.gz
+  elif test ! -z "$(cat /home/ark/.config/.DEVICE | grep MINILOONG | tr -d '\0')"
+  then
+    sudo setfont /usr/share/consolefonts/Lat7-TerminusBold28x14.psf.gz
   else
     sudo setfont /usr/share/consolefonts/Lat7-TerminusBold22x11.psf.gz
   fi

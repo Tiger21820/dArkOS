@@ -26,6 +26,8 @@ else
 	sudo mkdir -p Arkbuild/home/ark/.config/retroarch/autoconfig/udev
 	if [ "$UNIT" == "rgb10" ] || [ "$UNIT" == "rk2020" ]; then
 	  sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch.${CHIPSET}.rot Arkbuild/opt/retroarch/bin/retroarch
+	elif [ "$UNIT" == "miniloong" ]; then
+	  sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch-rgarotated Arkbuild/opt/retroarch/bin/retroarch
 	elif [ "$CHIPSET" == "rk3566" ]; then
 	  sudo cp -a Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch64/retroarch Arkbuild/opt/retroarch/bin/retroarch
 	else
@@ -216,6 +218,8 @@ if [[ "${BUILD_ARMHF}" == "y" ]]; then
 		sudo mkdir -p Arkbuild/home/ark/.config/retroarch32/autoconfig/udev
 		if [ "$UNIT" == "rgb10" ] || [ "$UNIT" == "rk2020" ]; then
 		  sudo cp Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch32/retroarch32.${CHIPSET}.rot Arkbuild/opt/retroarch/bin/retroarch32
+		elif [ "$UNIT" == "miniloong" ]; then
+		  sudo cp Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch32/retroarch32-rgarotated Arkbuild/opt/retroarch/bin/retroarch32
 		elif [ "$CHIPSET" == "rk3566" ]; then
 		  sudo cp Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch32/retroarch32 Arkbuild/opt/retroarch/bin/retroarch32
 		else
