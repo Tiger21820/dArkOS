@@ -27,6 +27,32 @@ fi
 ln -sfv "/$directory/psx/savestates" "$HOME/.local/share/duckstation/savestates"
 ln -sf /opt/inttools/gamecontrollerdb.txt "$HOME/.local/share/gamecontrollerdb.txt"
 
+DEVICE="$(tr -d '\0' < /home/ark/.config/.DEVICE 2>/dev/null)"
+
+# Only apply to miniloong
+case "$DEVICE" in
+  *miniloong*|*MINILOONG*)
+	for status in /sys/class/drm/card*-HDMI-A-*/status; do
+	  [ -e "$status" ] || continue
+	  if grep -q disconnected "$status"; then
+		HDMI_STATUS="disconnected"
+		break
+	  else
+		HDMI_STATUS="connected"
+		break
+	  fi
+	done
+    if [ "$HDMI_STATUS" = "connected" ]; then
+      sed -i "/Rotation/c\Rotation \= 0" $HOME/.local/share/duckstation/settings.ini
+    else
+      sed -i "/Rotation/c\Rotation \= Rotate270" $HOME/.local/share/duckstation/settings.ini
+    fi
+    ;;
+  *)
+    continue
+    ;;
+esac
+
 Test_Button_A
 if [ "$?" -eq "10" ]; then
   printf "\033c" >> /dev/tty1

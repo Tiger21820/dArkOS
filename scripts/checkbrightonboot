@@ -1,5 +1,12 @@
 #!/bin/bash
 
-if [ $(cat /sys/devices/platform/backlight/backlight/backlight/brightness) -lt 2 ]; then
-   echo 60 > /sys/devices/platform/backlight/backlight/backlight/brightness
+if test ! -z "$(cat /home/ark/.config/.DEVICE | grep MINILOONG | tr -d '\0')"
+then
+  MIN_BRIGHT=61
+else
+  MIN_BRIGHT=2
+fi
+
+if [ $(cat /sys/devices/platform/backlight/backlight/backlight/brightness) -lt $MIN_BRIGHT ]; then
+   echo 63 > /sys/devices/platform/backlight/backlight/backlight/brightness
 fi

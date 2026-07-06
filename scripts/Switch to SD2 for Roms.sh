@@ -17,6 +17,9 @@ fi
 
 if [[ "$(tr -d '\0' < /proc/device-tree/compatible)" == *"rk3326"* ]]; then
   BLOCK="1"
+elif test ! -z "$(cat /home/ark/.config/.DEVICE | grep MINILOONG | tr -d '\0')"
+then
+  BLOCK="3"
 else
   BLOCK="2"
 fi

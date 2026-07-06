@@ -24,3 +24,37 @@ else
   echo 0 | sudo tee /var/run/drmMode
   echo 1 | sudo tee /var/run/drmConn
 fi
+
+DEVICE="$(tr -d '\0' < /home/ark/.config/.DEVICE 2>/dev/null)"
+
+# Only apply to miniloong
+case "$DEVICE" in
+  *miniloong*|*MINILOONG*)
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+# Detect HDMI connection
+for status in /sys/class/drm/card*-HDMI-A-*/status; do
+  [ -e "$status" ] || continue
+  if grep -q disconnected "$status"; then
+    HDMI_STATUS="disconnected"
+    break
+  else
+    HDMI_STATUS="connected"
+    break
+  fi
+done
+
+# fbcon rotation:
+# 0 = normal
+# 1 = 90 clockwise
+# 2 = 180
+# 3 = 270 clockwise
+if [ "$HDMI_STATUS" = "connected" ]; then
+  echo 0 > /sys/class/graphics/fbcon/rotate_all 2>/dev/null
+else
+  echo 3 > /sys/class/graphics/fbcon/rotate_all 2>/dev/null
+fi

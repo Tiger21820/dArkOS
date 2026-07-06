@@ -83,6 +83,7 @@ fi
 
 # Set the default LED mode on boot (for MiniLoong only)
 if [[ "$UNIT" == *"miniloong"* ]]; then
+  sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/checkbrightonboot &\") | crontab -"
   sudo chroot Arkbuild/ bash -c "(crontab -l 2>/dev/null; echo \"@reboot /usr/local/bin/miniloong-led-mode.sh &\") | crontab -"
 fi
 
