@@ -4,16 +4,16 @@
 sudo mkdir -p ${mountpoint}/extlinux
 
 if [[ "$UNIT" == "miniloong" ]]; then
-  ROTATE=" fbcon=rotate:3"
+  ROTATE_HZ=" panel_miniloong_pocket1.preferred_refresh_hz=60 fbcon=rotate:3"
 else
-  ROTATE=""
+  ROTATE_HZ=""
 fi
 
 cat <<EOF | sudo tee ${mountpoint}/extlinux/extlinux.conf
 LABEL ArkOS
   LINUX /Image
   FDT /${UNIT_DTB}.dtb
-  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash vt.global_cursor_default=0 net.ifnames=0${ROTATE} console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=5 video=HDMI-A-1:1280x720@60
+  APPEND root=/dev/mmcblk1p4 initrd=/uInitrd rootwait rw fsck.repair=yes quiet splash vt.global_cursor_default=0 net.ifnames=0${ROTATE_HZ} console=tty1 plymouth.ignore-serial-consoles consoleblank=0 loglevel=5 video=HDMI-A-1:1280x720@60
 EOF
 
 #sudo cp logo.bmp ${mountpoint}/

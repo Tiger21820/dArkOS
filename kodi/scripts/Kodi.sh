@@ -19,7 +19,11 @@ export MALLOC_MMAP_THRESHOLD_=131072
   if [[ -e "/dev/input/by-path/platform-fe5b0000.i2c-event" ]]; then
     sudo chown root:root /dev/input/event3
   else
-    sudo chown root:root /dev/input/event2
+    if [ "$(cat ~/.config/.DEVICE)" == "MINILOONG" ]; then
+      sudo chown root:root /dev/input/event1
+    else
+      sudo chown root:root /dev/input/event2
+    fi
   fi
   sudo chown root:root /dev/input/event0
 #else

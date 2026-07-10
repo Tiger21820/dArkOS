@@ -49,7 +49,7 @@ function verify_action() {
 }
 
 function get_file() {
-  wget -t 5 -T 30 --no-check-certificate "$@"
+  wget --retry-connrefused --retry-on-http-error=429 --waitretry=20 -t 65 -T 30 --no-check-certificate "$@"
   if [ -f "wget-log" ]; then
     rm -f wget-log*
   fi

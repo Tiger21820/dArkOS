@@ -24,19 +24,19 @@ function set_hue() {
 }
 
 function get_brightness() {
-   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep brightness | awk -F 'brightness = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 12 130 | grep brightness | awk -F 'brightness = ' '{print $2}'
 }
 
 function get_contrast() {
-   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep contrast | awk -F 'contrast = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 12 130 | grep contrast | awk -F 'contrast = ' '{print $2}'
 }
 
 function get_saturation() {
-   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep saturation | awk -F 'saturation = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 12 130 | grep saturation | awk -F 'saturation = ' '{print $2}'
 }
 
 function get_hue() {
-   /usr/local/bin/panel_drm_tool list | grep -A 10 130 | grep hue | awk -F 'hue = ' '{print $2}'
+   /usr/local/bin/panel_drm_tool list | grep -A 12 130 | grep hue | awk -F 'hue = ' '{print $2}'
 }
 
 function SaveSettingsOnShutdown() {

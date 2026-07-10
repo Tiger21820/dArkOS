@@ -23,6 +23,30 @@ elif [[ -e "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick" ]]; the
 elif [[ -e "/dev/input/by-path/platform-odroidgo3-joypad-event-joystick" ]]; then
   sdl_controllerconfig="190000004b4800000011000000010000,GO-Super Gamepad,x:b3,a:b0,b:b1,y:b2,back:b12,start:b13,dpleft:b10,dpdown:b9,dpright:b11,dpup:b8,leftshoulder:b4,lefttrigger:b6,rightshoulder:b5,righttrigger:b7,leftstick:b14,rightstick:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,platform:Linux,"
 elif [[ -e "/dev/input/by-path/platform-singleadc-joypad-event-joystick" ]]; then
+  DEVICE="$(tr -d '\0' < /home/ark/.config/.DEVICE 2>/dev/null)"
+  # Only apply to miniloong
+  case "$DEVICE" in
+    *miniloong*|*MINILOONG*)
+	  for status in /sys/class/drm/card*-HDMI-A-*/status; do
+	    [ -e "$status" ] || continue
+	    if grep -q disconnected "$status"; then
+		  HDMI_STATUS="disconnected"
+		  break
+	    else
+		  HDMI_STATUS="connected"
+		  break
+	    fi
+	  done
+      if [ "$HDMI_STATUS" = "connected" ]; then
+        sed -i "/rend.Rotate90/c\rend.Rotate90 \= no" $HOME/.config/flycast/emu.cfg
+      else
+        sed -i "/rend.Rotate90/c\rend.Rotate90 \= yes" $HOME/.config/flycast/emu.cfg
+      fi
+      ;;
+    *)
+      continue
+      ;;
+  esac
   sdl_controllerconfig="190000004b4800000111000000010000,retrogame_joypad,a:b0,b:b1,x:b3,y:b2,back:b8,start:b9,rightstick:b12,leftstick:b11,dpleft:b15,dpdown:b14,dpright:b16,dpup:b13,leftshoulder:b4,lefttrigger:b6,rightshoulder:b5,righttrigger:b7,leftx:a0,lefty:a1,rightx:a2,righty:a3,platform:Linux,"
 else
   sdl_controllerconfig="19000000030000000300000002030000,gameforce_gamepad,leftstick:b14,rightx:a3,leftshoulder:b4,start:b9,lefty:a0,dpup:b10,righty:a2,a:b0,b:b1,guide:b16,dpdown:b11,rightshoulder:b5,righttrigger:b7,rightstick:b15,dpright:b13,x:b3,back:b8,leftx:a1,y:b2,dpleft:b12,lefttrigger:b6,platform:Linux,"
@@ -46,6 +70,9 @@ elif compgen -G "/boot/rk3566*" > /dev/null; then
   then
     DEVICENAME="RG353V"
   elif test ! -z "$(grep "RG353M" /home/ark/.config/.DEVICE | tr -d '\0')"
+  then
+    DEVICENAME="RG353M"
+  elif test ! -z "$(grep "MINILOONG" /home/ark/.config/.DEVICE | tr -d '\0')"
   then
     DEVICENAME="RG353M"
   else
@@ -104,6 +131,9 @@ elif compgen -G "/boot/rk3566*" > /dev/null; then
   then
     DEVICENAME="RG353V"
   elif test ! -z "$(grep "RG353M" /home/ark/.config/.DEVICE | tr -d '\0')"
+  then
+    DEVICENAME="RG353M"
+  elif test ! -z "$(grep "MINILOONG" /home/ark/.config/.DEVICE | tr -d '\0')"
   then
     DEVICENAME="RG353M"
   else
