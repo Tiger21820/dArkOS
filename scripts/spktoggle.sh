@@ -48,6 +48,8 @@ else
 	  sudo rm -f /var/local/asound.state
   fi
   if [ "$(cat /home/ark/.config/.DEVICE)" == "MINILOONG" ] && [ ! -f "/home/ark/.config/.SPKTOGGLE" ]; then
+   sleep 5
+   amixer -q sset 'Playback Path' RCV
    amixer -q sset 'Playback Path' SPK
    touch /home/ark/.config/.SPKTOGGLE
   fi

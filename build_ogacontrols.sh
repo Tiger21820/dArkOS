@@ -5,6 +5,7 @@
 call_chroot "cd /home/ark &&
   git clone --recursive --depth=1 https://github.com/christianhaitian/oga_controls.git -b quitter &&
   cd oga_controls &&
+  if [ ${UNIT} == "miniloong" ]; sed -i \"0,/back_key \= 314/s//back_key \= 316/1\" main.c; fi &&
   make all &&
   mkdir -p /opt/quitter &&
   strip oga_controls &&

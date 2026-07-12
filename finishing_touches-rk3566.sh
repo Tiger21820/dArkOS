@@ -96,6 +96,9 @@ sudo chroot Arkbuild/ bash -c "systemctl enable firstboot"
 # Add hotkeydaemon service and python script
 sudo cp hotkeydaemon/killer_daemon.service Arkbuild/etc/systemd/system/killer_daemon.service
 sudo cp hotkeydaemon/killer_daemon.py Arkbuild/usr/local/bin/killer_daemon.py
+if [[ "$UNIT" == "miniloong" ]]; then
+  sudo sed -i "0,/314/s//316/1" Arkbuild/usr/local/bin/killer_daemon.py
+fi
 sudo chmod 777 Arkbuild/usr/local/bin/killer_daemon.py
 sudo chroot Arkbuild/ bash -c "systemctl disable killer_daemon"
 
