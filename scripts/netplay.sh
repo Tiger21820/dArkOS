@@ -367,14 +367,17 @@ GameShare() {
   else
     local gameshareoptions=( 1 "Share current game with Client" 2 "Share game from Host" 3 "Go Back" )
   fi
-
+  HOTKEY="Select"
+  if [[ ! -z $(grep -q MINILOONG /home/ark/.config/.DEVICE) ]]; then
+    HOTKEY="Menu"
+  fi
   while true; do
     gameshareselection=(dialog \
     --backtitle "Game Share Mode: Connected to: $(iw dev wlan0 info | grep ssid | cut -c 7-30)" \
     --title "[ Game Share Menu: Share game from Host mode: $(systemctl is-active ssh) ]" \
     --no-collapse \
     --clear \
-    --cancel-label "Select + Start to Exit" \
+    --cancel-label "${HOTKEY} + Start to Exit" \
     --menu "What do you want to do?" $height $width 15)
 
     gamesharechoices=$("${gameshareselection[@]}" "${gameshareoptions[@]}" 2>&1 > /dev/tty0) || TopLevel
@@ -556,6 +559,9 @@ sudo chmod 666 /dev/uinput
 export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
 if [[ ! -z $(pgrep -f gptokeyb) ]]; then
   pgrep -f gptokeyb | sudo xargs kill -9
+fi
+if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+  export HOTKEY="guide"
 fi
 /opt/inttools/gptokeyb -1 "netplay.sh" -c "/opt/inttools/keys.gptk" &
 printf "\033c" > /dev/tty0

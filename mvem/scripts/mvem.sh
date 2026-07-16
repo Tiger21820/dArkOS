@@ -19,6 +19,9 @@ cd /opt/mvem
 sudo chmod 666 /dev/uinput
 
 export SDL_GAMECONTROLLERCONFIG_FILE="controls/gamecontrollerdb.txt"
+if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+  export HOTKEY="guide"
+fi
 
 if [ -f "$custom_gamecontrols_nocase" ]; then
   echo "Loading custom user controls from $custom_gamecontrols_nocase"

@@ -14,6 +14,9 @@ if [[ $1 == "standalone" ]]; then
 
   sudo chmod 666 /dev/uinput
   export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
+  if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+    export HOTKEY="guide"
+  fi
   /opt/inttools/gptokeyb -c "/opt/gametank/gametank.gptk" > /dev/null &
 
   /opt/gametank/GameTankEmulator "$2"

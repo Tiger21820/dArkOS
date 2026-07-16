@@ -74,6 +74,9 @@ export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
 if [[ ! -z $(pgrep -f gptokeyb) ]]; then
   pgrep -f gptokeyb | sudo xargs kill -9
 fi
+if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+  export HOTKEY="guide"
+fi
 /opt/inttools/gptokeyb -1 "Bluetooth.sh" -c "/opt/inttools/keys.gptk" > /dev/null 2>&1 &
 
 old_ifs="$IFS"
@@ -389,6 +392,10 @@ MainMenu() {
 	local BT_MStat="On"
   fi
 
+  HOTKEY="Select"
+  if [[ ! -z $(grep -q MINILOONG /home/ark/.config/.DEVICE) ]]; then
+    HOTKEY="Menu"
+  fi
   mainoptions=( 1 "Turn Bluetooth $BT_Stat" 2 "Connect to new Bluetooth device" 3 "Activate existing Bluetooth device" 4 "Deactivate existing Bluetooth device" 5 "Delete exiting Bluetooth device" 6 "Currently paired Bluetooth devices" 7 "Exit" )
   IFS="$old_ifs"
   while true; do
@@ -397,7 +404,7 @@ MainMenu() {
    	--title "Main Menu" \
    	--no-collapse \
    	--clear \
-	--cancel-label "Select + Start to Exit" \
+	--cancel-label "${HOTKEY} + Start to Exit" \
     --menu "Please make your selection" $height $width 15)
 	
 	mainchoices=$("${mainselection[@]}" "${mainoptions[@]}" 2>&1 > /dev/tty1)

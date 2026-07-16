@@ -26,6 +26,8 @@ if [[ -z $(pgrep -f gptokeyb) ]] && [[ -z $(pgrep -f oga_controls) ]]; then
   export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
   if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | grep "190000004b4800000010000001010000") ]] || [[ -e "/dev/input/by-path/platform-gameforce-gamepad-event-joystick" ]]; then
     export HOTKEY="l3"
+  elif [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+    export HOTKEY="guide"
   fi
   /opt/inttools/gptokeyb -1 "controllerTester" -c "/opt/inttools/keys.gptk" > /dev/null &
   disown

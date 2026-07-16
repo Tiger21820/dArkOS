@@ -23,6 +23,9 @@ printf "\033c" > /dev/tty1
 if [[ -z $(pgrep -f gptokeyb) ]] && [[ -z $(pgrep -f oga_controls) ]]; then
   sudo chmod 666 /dev/uinput
   export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
+  if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+    export HOTKEY="guide"
+  fi
   /opt/inttools/gptokeyb -1 "dialog" -c "/opt/inttools/keys.gptk" > /dev/null &
   disown
   set_gptokeyb="Y"

@@ -109,7 +109,9 @@ elif [[ $EMULATOR == "applewin" ]]; then
         GPTOKEYB="/opt/inttools/gptokeyb -1"
         export SDL_GAMECONTROLLERCONFIG_FILE="/opt/linapple/gamecontrollerdb.txt"
         export SDL_GAMECONTROLLERCONFIG="$(cat /opt/linapple/gamecontrollerdb.txt)"
-
+        if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+          export HOTKEY="guide"
+        fi
         # The next 2 variables are for use with custom game controls if the user creates some
         gamecontrols=$(echo "$(ls "$GAME" | cut -d "/" -f4 | cut -d "." -f1)")
         custom_gamecontrols_nocase=$(find "/$directory/apple2/controls" -maxdepth 1 -iname "${gamecontrols}".gptk)

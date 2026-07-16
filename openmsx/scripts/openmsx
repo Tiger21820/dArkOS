@@ -27,6 +27,9 @@ cd /opt/openmsx
 export OPENMSX_USER_DATA="/$directory/bios/openmsx/share"
 export OPENMSX_HOME=$(dirname "$3")
 export SDL_GAMECONTROLLERCONFIG_FILE="./gamecontrollerdb.txt" 
+if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+  export HOTKEY="guide"
+fi
 /opt/inttools/gptokeyb -1 "openmsx" -c "/$directory/bios/openmsx/openmsx.gptk" &
 ./openmsx -script "/$directory/bios/openmsx/commands.txt" "$3"
 unset SDL_GAMECONTROLLERCONFIG_FILE

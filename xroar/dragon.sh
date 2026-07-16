@@ -22,6 +22,9 @@ ext="${GAME##*.}"
 sudo chmod 666 /dev/tty1
 sudo chmod 666 /dev/uinput
 export SDL_GAMECONTROLLERCONFIG_FILE="/opt/inttools/gamecontrollerdb.txt"
+if [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+  export HOTKEY="guide"
+fi
 
 # This guard is here because there's a weird issue with the latest SDL2 that makes the odroid go advance type units controls look weird
 # So we'll use an available older sdl2 just for the keyboard/mouse emulator if need be.

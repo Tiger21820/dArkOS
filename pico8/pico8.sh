@@ -82,6 +82,8 @@ LaunchFake08() {
 
   if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | grep "190000004b4800000010000001010000") ]] || [[ -e "/dev/input/by-path/platform-gameforce-gamepad-event-joystick" ]]; then
     export HOTKEY="l3"
+  elif [[ $(cat /home/ark/.config/.DEVICE) == "MINILOONG" ]]; then
+    export HOTKEY="guide"
   fi
 
   sudo chmod 666 /dev/uinput
