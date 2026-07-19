@@ -88,12 +88,12 @@ Rotation = Rotate270
 
 
 [Hotkeys]
-OpenPauseMenu = SDL-0/Back & SDL-0/X
-FastForward = SDL-0/Back & SDL-0/+RightTrigger
-Screenshot = SDL-0/Back & SDL-0/A
-LoadSelectedSaveState = SDL-0/Back & SDL-0/LeftShoulder
-SaveSelectedSaveState = SDL-0/Back & SDL-0/RightShoulder
-PowerOff = SDL-0/Back & SDL-0/Start
+OpenPauseMenu = SDL-0/Button10 & SDL-0/X
+FastForward = SDL-0/Button10 & SDL-0/+RightTrigger
+Screenshot = SDL-0/Button10 & SDL-0/A
+LoadSelectedSaveState = SDL-0/Button10 & SDL-0/LeftShoulder
+SaveSelectedSaveState = SDL-0/Button10 & SDL-0/RightShoulder
+PowerOff = SDL-0/Button10 & SDL-0/Start
 
 [Logging]
 LogLevel = Error

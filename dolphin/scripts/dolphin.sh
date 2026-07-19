@@ -35,7 +35,7 @@ else
   sed -i '/wideScreenHack =/c\wideScreenHack = True' ${HOME}/.local/share/dolphin-emu/Config/GFX.ini
 fi
 
-if [[ ! -z $(grep -q MINILOONG /home/ark/.config/.DEVICE) ]]; then
+if [[ ! -z $(grep MINILOONG /home/ark/.config/.DEVICE) ]]; then
   sed -i '/Buttons\/Hotkey =/c\Buttons\/Hotkey = Button 10' ${HOME}/.local/share/dolphin-emu/Config/GCPadNew.ini
 fi
 
