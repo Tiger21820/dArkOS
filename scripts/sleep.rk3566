@@ -12,6 +12,12 @@ case $1 in
     if [ -f "/usr/local/bin/quickmode.sh" ]; then
       touch /dev/shm/.JUSTWOKEUP
     fi
+    if [[ -e /sys/class/gpio/gpio16 ]]; then
+      if [[ "$(cat /sys/class/gpio/gpio16/value)" == "1" ]]; then
+        echo 0 > /sys/class/gpio/gpio16/value
+        touch /dev/shm/.SLEEPMUTED
+      fi
+    fi
     sudo btconnected.sh check
     #echo mem | sudo tee /sys/power/state
     sudo sleep_governors.sh SaveSettingsOnSleep
@@ -24,6 +30,10 @@ case $1 in
       systemctl is-active --quiet emulationstation.service && echo ok || systemctl start emulationstation
     fi
     sleep 2
+    if [[ -e /dev/shm/.SLEEPMUTED ]]; then
+      echo 1 > /sys/class/gpio/gpio16/value
+      rm -f /dev/shm/.SLEEPMUTED
+    fi
     systemctl is-active --quiet bluetooth.service && sudo systemctl restart bluetooth
     systemctl is-active --quiet bluealsa.service && sudo systemctl restart bluealsa
     systemctl is-active --quiet watchforbtaudio.service && sudo systemctl restart watchforbtaudio --no-block

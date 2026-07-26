@@ -11,6 +11,7 @@
 
 LED="/sys/class/leds/aw20036_led"
 CONFIG_FILE="/home/ark/.config/miniloong_led_mode"
+LED_MODE="$(sed -n '1p' "$CONFIG_FILE" | tr -d '\r\n[:space:]' | tr '[:upper:]' '[:lower:]')"
 
 if [ -f "$CONFIG_FILE" ]; then
   BRIGHTNESS="$(sed -n '2p' "$CONFIG_FILE" | tr -d '\r\n[:space:]')"
@@ -105,18 +106,33 @@ while true; do
         EFFECT="pulse"
         SLEEP_TIME="$POLL_CHARGING"
     elif [ "$STATUS" = "Full" ] || [ "$CAPACITY" -ge 100 ]; then
-        STATE="FULL"
-        COLOR="green"
+        if [[ "$LED_MODE" == *"battery-"* ]]; then
+          STATE="OFF"
+          COLOR="off"
+        else
+          STATE="FULL"
+          COLOR="green"
+        fi
         EFFECT="solid"
         SLEEP_TIME="$POLL_CHARGING"
     elif [ "$CAPACITY" -ge 75 ]; then
-        STATE="GREEN"
-        COLOR="green"
+        if [[ "$LED_MODE" == *"battery-"* ]]; then
+          STATE="OFF"
+          COLOR="off"
+        else
+          STATE="GREEN"
+          COLOR="green"
+        fi
         EFFECT="solid"
         SLEEP_TIME="$POLL_NORMAL"
     elif [ "$CAPACITY" -ge 30 ]; then
-        STATE="YELLOW"
-        COLOR="yellow"
+        if [[ "$LED_MODE" == *"-critical"* ]]; then
+          STATE="OFF"
+          COLOR="off"
+        else
+          STATE="YELLOW"
+          COLOR="yellow"
+        fi
         EFFECT="solid"
         SLEEP_TIME="$POLL_NORMAL"
     elif [ "$CAPACITY" -ge 10 ]; then

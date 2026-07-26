@@ -52,6 +52,7 @@ sudo cp retrorun/scripts/*.sh Arkbuild/usr/local/bin/
 sudo cp retrorun/configs/retrorun.cfg.${CHIPSET} Arkbuild/home/ark/.config/retrorun.cfg
 
 if [[ "$UNIT" == "miniloong" ]]; then
+  sudo sed -i '/^# ---- RETRORUN INTERNAL SETTINGS ----$/a retrorun_device_name=Miniloong Pocket 1' Arkbuild/home/ark/.config/retrorun.cfg
   sudo mv Arkbuild/usr/local/bin/retrorun-miniloong Arkbuild/usr/local/bin/retrorun
   if [[ "${BUILD_ARMHF}" == "y" ]]; then
     sudo mv Arkbuild/usr/local/bin/retrorun32-miniloong Arkbuild/usr/local/bin/retrorun32

@@ -27,7 +27,7 @@ LED_EFFECT="${LED_EFFECT:-solid}"
 
 # Validate mode.
 case "$LED_MODE" in
-    battery|red|green|blue|yellow|cyan|magenta|rainbow|off) ;;
+    battery|battery-warning|battery-critical|red|green|blue|yellow|cyan|magenta|rainbow|off) ;;
     *) LED_MODE="battery" ;;
 esac
 
@@ -92,7 +92,7 @@ fi
 write_led_attr "miniloong_brightness" "$DRIVER_BRIGHTNESS"
 
 case "$LED_MODE" in
-    battery)
+    battery|battery-warning|battery-critical)
         # Battery mode keeps the service in charge/state-driven control.
         # Brightness is still applied above.
         start_battery_led_service
