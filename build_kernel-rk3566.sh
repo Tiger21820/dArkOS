@@ -116,8 +116,14 @@ if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloo
   git clone --depth=1 https://github.com/rockchip-linux/rkbin
   cd rkbin/tools
   #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-  if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"miniloong"* ]]; then
+  if [[ "$UNIT" == "503" ]]; then
     cp ../../../misc/rk3566/device_off_charging_bmps/rg503/* .
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
+  elif [[ "$UNIT" == *"miniloong"* ]]; then
+    cp ../../../misc/rk3566/device_off_charging_bmps/miniloong/* .
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   else
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
   fi
