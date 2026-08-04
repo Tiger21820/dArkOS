@@ -118,17 +118,19 @@ if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloo
   #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
   if [[ "$UNIT" == "503" ]]; then
     cp ../../../misc/rk3566/device_off_charging_bmps/rg503/* .
-    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   elif [[ "$UNIT" == *"miniloong"* ]]; then
     cp ../../../misc/rk3566/device_off_charging_bmps/miniloong/* .
-    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
+    #Commenting the next 2 lines out because it currently impacts charging status from within the OS
+	#Just using the stock rk-kernel.dtb from the rg503 with display timings updated for the miniloong for now
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   else
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
   fi
   # Use Anbernic's resource.img files to provide onscreen battery charging state while off
-  ./resource_tool --pack battery_* rk3566* rk-kernel.dtb
+  ./resource_tool --pack battery_* rk-kernel.dtb
   cp resource.img ../../.
   cd ../..
   rm -rf rkbin
