@@ -121,11 +121,9 @@ if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloo
     #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
     #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   elif [[ "$UNIT" == *"miniloong"* ]]; then
-    cp ../../../misc/rk3566/device_off_charging_bmps/miniloong/* .
-    #Commenting the next 2 lines out because it currently impacts charging status from within the OS
-	#Just using the stock rk-kernel.dtb from the rg503 with display timings updated for the miniloong for now
+    cp ../../../misc/rk3566/device_off_charging_bmps/miniloong/*.bmp .
     #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   else
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
   fi
