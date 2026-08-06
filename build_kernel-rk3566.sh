@@ -128,7 +128,7 @@ if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloo
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
   fi
   # Use Anbernic's resource.img files to provide onscreen battery charging state while off
-  ./resource_tool --pack battery_* rk-kernel.dtb
+  ./resource_tool --pack *.bmp rk-kernel.dtb
   cp resource.img ../../.
   cd ../..
   rm -rf rkbin
