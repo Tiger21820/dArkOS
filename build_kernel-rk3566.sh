@@ -10,6 +10,7 @@ cd $KERNEL_SRC
 if [[ -e "../logos/unrotated/dArkos${UNIT}.png" ]]; then
   apt list --installed 2>/dev/null | grep -q "netpbm"
   if [[ $? != "0" ]]; then
+    sudo apt -y update
     sudo apt -y install netpbm
   fi	
   pngtopnm ../logos/unrotated/dArkos${UNIT}.png | ppmquant 224 | pnmnoraw > drivers/video/logo/logo_linux_clut224.ppm
@@ -115,13 +116,19 @@ if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"353"* ]] || [[ "$UNIT" == *"miniloo
   git clone --depth=1 https://github.com/rockchip-linux/rkbin
   cd rkbin/tools
   #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
-  if [[ "$UNIT" == "503" ]] || [[ "$UNIT" == *"miniloong"* ]]; then
+  if [[ "$UNIT" == "503" ]]; then
     cp ../../../misc/rk3566/device_off_charging_bmps/rg503/* .
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
+  elif [[ "$UNIT" == *"miniloong"* ]]; then
+    cp ../../../misc/rk3566/device_off_charging_bmps/miniloong/*.bmp .
+    #cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb .
+    cp ../../arch/arm64/boot/dts/rockchip/${UNIT_DTB}.dtb rk-kernel.dtb
   else
     cp ../../../misc/rk3566/device_off_charging_bmps/rg353/* .
   fi
   # Use Anbernic's resource.img files to provide onscreen battery charging state while off
-  ./resource_tool --pack battery_* rk3566* rk-kernel.dtb
+  ./resource_tool --pack *.bmp rk-kernel.dtb
   cp resource.img ../../.
   cd ../..
   rm -rf rkbin

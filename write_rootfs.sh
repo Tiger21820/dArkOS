@@ -14,15 +14,25 @@ elif [[ "${ROOT_FILESYSTEM_FORMAT}" == *"ext"* ]]; then
   sudo dd if="${FILESYSTEM}" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc
 elif [ "${ROOT_FILESYSTEM_FORMAT}" == "btrfs" ]; then
   sudo btrfs balance start --full-balance Arkbuild
-  sync Arkbuild
-  sizes="8000 7700 7300 7250 7100"
-  for size in $sizes
-  do
-    sudo btrfs filesystem resize ${size}M Arkbuild/
+  sudo sync Arkbuild
+  sizes=(8000 7700 7300 7250 7100)
+  i=0
+  count=0
+  while [[ $i -lt ${#sizes[@]} ]]; do
+    size=${sizes[$i]}
+    sudo btrfs filesystem resize "${size}M" Arkbuild/
     if [ $? -eq 0 ]; then
-      tsize=$((${size} + 350))
+      tsize=$((size + 350))
+      ((i++)) || true
     else
-      break  
+      if [[ -z $tsize ]] && [[ $count -le 4 ]]; then
+        sudo btrfs balance start --full-balance Arkbuild
+        sudo sync Arkbuild
+        ((count++)) || true
+        i=0
+      else
+        break
+      fi
     fi
   done
   #verify_action
