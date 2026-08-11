@@ -37,7 +37,7 @@ fi
 if [ "$CHIPSET" == "rk3326" ]; then
   export whichmali=libmali-bifrost-g31-rxp0-gbm.so
 else
-  export whichmali=libmali-bifrost-g52-g13p0-gbm.so
+  export whichmali=libmali-bifrost-g52-g29p1.so
 fi
 
 function verify_action() {
@@ -125,7 +125,7 @@ function setup_arkbuild32() {
     sudo mv ${whichmali} Arkbuild32/usr/lib/arm-linux-gnueabihf/.
     cd Arkbuild32/usr/lib/arm-linux-gnueabihf
     sudo ln -sf ${whichmali} libMali.so
-    for LIB in libEGL.so libEGL.so.1 libEGL.so.1.1.0 libGLES_CM.so libGLES_CM.so.1 libGLESv1_CM.so libGLESv1_CM.so.1 libGLESv1_CM.so.1.1.0 libGLESv2.so libGLESv2.so.2 libGLESv2.so.2.0.0 libGLESv2.so.2.1.0 libGLESv3.so libGLESv3.so.3 libgbm.so libgbm.so.1 libgbm.so.1.0.0 libmali.so libmali.so.1 libMaliOpenCL.so libOpenCL.so libwayland-egl.so libwayland-egl.so.1 libwayland-egl.so.1.0.0
+    for LIB in libEGL.so libEGL.so.1 libEGL.so.1.1.0 libGLES_CM.so libGLES_CM.so.1 libGLESv1_CM.so libGLESv1_CM.so.1 libGLESv1_CM.so.1.1.0 libGLESv2.so libGLESv2.so.2 libGLESv2.so.2.0.0 libGLESv2.so.2.1.0 libGLESv3.so libGLESv3.so.3 libgbm.so libgbm.so.1 libgbm.so.1.0.0 libmali.so libmali.so.1 libMaliOpenCL.so libOpenCL.so libOpenCL.so.1 libwayland-egl.so libwayland-egl.so.1 libwayland-egl.so.1.0.0
     do
       sudo rm -fv ${LIB}
       sudo ln -sfv libMali.so ${LIB}

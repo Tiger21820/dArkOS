@@ -160,8 +160,8 @@ source ./fetch_compat_libs.sh
 
 # Various tools available through Options added here
 sudo mkdir -p Arkbuild/opt/system/Advanced
-sudo mkdir -p Arkbuild/opt/vulkan
-sudo cp misc/rk3566/vulkan/libmali-bifrost-g52-g29p1.so Arkbuild/opt/vulkan/libmali.so
+#sudo mkdir -p Arkbuild/opt/vulkan
+#sudo cp misc/rk3566/vulkan/libmali-bifrost-g52-g29p1.so Arkbuild/opt/vulkan/libmali.so
 sudo cp misc/rk3566/vulkan/rk_vk.json Arkbuild/usr/share/vulkan/icd.d/rk_vk.json
 sudo cp -f misc/rk3566/vulkan/libvulkan.so.1.3.274 Arkbuild/usr/lib/aarch64-linux-gnu/.
 sudo cp -f misc/rk3566/vulkan/libmali-hook.so.1.9.0 Arkbuild/usr/lib/aarch64-linux-gnu/.
