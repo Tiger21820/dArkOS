@@ -62,7 +62,7 @@ sudo chroot Arkbuild/ bash -c "sed -i '/\"\~\/.asoundrc\"/s//\"\~\/.asoundrc.med
 sudo mkdir -p Arkbuild/usr/lib/systemd/system-sleep
 sudo cp scripts/sleep.${CHIPSET} Arkbuild/usr/lib/systemd/system-sleep/sleep
 if [[ "$UNIT" == "miniloong" ]]; then
-  sudo sed -i '/post)/a\    \/usr\/local\/bin\/miniloong-led-mode.sh' Arkbuild/usr/lib/systemd/system-sleep/sleep
+  sudo sed -i '/RestoreSettingsOnWake/a\    \/usr\/local\/bin\/miniloong-led-mode.sh &' Arkbuild/usr/lib/systemd/system-sleep/sleep
 fi
 sudo chmod 777 Arkbuild/usr/lib/systemd/system-sleep/sleep
 sudo sed -i "/SuspendState\=/c\SuspendState\=mem" Arkbuild/etc/systemd/sleep.conf
