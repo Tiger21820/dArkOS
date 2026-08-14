@@ -129,7 +129,7 @@ clean:
 	[ -f "wget-log" ] && sudo rm -f wget-log* || true
 	source utils.sh && remove_arkbuild && remove_arkbuild32
 	sudo rm -rf Arkbuild Arkbuild32 Arkbuild-final arkos_* main mnt odroidgoA-4.4.y ArkOS_* rg351 wget-*
-	while losetup -a | grep -m 1 ArkOS; do sudo losetup -d "$$(losetup -a | grep ArkOS | cut -d ':' -f 1)"; done
+	for devlo in $$(losetup -a | grep -F "($$(pwd)/" | cut -d ':' -f 1); do sudo losetup -d "$$devlo" || echo "Skipping $$devlo (still in use)"; done
 	@echo "Done!"
 
 clean_devenv:
