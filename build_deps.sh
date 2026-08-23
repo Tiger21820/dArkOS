@@ -73,7 +73,7 @@ do
   done
   cd ../../../../
 done
-sudo chroot Arkbuild/ ldconfig
+sudo chroot Arkbuild/ ldconfig -X
 
 # Install meson
 sudo chroot ${CHROOT_DIR}/ bash -c "git clone https://github.com/mesonbuild/meson.git && ln -s /meson/meson.py /usr/bin/meson"

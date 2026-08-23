@@ -69,8 +69,8 @@ if [[ ! -f ${KODI_DEVENV}/home/ark/.ffmpeg_mpp_rga_ready ]]; then
 	  cp -av rkrga_build/librga.so* /usr/lib/aarch64-linux-gnu/ &&
 	  git clone --depth=1 https://github.com/nyanmisaka/ffmpeg-rockchip.git -b 7.1 ffmpeg &&
 	  cd ffmpeg &&
-	  rm /usr/lib/aarch64-linux-gnu/librga.so.2.0.0 /usr/lib/aarch64-linux-gnu/librga.so.2 /usr/lib/aarch64-linux-gnu/librga.so &&
-	  rm -rf /usr/local/include/rga &&
+	  rm /usr/lib/aarch64-linux-gnu/librga.so.2.0.0 /usr/lib/aarch64-linux-gnu/librga.so.2 /usr/lib/aarch64-linux-gnu/librga.so;
+	  rm -rf /usr/local/include/rga;
 	  ./configure --prefix=/usr --libdir=/usr/lib/aarch64-linux-gnu --shlibdir=/usr/lib/aarch64-linux-gnu --enable-gpl --enable-version3 --enable-libdrm --enable-rkmpp --enable-rkrga --disable-vulkan --disable-autodetect --enable-shared --disable-static &&
 	  make -j $(nproc) &&
 	  make install &&
