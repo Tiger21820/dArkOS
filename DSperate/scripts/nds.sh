@@ -69,9 +69,17 @@ elif [[ "$1" == "dsperate" ]]; then
 
   ln -sfn /${directory}/nds/dsperate /home/ark/.config/
 
+  if [[ ! -d "/${directory}/nds/cheats" ]]; then
+    mkdir /${directory}/nds/cheats
+  fi
+
+  if [[ ! -d "/${directory}/nds/savestates" ]]; then
+    mkdir /${directory}/nds/savestates
+  fi
+
   sed -i "/saves =/c\saves = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
-  sed -i "/states =/c\states = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
-  sed -i "/cheats =/c\cheats = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/states =/c\states = /${directory}/nds/savestates" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/cheats =/c\cheats = /${directory}/nds/cheats" /${directory}/nds/dsperate/dsperate.ini
 
   /opt/DSperate/dsperate "$game" --bios9 /${directory}/bios/nds_bios9.bin --bios7 /${directory}/bios/nds_bios7.bin --firmware /${directory}/bios/nds_firmware.bin
 
