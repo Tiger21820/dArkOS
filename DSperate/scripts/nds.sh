@@ -24,6 +24,10 @@ if [[ "$1" == "drastic" ]]; then
 
   sudo systemctl restart ogage &
 elif [[ "$1" == "dsperate" ]]; then
+  sed -i "/saves =/c\saves = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/states =/c\states = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/cheats =/c\cheats = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+
   # The DSperate standalone emulator does not support 7z archive files.  We'll take care of that here
   game="$2"
   ext="${2##*.}"
@@ -66,10 +70,6 @@ elif [[ "$1" == "dsperate" ]]; then
   if [[ ! -s "/${directory}/nds/dsperate/dsperate.ini" ]]; then
     cp /opt/DSperate/config/dsperate.ini /${directory}/nds/dsperate/.
   fi
-
-  sed -i "/saves =/c\saves = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
-  sed -i "/states =/c\states = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
-  sed -i "/cheats =/c\cheats = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
 
   ln -sfn /${directory}/nds/dsperate /home/ark/.config/
 
