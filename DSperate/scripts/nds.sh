@@ -24,7 +24,7 @@ if [[ "$1" == "drastic" ]]; then
 
   sudo systemctl restart ogage &
 elif [[ "$1" == "dsperate" ]]; then
-  # The DSperate does not support 7z archive files.  We'll take care of that here
+  # The DSperate standalone emulator does not support 7z archive files.  We'll take care of that here
   game="$2"
   ext="${2##*.}"
   if [[ "${ext,,}" == "7z" ]]; then
@@ -67,7 +67,15 @@ elif [[ "$1" == "dsperate" ]]; then
     cp /opt/DSperate/config/dsperate.ini /${directory}/nds/dsperate/.
   fi
 
+  sed -i "/saves =/c\saves = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/states =/c\states = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+  sed -i "/cheats =/c\cheats = /${directory}/nds" /${directory}/nds/dsperate/dsperate.ini
+
   ln -sfn /${directory}/nds/dsperate /home/ark/.config/
 
   /opt/DSperate/dsperate "$game" --bios9 /${directory}/bios/nds_bios9.bin --bios7 /${directory}/bios/nds_bios7.bin --firmware /${directory}/bios/nds_firmware.bin
+
+  if [ -d "/dev/shm/ndsroms" ]; then
+    rm -rf /dev/shm/ndsroms
+  fi
 fi
