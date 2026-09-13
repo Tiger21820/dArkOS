@@ -72,6 +72,7 @@ source ./build_sdljoytest.sh
 source ./build_controllertester.sh
 source ./build_batteryplus.sh
 source ./build_drastic.sh
+source ./build_dsperate.sh
 source ./finishing_touches.sh
 source ./cleanup_filesystem.sh
 source ./write_rootfs.sh
