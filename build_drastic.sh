@@ -16,7 +16,5 @@ sudo cp drastic/game_database.xml Arkbuild/opt/drastic/.
 sudo cp -R drastic/system/ Arkbuild/opt/drastic/
 sudo cp -rL drastic/configs/ Arkbuild/opt/drastic/config/backup/
 sudo cp drastic/bin/drastic Arkbuild/opt/drastic/
-sudo cp drastic/scripts/drastic.sh Arkbuild/usr/local/bin/
 call_chroot "chown -R ark:ark /opt/"
-sudo chmod 777 Arkbuild/usr/local/bin/drastic.sh
 sudo chmod 777 Arkbuild/opt/drastic/drastic

@@ -22,7 +22,7 @@ if [[ "$1" == "advanced_drastic" ]]; then
   echo "VAR=drastic" > /home/ark/.config/KILLIT
   sudo systemctl restart killer_daemon.service
 
-  ./drastic_v2522 "$2"
+  ./drastic "$2"
 
   sudo systemctl stop killer_daemon.service
 
