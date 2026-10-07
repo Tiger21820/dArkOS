@@ -231,6 +231,7 @@ if [[ "${BUILD_ARMHF}" == "y" ]]; then
 		fi
 		if [[ "$UNIT" == *"a10mini"* ]]; then
 		  sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch32/retroarch32.${CHIPSET}.a10miniv4 Arkbuild/opt/retroarch/bin/retroarch32.a10miniv4
+		  sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/sdl2-32/libSDL2-2.0.so.0.$extension.a10miniv4 Arkbuild/usr/lib/arm-linux-gnueabihf/.
 		fi
 		sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filters/*.so Arkbuild/home/ark/.config/retroarch32/filters/video/
 		sudo cp -a Arkbuild32/home/ark/${CHIPSET}_core_builds/retroarch/gfx/video_filters/*.filt Arkbuild/home/ark/.config/retroarch32/filters/video/
@@ -242,7 +243,7 @@ if [[ "${BUILD_ARMHF}" == "y" ]]; then
 		if [ -f "Arkbuild_package_cache/${CHIPSET}/retroarch32_${UNIT}.commit" ]; then
 	      sudo rm -f Arkbuild_package_cache/${CHIPSET}/retroarch32_${UNIT}.commit
 		fi
-		sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/retroarch32_${UNIT}.tar.gz Arkbuild/opt/retroarch/bin/retroarch32* Arkbuild/home/ark/.config/retroarch32/ Arkbuild/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.${extension}.* Arkbuild/usr/lib/arm-linux-gnueabihf/librga.so* Arkbuild/usr/lib/arm-linux-gnueabihf/libgo2.so* Arkbuild/usr/lib/arm-linux-gnueabihf/${whichmali} Arkbuild/usr/lib/arm-linux-gnueabihf/{libEGL.so,libEGL.so.1,libEGL.so.1.1.0,libGLES_CM.so,libGLES_CM.so.1,libGLESv1_CM.so,libGLESv1_CM.so.1,libGLESv1_CM.so.1.1.0,libGLESv2.so,libGLESv2.so.2,libGLESv2.so.2.0.0,libGLESv2.so.2.1.0,libGLESv3.so,libGLESv3.so.3,libgbm.so,libgbm.so.1,libgbm.so.1.0.0,libmali.so,libmali.so.1,libMaliOpenCL.so,libOpenCL.so,libwayland-egl.so,libwayland-egl.so.1,libwayland-egl.so.1.0.0,libMali.so}
+		sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/retroarch32_${UNIT}.tar.gz Arkbuild/opt/retroarch/bin/retroarch32* Arkbuild/home/ark/.config/retroarch32/ Arkbuild/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.${extension}* Arkbuild/usr/lib/arm-linux-gnueabihf/librga.so* Arkbuild/usr/lib/arm-linux-gnueabihf/libgo2.so* Arkbuild/usr/lib/arm-linux-gnueabihf/${whichmali} Arkbuild/usr/lib/arm-linux-gnueabihf/{libEGL.so,libEGL.so.1,libEGL.so.1.1.0,libGLES_CM.so,libGLES_CM.so.1,libGLESv1_CM.so,libGLESv1_CM.so.1,libGLESv1_CM.so.1.1.0,libGLESv2.so,libGLESv2.so.2,libGLESv2.so.2.0.0,libGLESv2.so.2.1.0,libGLESv3.so,libGLESv3.so.3,libgbm.so,libgbm.so.1,libgbm.so.1.0.0,libmali.so,libmali.so.1,libMaliOpenCL.so,libOpenCL.so,libwayland-egl.so,libwayland-egl.so.1,libwayland-egl.so.1.0.0,libMali.so}
 		sudo curl -s https://raw.githubusercontent.com/christianhaitian/${CHIPSET}_core_builds/refs/heads/master/scripts/retroarch.sh | grep -oP '(?<=tag=").*?(?=")' > Arkbuild_package_cache/${CHIPSET}/retroarch32_${UNIT}.commit
 	fi
 	sudo cp retroarch32/configs/retroarch.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch32/retroarch.cfg

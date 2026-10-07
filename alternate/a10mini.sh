@@ -3,9 +3,8 @@
 # We'll finalize the regular a10mini image first
 sudo mv -fv Arkbuild/opt/retroarch/bin/retroarch.${UNIT}v4 /tmp/${UNIT}v4/.
 sudo mv -fv Arkbuild/opt/retroarch/bin/retroarch32.${UNIT}v4 /tmp/${UNIT}v4/.
-sudo mv -fv Arkbuild/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.$extension.${UNIT}v4.32 /tmp/${UNIT}v4/libSDL2-2.0.so.0.$extension.${UNIT}v4.32
+sudo mv -fv Arkbuild/usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.$extension.${UNIT}v4 /tmp/${UNIT}v4/libSDL2-2.0.so.0.$extension.${UNIT}v4.32
 mkdir -p /tmp/${UNIT}v4/boot
-sudo cp -fv ${mountpoint}/* /tmp/${UNIT}v4/boot/.
 sync Arkbuild
 sudo dd if="${FILESYSTEM}" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc
 sync ${DISK}
@@ -60,8 +59,4 @@ sync
 
 sudo umount -l /tmp/a10v4-rootfs
 sudo umount -l /tmp/a10v4-boot
-sudo umount -l ${mountpoint}
-sudo losetup -d ${LOOP_BOOT}
-sudo losetup -d ${LOOP_ROOTFS}
-sudo losetup -d ${LOOP_ROM}
 sudo losetup -d ${LOOP_ALT}
