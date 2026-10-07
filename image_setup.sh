@@ -31,5 +31,9 @@ dd if="sd_fuse/trust.img" of="../${DISK}" bs=512 seek=24576 conv=sync,noerror,no
 if [ "$UNIT" == "rg351mp" ] || [ "$UNIT" == "g350" ] || [ "$UNIT" == "a10mini" ]; then
   cp arch/arm/dts/${UNIT}-uboot.dtb /tmp/
 fi
+if [[ "$UNIT" == *"a10mini"* ]]; then
+  mkdir -p /tmp/a10miniv4/
+  cp arch/arm/dts/${UNIT}v4-uboot.dtb /tmp/a10miniv4/.
+fi
 cd ..
 rm -rf u-boot-${CHIPSET}

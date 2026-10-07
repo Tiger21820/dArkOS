@@ -392,14 +392,18 @@ sudo git clone --depth=1 https://github.com/Jetup13/es-theme-switch.git Arkbuild
 sudo git clone --depth=1 https://github.com/dani7959/es-theme-replica.git Arkbuild/tempthemes/es-theme-replica
 
 sync
-sudo umount -l ${mountpoint}
-sudo losetup -d ${LOOP_BOOT}
+#if [[ "$UNIT" != *"a10mini"* ]]; then
+  sudo umount -l ${mountpoint}
+  sudo losetup -d ${LOOP_BOOT}
+#fi
 
 # Format rootfs partition in final image
 ROOTFS_PART_OFFSET=$((STORAGE_PART_START * 512))
 LOOP_ROOTFS=$(sudo losetup --find --show --offset ${ROOTFS_PART_OFFSET} ${DISK})
 sudo mkfs.${ROOT_FILESYSTEM_FORMAT} ${ROOT_FILESYSTEM_FORMAT_PARAMETERS} ${LOOP_ROOTFS}
-sudo losetup -d ${LOOP_ROOTFS}
+#if [[ "$UNIT" != *"a10mini"* ]]; then
+  sudo losetup -d ${LOOP_ROOTFS}
+#fi
 
 # Format ROMS partition in final image
 ROM_PART_OFFSET=$((ROM_PART_START * 512))
