@@ -20,7 +20,7 @@ else
 	sudo tar -czpf Arkbuild_package_cache/${CHIPSET}/solarus.tar.gz Arkbuild/opt/solarus/
 	sudo curl -s https://raw.githubusercontent.com/christianhaitian/${CHIPSET}_core_builds/refs/heads/master/scripts/solarus.sh | grep -oP '(?<=TAG=").*?(?=")' > Arkbuild_package_cache/${CHIPSET}/solarus.commit
 fi
-sudo cp solarus/configs/${UNIT}/pads.ini Arkbuild/opt/solarus/
+#sudo cp solarus/configs/${UNIT}/pads.ini Arkbuild/opt/solarus/
 sudo cp solarus/scripts/solarus.sh Arkbuild/usr/local/bin/
 sudo chmod 777 Arkbuild/usr/local/bin/solarus.sh
 call_chroot "chown -R ark:ark /opt/"
