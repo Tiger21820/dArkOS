@@ -19,7 +19,6 @@ sudo mkdir -p /tmp/a10v4-rootfs
 sudo mount ${LOOP_ALT}p1 /tmp/a10v4-boot
 sudo mount ${LOOP_ALT}p2 /tmp/a10v4-rootfs
 
-sudo cp -fv /tmp/${UNIT}v4/boot/* /tmp/a10v4-boot/.
 sudo rm -fv /tmp/a10v4-boot/${CHIPSET}-${UNIT}*
 sudo mv -fv /tmp/${UNIT}v4/${CHIPSET}-${UNIT}-v4-linux.dtb /tmp/a10v4-boot/.
 sudo rm -fv /tmp/a10v4-boot/rg351mp-uboot.dtb
