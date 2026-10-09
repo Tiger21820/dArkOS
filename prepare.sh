@@ -6,7 +6,7 @@ if [ -z $(dpkg --print-foreign-architectures | grep i386) ]; then
   sudo dpkg --add-architecture i386
 fi
 sudo apt -y update
-for NEEDED_TOOL in bc btrfs-progs build-essential bison flex ccache curl debconf-utils debootstrap device-tree-compiler dosfstools e2fsprogs eatmydata gcc gdisk jq lib32stdc++6 libc6-i386 libncurses5-dev libssl-dev lz4 lzop p7zip-full parted python-is-python3 qemu-user-static zlib1g:i386 xfsprogs
+for NEEDED_TOOL in bc btrfs-progs build-essential bison flex ccache curl debconf-utils debootstrap device-tree-compiler dosfstools e2fsprogs eatmydata gcc gdisk jq lib32stdc++6 libc6-i386 libncurses5-dev libssl-dev lz4 lzop p7zip-full parted python-is-python3 zlib1g:i386 xfsprogs
 do
   apt list --installed 2>/dev/null | grep -q "$NEEDED_TOOL"
   if [[ $? != "0" ]]; then
@@ -14,6 +14,23 @@ do
     verify_action
   fi
 done
+
+if apt-cache show qemu-user-static &>/dev/null; then
+    sudo apt-get install -y qemu-user-static
+    apt list --installed 2>/dev/null | grep -q qemu-user-static
+    if [[ $? != "0" ]]; then
+      sudo apt -y install qemu-user-static
+      verify_action
+    fi
+elif apt-cache show qemu-user-binfmt-hwe &>/dev/null; then
+    if ! dpkg -s qemu-user qemu-user-binfmt-hwe &>/dev/null; then
+      sudo apt -y install qemu-user qemu-user-binfmt-hwe
+      verify_action
+    fi
+else
+    echo "ERROR: No supported QEMU user emulation package found."
+    exit 1
+fi
 
 # Ensure apt-cacher-ng is installed and if enabled for the build
 if [[ "${ENABLE_CACHE}" == "y" ]]; then
