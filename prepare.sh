@@ -22,8 +22,8 @@ if apt-cache policy qemu-user-static | grep -qE 'Candidate: [0-9]'; then
       sudo apt -y install qemu-user-static
       verify_action
     fi
-elif apt-cache show qemu-user-binfmt-hwe &>/dev/null; then
-    if ! dpkg -s qemu-user qemu-user-binfmt-hwe &>/dev/null; then
+elif apt-cache show qemu-user-binfmt &>/dev/null; then
+    if ! dpkg -s qemu-user qemu-user-binfmt &>/dev/null; then
       sudo apt -y install qemu-user qemu-user-binfmt-hwe
       verify_action
       sudo cp -fv /usr/bin/qemu-aarch64 /usr/bin/qemu-aarch64-static
