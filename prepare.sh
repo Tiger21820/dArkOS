@@ -26,6 +26,8 @@ elif apt-cache show qemu-user-binfmt-hwe &>/dev/null; then
     if ! dpkg -s qemu-user qemu-user-binfmt-hwe &>/dev/null; then
       sudo apt -y install qemu-user qemu-user-binfmt-hwe
       verify_action
+      sudo cp -fv /usr/bin/qemu-aarch64 /usr/bin/qemu-aarch64-static
+	  sudo cp -fv /usr/bin/qemu-arm /usr/bin/qemu-arm-static
     fi
 else
     echo "ERROR: No supported QEMU user emulation package found."
