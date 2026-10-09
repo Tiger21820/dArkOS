@@ -15,7 +15,7 @@ do
   fi
 done
 
-if apt-cache show qemu-user-static &>/dev/null; then
+if apt-cache policy qemu-user-static | grep -qE 'Candidate: [0-9]'; then
     sudo apt-get install -y qemu-user-static
     apt list --installed 2>/dev/null | grep -q qemu-user-static
     if [[ $? != "0" ]]; then
