@@ -1236,6 +1236,18 @@
 		<hardware>console</hardware>
 	</system>
 	<system>
+		<name>3ds</name>
+		<fullname>3DS</fullname>
+		<path>/roms/3ds/</path>
+		<extension>.3ds .3DS .3dsx .3DSX .z3dsx .Z3DSX .elf .ELF .axf .AXF .cci .CCI .zcci .ZCCI .cxi .CXI .zcxi .ZCXI .app .APP</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch --appendconfig=/home/ark/.config/retroarch/retroarch.cfg.azahar -L /home/ark/.config/retroarch/cores/azahar_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>n3ds</platform>
+		<theme>3ds</theme>
+		<manufacturer>Nintendo</manufacturer>
+		<release>2011</release>
+		<hardware>handheld</hardware>
+	</system>
+	<system>
 		<name>nds</name>
 		<fullname>NDS</fullname>
 		<path>/roms/nds/</path>
@@ -2393,6 +2405,18 @@
 		<theme>uzebox</theme>
 		<manufacturer>Belogic</manufacturer>
 		<release>2008</release>
+		<hardware>console</hardware>
+	</system>
+	<system>
+		<name>zeebo</name>
+		<fullname>Zeebo</fullname>
+		<path>/roms/zeebo</path>
+		<extension>.7z .7Z .mod .MOD .zip .ZIP</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/zeebx_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>zeebo</platform>
+		<theme>zeebo</theme>
+		<manufacturer>Zeebo</manufacturer>
+		<release>2009</release>
 		<hardware>console</hardware>
 	</system>
 	<system>

@@ -1522,6 +1522,7 @@
 			<emulator name="retroarch32">
 				<cores>
 					<core>yabasanshiro</core>
+					<core>yabadabadoo</core>
 					<core>yabause</core>
 				</cores>
 			</emulator>
@@ -2516,6 +2517,18 @@
 		<theme>uzebox</theme>
 		<manufacturer>Belogic</manufacturer>
 		<release>2008</release>
+		<hardware>console</hardware>
+	</system>
+	<system>
+		<name>zeebo</name>
+		<fullname>Zeebo</fullname>
+		<path>/roms/zeebo</path>
+		<extension>.7z .7Z .mod .MOD .zip .ZIP</extension>
+		<command>sudo perfmax %GOVERNOR% %ROM%; nice -n -19 /usr/local/bin/retroarch -L /home/ark/.config/retroarch/cores/zeebx_libretro.so %ROM%; sudo perfnorm</command>
+		<platform>zeebo</platform>
+		<theme>zeebo</theme>
+		<manufacturer>Zeebo</manufacturer>
+		<release>2009</release>
 		<hardware>console</hardware>
 	</system>
 	<system>
