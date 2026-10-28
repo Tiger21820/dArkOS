@@ -52,6 +52,9 @@ fi
 sudo rm -rf Arkbuild/home/ark/${CHIPSET}_core_builds/retroarch/
 sudo cp retroarch/configs/retroarch.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch.cfg
 sudo cp retroarch/configs/retroarch.cfg.spectate Arkbuild/home/ark/.config/retroarch/retroarch.cfg.spectate
+if [ "$CHIPSET" == "rk3566" ]; then
+  sudo cp retroarch/configs/retroarch.cfg.azahar Arkbuild/home/ark/.config/retroarch/retroarch.cfg.azahar
+fi
 sudo cp retroarch/configs/retroarch.cfg.vert Arkbuild/home/ark/.config/retroarch/retroarch.cfg.vert
 sudo cp retroarch/configs/retroarch.cfg.bak.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch.cfg.bak
 sudo cp retroarch/configs/retroarch-core-options.cfg.${UNIT} Arkbuild/home/ark/.config/retroarch/retroarch-core-options.cfg
